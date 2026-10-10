@@ -515,33 +515,41 @@ Pluto.run()</code></pre>
 <p>An <strong>agent</strong> is a language model wrapped in a loop that can read your files, edit them, and run commands, showing you the result each time. Four words help keep that straight. The <em>model</em> is text in, text out, with no memory and no access to your disk. The <em>harness</em> is the programme around it that builds the context, runs the tools and shows you what happened; opencode is a harness. <em>Tools</em> are the actions it can take: read a file, write a file, run a command. <em>Skills</em> or instruction files (an <code>AGENTS.md</code> in your project) encode your own judgement so you do not have to repeat it.</p>
 
 <figure class="diagram" aria-label="Diagram of the agent loop">
-<svg viewBox="0 0 680 230" role="img">
-<rect x="20" y="80" width="110" height="56" rx="6" class="accbox"/>
-<text x="75" y="104" text-anchor="middle">You</text>
-<text x="75" y="122" text-anchor="middle" class="muted small">ask, then verify</text>
-<rect x="200" y="80" width="170" height="56" rx="6" class="box"/>
-<text x="285" y="104" text-anchor="middle">Harness</text>
-<text x="285" y="122" text-anchor="middle" class="muted small">opencode: builds context, runs tools</text>
-<rect x="440" y="14" width="150" height="50" rx="6" class="box"/>
-<text x="515" y="36" text-anchor="middle">Model</text>
-<text x="515" y="53" text-anchor="middle" class="muted small">text in, text out</text>
-<rect x="440" y="100" width="150" height="50" rx="6" class="box"/>
-<text x="515" y="122" text-anchor="middle">Tools</text>
-<text x="515" y="139" text-anchor="middle" class="muted small">read, edit, run a command</text>
-<rect x="440" y="170" width="150" height="46" rx="6" class="box"/>
-<text x="515" y="190" text-anchor="middle">Your files</text>
-<text x="515" y="206" text-anchor="middle" class="mono muted small">ec991-work/, git</text>
-<path d="M130 108 L 198 108" class="arrow"/>
-<text x="164" y="100" text-anchor="middle" class="small muted">request</text>
-<path d="M370 100 C 400 100, 400 39, 438 39" class="arrow"/>
-<path d="M438 50 C 405 50, 405 112, 372 112" class="arrow"/>
-<text x="404" y="30" text-anchor="middle" class="small muted">prompt</text>
-<text x="404" y="90" text-anchor="middle" class="small muted">next step</text>
-<path d="M370 120 L 438 120" class="arrow"/>
-<path d="M515 150 L 515 168" class="arrow"/>
-<path d="M440 193 L 75 193 L 75 138" class="accarrow"/>
-<text x="250" y="186" text-anchor="middle" class="mono small acctext">git diff, run it, then commit</text>
-<text x="285" y="160" text-anchor="middle" class="muted small">AGENTS.md is read by the harness at the start of every session</text>
+<svg viewBox="0 0 720 300" role="img">
+<!-- boxes -->
+<rect x="20" y="112" width="130" height="64" rx="6" class="accbox"/>
+<text x="85" y="139" text-anchor="middle">You</text>
+<text x="85" y="158" text-anchor="middle" class="muted small">ask, then verify</text>
+<rect x="230" y="108" width="200" height="72" rx="6" class="box"/>
+<text x="330" y="133" text-anchor="middle">Harness</text>
+<text x="330" y="151" text-anchor="middle" class="mono muted small">opencode</text>
+<text x="330" y="168" text-anchor="middle" class="muted small">builds context, runs tools</text>
+<rect x="510" y="14" width="190" height="60" rx="6" class="box"/>
+<text x="605" y="39" text-anchor="middle">Model</text>
+<text x="605" y="58" text-anchor="middle" class="muted small">text in, text out</text>
+<rect x="510" y="114" width="190" height="60" rx="6" class="box"/>
+<text x="605" y="139" text-anchor="middle">Tools</text>
+<text x="605" y="158" text-anchor="middle" class="muted small">read, edit, run a command</text>
+<rect x="510" y="214" width="190" height="60" rx="6" class="box"/>
+<text x="605" y="239" text-anchor="middle">Your files</text>
+<text x="605" y="258" text-anchor="middle" class="mono muted small">ec991-work/, git</text>
+<!-- you -> harness -->
+<path d="M150 144 L 228 144" class="arrow"/>
+<text x="189" y="134" text-anchor="middle" class="small muted">request</text>
+<!-- harness <-> model -->
+<path d="M360 108 L 360 38 L 508 38" class="arrow"/>
+<text x="440" y="29" text-anchor="middle" class="small muted">prompt</text>
+<path d="M510 60 L 400 60 L 400 106" class="arrow"/>
+<text x="456" y="82" text-anchor="middle" class="small muted">next step</text>
+<!-- harness -> tools -> files -->
+<path d="M430 144 L 508 144" class="arrow"/>
+<text x="469" y="134" text-anchor="middle" class="small muted">call</text>
+<path d="M605 174 L 605 212" class="arrow"/>
+<text x="615" y="198" class="small muted">act</text>
+<!-- files -> you -->
+<path d="M510 244 L 85 244 L 85 178" class="accarrow"/>
+<text x="300" y="264" text-anchor="middle" class="mono small acctext">git diff, run it, then commit</text>
+<text x="330" y="212" text-anchor="middle" class="muted small">AGENTS.md: your rules, read at the start of every session</text>
 </svg>
 <figcaption>The loop you supervise. The model never touches your disk; the harness does, through tools, and Git shows you what it did.</figcaption>
 </figure>
