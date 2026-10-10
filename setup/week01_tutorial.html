@@ -237,7 +237,7 @@ julia</code></pre>
 <tr><td><code>\beta</code> then <kbd>Tab</kbd></td><td>Unicode input</td><td>gives <code>β</code>; works for any LaTeX name</td></tr>
 </table></div>
 <figure class="diagram" aria-label="Diagram of the four REPL modes">
-<svg viewBox="0 0 640 210" role="img">
+<svg viewBox="0 0 640 236" role="img">
 <defs>
 <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" class="arrhead"/></marker>
 <marker id="arracc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" class="arrheadacc"/></marker>
@@ -260,8 +260,8 @@ julia</code></pre>
 <text x="300" y="55" text-anchor="middle" class="mono acctext">]</text>
 <text x="300" y="99" text-anchor="middle" class="mono acctext">?</text>
 <text x="300" y="158" text-anchor="middle" class="mono acctext">;</text>
-<text x="105" y="160" text-anchor="middle" class="muted small">Press the key on an empty line to enter a mode.</text>
-<text x="105" y="176" text-anchor="middle" class="muted small">Backspace on an empty line returns to julia&gt;.</text>
+<text x="20" y="214" class="muted small">Press the key on an empty line to enter a mode.</text>
+<text x="20" y="230" class="muted small">Backspace on an empty line returns to julia&gt;.</text>
 </svg>
 <figcaption>The REPL's four modes. The prompt always tells you where you are.</figcaption>
 </figure>
@@ -383,25 +383,25 @@ All checks passed. You are ready for the week 2 lab.</div>
 </ol>
 
 <figure class="diagram" aria-label="Diagram of the Git workflow">
-<svg viewBox="0 0 680 190" role="img">
-<rect x="10" y="40" width="140" height="56" rx="6" class="accbox"/>
-<text x="80" y="64" text-anchor="middle">Working folder</text>
-<text x="80" y="82" text-anchor="middle" class="muted">files you edit</text>
-<rect x="185" y="40" width="140" height="56" rx="6" class="box"/>
-<text x="255" y="64" text-anchor="middle">Staging area</text>
-<text x="255" y="82" text-anchor="middle" class="muted">what the next commit holds</text>
-<rect x="360" y="40" width="140" height="56" rx="6" class="box"/>
-<text x="430" y="64" text-anchor="middle">Local history</text>
-<text x="430" y="82" text-anchor="middle" class="mono muted">.git/</text>
-<rect x="535" y="40" width="135" height="56" rx="6" class="box"/>
-<text x="602" y="64" text-anchor="middle">GitHub</text>
-<text x="602" y="82" text-anchor="middle" class="muted">origin</text>
-<path d="M150 68 L 183 68" class="arrow"/><text x="167" y="30" text-anchor="middle" class="mono small">git add</text>
-<path d="M325 68 L 358 68" class="arrow"/><text x="342" y="30" text-anchor="middle" class="mono small">git commit</text>
-<path d="M500 68 L 533 68" class="arrow"/><text x="517" y="30" text-anchor="middle" class="mono small">git push</text>
-<path d="M602 96 L 602 140 L 80 140 L 80 98" class="accarrow"/>
-<text x="341" y="160" text-anchor="middle" class="mono small">git pull</text>
-<text x="341" y="178" text-anchor="middle" class="muted small">VS Code's Source Control pane does the same four steps with buttons: +, Commit, Sync</text>
+<svg viewBox="0 0 780 196" role="img">
+<rect x="10" y="44" width="160" height="56" rx="6" class="accbox"/>
+<text x="90" y="68" text-anchor="middle">Working folder</text>
+<text x="90" y="86" text-anchor="middle" class="muted">files you edit</text>
+<rect x="210" y="44" width="160" height="56" rx="6" class="box"/>
+<text x="290" y="68" text-anchor="middle">Staging area</text>
+<text x="290" y="86" text-anchor="middle" class="muted">contents of next commit</text>
+<rect x="410" y="44" width="160" height="56" rx="6" class="box"/>
+<text x="490" y="68" text-anchor="middle">Local history</text>
+<text x="490" y="86" text-anchor="middle" class="mono muted">.git/</text>
+<rect x="610" y="44" width="160" height="56" rx="6" class="box"/>
+<text x="690" y="68" text-anchor="middle">GitHub</text>
+<text x="690" y="86" text-anchor="middle" class="muted">origin</text>
+<path d="M170 72 L 208 72" class="arrow"/><text x="190" y="32" text-anchor="middle" class="mono small">git add</text>
+<path d="M370 72 L 408 72" class="arrow"/><text x="390" y="32" text-anchor="middle" class="mono small">git commit</text>
+<path d="M570 72 L 608 72" class="arrow"/><text x="590" y="32" text-anchor="middle" class="mono small">git push</text>
+<path d="M690 100 L 690 140 L 90 140 L 90 102" class="accarrow"/>
+<text x="390" y="160" text-anchor="middle" class="mono small">git pull</text>
+<text x="390" y="184" text-anchor="middle" class="muted small">VS Code's Source Control pane does the same four steps with buttons: +, Commit, Sync</text>
 </svg>
 <figcaption>Where a change lives at each step. <code>git status</code> and <code>git diff</code> look at the left end; GitHub shows the right end.</figcaption>
 </figure>
@@ -443,21 +443,21 @@ Pluto.run()</code></pre>
   <li><strong>Packages install themselves.</strong> Write <code>using Plots</code> and Pluto adds it to the notebook's environment, recorded inside the <code>.jl</code> file, so your notebook is reproducible by anyone who opens it.</li>
 </ol>
 <figure class="diagram" aria-label="Diagram of Pluto reactivity">
-<svg viewBox="0 0 640 170" role="img">
-<rect x="20" y="20" width="180" height="50" rx="6" class="accbox"/>
-<text x="110" y="42" text-anchor="middle" class="mono">β = 0.96</text>
-<text x="110" y="60" text-anchor="middle" class="acctext small">you edit this cell</text>
-<rect x="250" y="20" width="200" height="50" rx="6" class="box"/>
+<svg viewBox="0 0 680 170" role="img">
+<rect x="20" y="20" width="170" height="50" rx="6" class="accbox"/>
+<text x="105" y="42" text-anchor="middle" class="mono">β = 0.96</text>
+<text x="105" y="60" text-anchor="middle" class="acctext small">you edit this cell</text>
+<rect x="230" y="20" width="240" height="50" rx="6" class="box"/>
 <text x="350" y="42" text-anchor="middle" class="mono">v = sum(β^t for t in 0:10)</text>
 <text x="350" y="60" text-anchor="middle" class="muted small">re-runs by itself</text>
-<rect x="490" y="20" width="130" height="50" rx="6" class="box"/>
-<text x="555" y="42" text-anchor="middle" class="mono">plot(…, v)</text>
-<text x="555" y="60" text-anchor="middle" class="muted small">re-draws by itself</text>
-<rect x="250" y="100" width="200" height="50" rx="6" class="box"/>
+<rect x="510" y="20" width="150" height="50" rx="6" class="box"/>
+<text x="585" y="42" text-anchor="middle" class="mono">plot(…, v)</text>
+<text x="585" y="60" text-anchor="middle" class="muted small">re-draws by itself</text>
+<rect x="230" y="100" width="240" height="50" rx="6" class="box"/>
 <text x="350" y="122" text-anchor="middle" class="mono">u(c) = c^(1-γ)/(1-γ)</text>
 <text x="350" y="140" text-anchor="middle" class="muted small">does not depend on β: untouched</text>
-<path d="M200 45 L 248 45" class="accarrow"/>
-<path d="M450 45 L 488 45" class="accarrow"/>
+<path d="M190 45 L 226 45" class="accarrow"/>
+<path d="M470 45 L 506 45" class="accarrow"/>
 </svg>
 <figcaption>Reactivity. Pluto tracks which cells use which names and re-runs exactly the dependents, in the right order.</figcaption>
 </figure>
