@@ -15,7 +15,7 @@ This repository holds the course materials: lecture slides, lab slides, Julia no
 
 | Week | Topic | Lecture | Lab |
 | --- | --- | --- | --- |
-| 1 | Introduction and Computing Toolkit | [Slides](week01/lecture/week01_motivation.pdf) | [Slides](week01/lab/week01_tutorial_slides.pdf) · [Setup guide](https://aseem-patel.github.io/EC991/setup/week01_tutorial.html) · [Pluto notebook](week01/lab/week01_julia_basics.jl) · [Python version](week01/lab/week01_python_basics.py) |
+| 1 | Lecture: Motivation – Household Heterogeneity<br>Lab: Introduction and Computing Toolkit | [Slides](week01/lecture/week01_motivation.pdf) | [Slides](week01/lab/week01_tutorial_slides.pdf) · [Setup guide](https://aseem-patel.github.io/EC991/setup/week01_tutorial.html) · [Pluto notebook](week01/lab/week01_julia_basics.jl) · [Python version](week01/lab/week01_python_basics.py) |
 
 Later weeks appear here as they are released.
 
@@ -51,17 +51,13 @@ git pull
 
 Do not edit files inside this repository. Copy what you want to work on into your own repository (`ec991-work` in the setup guide) and edit it there. If you edit files here, `git pull` will run into conflicts with the next update.
 
-## AI tools
-
-You may use AI assistants for the problem sets and in the labs, provided you can explain and defend every line you hand in. See Part 9 of the [setup guide](https://aseem-patel.github.io/EC991/setup/week01_tutorial.html#agent).
-
 ## Questions
 
 For problems with setup or with the code in this repository, open an [issue](https://github.com/Aseem-Patel/EC991/issues). For anything about your own work, email me or come to the support hours.
 
 ## Acknowledgements
 
-The content of this course builds on the lecture notes of Tomás R. Martinez. All errors are mine.
+The content of this course builds on the lecture notes of [Tomás R. Martinez](https://tomasrm.github.io/). All errors are mine.
 
 ## Licence
 
