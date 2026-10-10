@@ -1,0 +1,723 @@
+<title>EC991 Toolkit Setup</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Public+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column, 68ch, numbered parts, OS tabs inside install steps. */
+:root {
+  --bg: #fbf9f7;
+  --surface: #f3efeb;
+  --surface-2: #e9e3dd;
+  --fg: #1f1a18;
+  --fg-muted: #6b625d;
+  --rule: #d9d0c9;
+  --accent: #cc092f;        /* vermell, the course colour */
+  --accent-ink: #ffffff;
+  --link: #0000b2;
+  --code-bg: #f0ebe6;
+  --ok: #1f7a3a;
+  --ok-bg: #e3f2e7;
+  --warn: #8a5a00;
+  --warn-bg: #fbefd4;
+  --display: "Newsreader", Georgia, "Times New Roman", serif;
+  --body: "Public Sans", -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  --mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #171412; --surface: #211d1a; --surface-2: #2b2522; --fg: #ece6e0; --fg-muted: #a69c94;
+    --rule: #3a322d; --accent: #ff4d6d; --accent-ink: #1a0b0f; --link: #8f9bff; --code-bg: #1f1b18;
+    --ok: #7fd49a; --ok-bg: #1b3022; --warn: #f2c56b; --warn-bg: #352a12; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #171412; --surface: #211d1a; --surface-2: #2b2522; --fg: #ece6e0; --fg-muted: #a69c94;
+  --rule: #3a322d; --accent: #ff4d6d; --accent-ink: #1a0b0f; --link: #8f9bff; --code-bg: #1f1b18;
+  --ok: #7fd49a; --ok-bg: #1b3022; --warn: #f2c56b; --warn-bg: #352a12; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 16.5px; line-height: 1.6; margin: 0; }
+.wrap { max-width: 72ch; margin: 0 auto; padding-block: 2.5rem 5rem; padding-inline: 20px; }
+header.masthead { border-bottom: 2px solid var(--accent); padding-bottom: 1.25rem; margin-bottom: 2rem; }
+.eyebrow { font-family: var(--body); text-transform: uppercase; letter-spacing: .12em; font-size: .75rem; color: var(--accent); font-weight: 600; margin: 0 0 .5rem; }
+h1 { font-family: var(--display); font-weight: 500; font-size: clamp(2rem, 5vw, 3rem); line-height: 1.1; margin: 0 0 .75rem; text-wrap: balance; letter-spacing: -.01em; }
+.lede { font-size: 1.1rem; color: var(--fg-muted); margin: 0; max-width: 60ch; }
+.meta { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; margin-top: 1rem; font-size: .9rem; color: var(--fg-muted); }
+.meta b { color: var(--fg); font-weight: 600; }
+h2 { font-family: var(--display); font-weight: 500; font-size: 1.85rem; line-height: 1.15; margin: 3rem 0 .75rem; text-wrap: balance; display: flex; gap: .75rem; align-items: baseline; }
+h2 .num { font-family: var(--body); font-size: .8rem; font-weight: 600; color: var(--accent); letter-spacing: .08em; flex: none; }
+h3 { font-family: var(--body); font-weight: 600; font-size: 1.05rem; margin: 2rem 0 .5rem; }
+p { margin: 0 0 1rem; }
+a { color: var(--link); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+ul, ol { padding-left: 1.4rem; margin: 0 0 1rem; }
+li { margin-bottom: .35rem; }
+li > ul { margin-top: .35rem; }
+code { font-family: var(--mono); font-size: .86em; background: var(--code-bg); padding: .1em .35em; border-radius: 3px; }
+pre { position: relative; background: var(--code-bg); border: 1px solid var(--rule); border-radius: 6px; padding: .85rem 1rem; overflow-x: auto; margin: 0 0 1rem; font-size: .85rem; line-height: 1.5; }
+pre code { background: none; padding: 0; font-size: inherit; }
+pre .c { color: var(--fg-muted); }
+pre .copy { position: absolute; top: .4rem; right: .4rem; font: 600 .7rem var(--body); letter-spacing: .05em; text-transform: uppercase; color: var(--fg-muted); background: var(--surface); border: 1px solid var(--rule); border-radius: 4px; padding: .2rem .5rem; cursor: pointer; }
+pre .copy:hover { color: var(--fg); }
+kbd { font-family: var(--mono); font-size: .8em; border: 1px solid var(--rule); border-bottom-width: 2px; border-radius: 4px; padding: .05em .4em; background: var(--surface); }
+.toc { background: var(--surface); border-radius: 6px; padding: 1.1rem 1.25rem; margin: 1.5rem 0 0; }
+.toc h3 { margin: 0 0 .5rem; font-size: .8rem; text-transform: uppercase; letter-spacing: .1em; color: var(--fg-muted); }
+.toc ol { margin: 0; columns: 2; column-gap: 2rem; font-size: .95rem; }
+.toc li { break-inside: avoid; }
+@media (max-width: 560px) { .toc ol { columns: 1; } }
+.callout { border-left: 3px solid var(--accent); background: var(--surface); padding: .9rem 1.1rem; margin: 0 0 1.25rem; border-radius: 0 6px 6px 0; }
+.callout.ok { border-color: var(--ok); background: var(--ok-bg); }
+.callout.warn { border-color: var(--warn); background: var(--warn-bg); }
+.callout p:last-child { margin: 0; }
+.callout .tag { display: block; font-size: .72rem; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; margin-bottom: .3rem; color: var(--fg-muted); }
+.callout.ok .tag { color: var(--ok); }
+.callout.warn .tag { color: var(--warn); }
+/* OS tabs */
+.os { border: 1px solid var(--rule); border-radius: 6px; margin: 0 0 1.25rem; overflow: hidden; }
+.os-tabs { display: flex; background: var(--surface); border-bottom: 1px solid var(--rule); }
+.os-tabs button { flex: 1; font: 600 .85rem var(--body); padding: .55rem .5rem; background: none; border: 0; color: var(--fg-muted); cursor: pointer; border-bottom: 2px solid transparent; }
+.os-tabs button[aria-selected="true"] { color: var(--fg); border-bottom-color: var(--accent); }
+.os-pane { display: none; padding: 1rem 1rem .25rem; }
+.os-pane.active { display: block; }
+.os-pane pre { margin-bottom: .85rem; }
+/* tables */
+.tbl { overflow-x: auto; margin: 0 0 1.25rem; }
+table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+th, td { text-align: left; padding: .5rem .6rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font-size: .75rem; text-transform: uppercase; letter-spacing: .08em; color: var(--fg-muted); font-weight: 600; }
+td code { white-space: nowrap; }
+/* checklist */
+.check { list-style: none; padding: 0; }
+.check li { display: flex; gap: .7rem; align-items: flex-start; padding: .45rem 0; border-bottom: 1px solid var(--rule); margin: 0; }
+.check input { margin-top: .35rem; accent-color: var(--accent); width: 1rem; height: 1rem; flex: none; }
+.check label { cursor: pointer; }
+.progress { font-size: .85rem; color: var(--fg-muted); margin-top: .5rem; }
+.plan td:first-child { font-family: var(--mono); font-size: .85rem; white-space: nowrap; }
+.compare td:first-child { font-weight: 500; white-space: nowrap; }
+.compare code { white-space: pre; }
+figure { margin: 1.25rem 0; }
+figure img { width: 100%; height: auto; display: block; border: 1px solid var(--rule); border-radius: 6px; }
+figcaption { font-size: .85rem; color: var(--fg-muted); margin-top: .45rem; }
+.diagram { background: var(--surface); border-radius: 6px; padding: .75rem .75rem .25rem; margin: 1.25rem 0; }
+.diagram svg { width: 100%; height: auto; display: block; }
+.diagram text { fill: var(--fg); font-family: var(--body); font-size: 13px; }
+.diagram .mono { font-family: var(--mono); font-size: 12.5px; }
+.diagram .muted { fill: var(--fg-muted); font-size: 12px; }
+.diagram .small { font-size: 11.5px; }
+.diagram .box { fill: var(--bg); stroke: var(--rule); stroke-width: 1.2; }
+.diagram .accbox { fill: var(--bg); stroke: var(--accent); stroke-width: 1.6; }
+.diagram .arrow { stroke: var(--fg-muted); stroke-width: 1.4; fill: none; marker-end: url(#arr); }
+.diagram .accarrow { stroke: var(--accent); stroke-width: 1.6; fill: none; marker-end: url(#arracc); }
+.diagram .arrhead { fill: var(--fg-muted); }
+.diagram .arrheadacc { fill: var(--accent); }
+.diagram .acctext { fill: var(--accent); font-weight: 600; }
+.term { background: #1b1816; color: #e8e2dc; border-radius: 6px; padding: .85rem 1rem; font-family: var(--mono); font-size: .82rem; line-height: 1.5; overflow-x: auto; margin: 0 0 1rem; white-space: pre; }
+.term .ok { color: #7fd49a; } .term .dim { color: #9c928a; }
+footer { margin-top: 4rem; padding-top: 1.25rem; border-top: 1px solid var(--rule); font-size: .88rem; color: var(--fg-muted); }
+.small { font-size: .9rem; color: var(--fg-muted); }
+@media (prefers-reduced-motion: no-preference) { .os-pane.active { animation: fade .15s ease; } }
+@keyframes fade { from { opacity: .4 } to { opacity: 1 } }
+</style>
+
+<div class="wrap">
+<header class="masthead">
+  <p class="eyebrow">EC991 Topics in Macroeconomics · Week 1 Tutorial</p>
+  <h1>Your computing toolkit: Julia, VS Code, Git, Pluto and an AI coding agent</h1>
+  <p class="lede">A self-paced walkthrough. By the end you will have a working Julia installation, an editor that talks to it, a GitHub repository with your first commits, a Pluto notebook that teaches you the Julia you need for week 2, and an AI coding agent you know how to supervise.</p>
+  <div class="meta">
+    <span><b>Lecturer</b> Aseem Patel</span>
+    <span><b>Term</b> Autumn 2026</span>
+    <span><b>Prerequisites</b> none</span>
+  </div>
+  <nav class="toc" aria-label="Contents">
+    <h3>Contents</h3>
+    <ol>
+      <li><a href="#why">Why learn to code when AI can do it</a></li>
+      <li><a href="#terminal">Terminal and Git</a></li>
+      <li><a href="#julia">Julia with juliaup</a></li>
+      <li><a href="#vscode">VS Code and the Julia extension</a></li>
+      <li><a href="#packages">Packages and environments</a></li>
+      <li><a href="#smoke">The smoke test</a></li>
+      <li><a href="#git">Git and GitHub in practice</a></li>
+      <li><a href="#pluto">Pluto notebooks</a></li>
+      <li><a href="#basics">Julia basics for week 2</a></li>
+      <li><a href="#agent">An AI coding agent: opencode</a></li>
+      <li><a href="#session">How the session runs</a></li>
+      <li><a href="#checklist">Checklist and troubleshooting</a></li>
+    </ol>
+  </nav>
+</header>
+
+<div class="callout">
+  <span class="tag">How to use this page</span>
+  <p>Work through the parts in order. Install steps have tabs for macOS, Windows and Linux; pick yours once and the page remembers it. Every code block has a copy button. The checklist at the end tracks what you have done.</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="why"><span class="num">PART 0</span>Why learn to code when AI can do it</h2>
+
+<p>Three years ago the hard part of computational macro was syntax: which bracket, which index, why the loop runs off the end of the array. Language models have made that part cheap. A good agent will write a value function iteration in Julia on request. So why spend a tutorial on tooling?</p>
+
+<p>Because the barrier is lower, not gone. The agent writes; you decide whether what it wrote is right. That decision needs you to read code fluently, know what the answer should look like, and test against a prediction. In this course every piece of numerical output gets checked against something you know, a closed form, a theorem, a limit. An agent cannot do that for you if you do not know what to check. Florian Oswald puts it well in his programming course: <em>programming with AI in 2026 mostly means you supervise the loop</em>. The habit to build this term is to check what the agent did before you trust it.</p>
+
+<p>On languages. I teach in <strong>Julia</strong>: it is fast, reads like maths, and the heterogeneous-agent literature increasingly uses it. Wherever I can, I provide a <strong>Python</strong> version of the same code. For the problem sets you may use whichever language you prefer, as the module outline says. The ideas (grids, iteration, interpolation, distributions) transfer; the syntax does not matter much once you have seen two languages side by side, and Part 8 does exactly that.</p>
+
+<!-- ============================================================ -->
+<h2 id="terminal"><span class="num">PART 1</span>Terminal and Git</h2>
+
+<p>Everything else in this tutorial is installed from a terminal, so start there. Git is the version control system used by every repository in this course, including the one you will clone in Part 6.</p>
+
+<div class="os" data-os-group>
+  <div class="os-tabs" role="tablist">
+    <button role="tab" data-os="mac" aria-selected="true">macOS</button>
+    <button role="tab" data-os="win" aria-selected="false">Windows</button>
+    <button role="tab" data-os="linux" aria-selected="false">Linux</button>
+  </div>
+  <div class="os-pane active" data-os="mac">
+    <p>Open <strong>Terminal</strong> (Spotlight: <kbd>⌘</kbd>+<kbd>Space</kbd>, type Terminal). Git comes with Apple's command line tools. Type:</p>
+<pre><code>git --version</code></pre>
+    <p>If a dialog offers to install the command line tools, accept, wait, and run the command again.</p>
+  </div>
+  <div class="os-pane" data-os="win">
+    <p>Install <a href="https://git-scm.com/install/">Git for Windows</a> and accept the defaults. It gives you <strong>Git Bash</strong>, a Unix-style terminal, and the <code>git</code> command. Open Git Bash from the Start menu and type:</p>
+<pre><code>git --version</code></pre>
+    <p>Julia and VS Code run natively on Windows, so you do not need the Windows Subsystem for Linux for this course. The one place it helps is opencode (Part 9), whose documentation recommends WSL; the Windows tab there gives alternatives.</p>
+  </div>
+  <div class="os-pane" data-os="linux">
+    <p>Use your usual shell. On Debian or Ubuntu:</p>
+<pre><code>sudo apt update &amp;&amp; sudo apt install git -y
+git --version</code></pre>
+  </div>
+</div>
+
+<p>Tell Git who you are. This is written into every commit you make. Use the email address attached to your GitHub account (Part 6).</p>
+<pre><code>git config --global user.name "Your Name"
+git config --global user.email "you@essex.ac.uk"</code></pre>
+<p class="small">Windows only, so that line endings match everyone else's: <code>git config --global core.autocrlf false</code> and <code>git config --global core.eol lf</code>.</p>
+
+<p>Five shell commands cover ninety per cent of what you need: <code>pwd</code> (where am I), <code>ls</code> (what is here), <code>cd folder</code> (go there; <code>cd ..</code> goes up), <code>mkdir name</code> (make a folder), <code>cat file</code> (print a file). Make a folder for the course now and go into it:</p>
+<pre><code>mkdir ec991 &amp;&amp; cd ec991
+pwd</code></pre>
+
+<!-- ============================================================ -->
+<h2 id="julia"><span class="num">PART 2</span>Julia with juliaup</h2>
+
+<p>Do not download Julia from a web page. Install <strong>juliaup</strong>, a small manager that installs Julia, keeps it updated, and lets you switch versions. If you have an old manual install of Julia, uninstall it first.</p>
+
+<div class="os" data-os-group>
+  <div class="os-tabs" role="tablist">
+    <button role="tab" data-os="mac" aria-selected="true">macOS</button>
+    <button role="tab" data-os="win" aria-selected="false">Windows</button>
+    <button role="tab" data-os="linux" aria-selected="false">Linux</button>
+  </div>
+  <div class="os-pane active" data-os="mac">
+<pre><code>curl -fsSL https://install.julialang.org | sh</code></pre>
+    <p>Accept the defaults. Close and reopen Terminal so that <code>julia</code> is on your path. Homebrew users can use <code>brew install juliaup</code> instead.</p>
+  </div>
+  <div class="os-pane" data-os="win">
+    <p>In PowerShell or Git Bash:</p>
+<pre><code>winget install --name Julia --id 9NJNWW8PVKMN -e -s msstore</code></pre>
+    <p>Or install "Julia" from the Microsoft Store. Close and reopen the terminal afterwards.</p>
+  </div>
+  <div class="os-pane" data-os="linux">
+<pre><code>curl -fsSL https://install.julialang.org | sh</code></pre>
+    <p>If it complains about permissions, the juliaup wiki has a page on it; the simplest fix is usually to make sure <code>~/.juliaup/bin</code> is on your <code>PATH</code> and open a new shell.</p>
+  </div>
+</div>
+
+<p>Check it worked, and that you have the current release (1.12 at the time of writing; anything from 1.10 upward is fine for the course):</p>
+<pre><code>juliaup status
+julia</code></pre>
+<p>You are now in the <strong>REPL</strong>, Julia's interactive prompt. Type <code>1 + 1</code> and press <kbd>Enter</kbd>. Then try these four prompt modes; each is entered by typing one character at the start of an empty line, and left with <kbd>Backspace</kbd>:</p>
+
+<div class="tbl"><table>
+<tr><th>Key</th><th>Mode</th><th>Example</th></tr>
+<tr><td><code>]</code></td><td>Package manager</td><td><code>add Pluto</code>, <code>st</code> (status), <code>up</code> (update)</td></tr>
+<tr><td><code>?</code></td><td>Help</td><td><code>?maximum</code> shows the documentation of <code>maximum</code></td></tr>
+<tr><td><code>;</code></td><td>Shell</td><td><code>;ls</code> runs the shell command <code>ls</code></td></tr>
+<tr><td><code>\beta</code> then <kbd>Tab</kbd></td><td>Unicode input</td><td>gives <code>β</code>; works for any LaTeX name</td></tr>
+</table></div>
+<figure class="diagram" aria-label="Diagram of the four REPL modes">
+<svg viewBox="0 0 640 210" role="img">
+<defs>
+<marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" class="arrhead"/></marker>
+<marker id="arracc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" class="arrheadacc"/></marker>
+</defs>
+<rect x="20" y="78" width="170" height="54" rx="6" class="accbox"/>
+<text x="105" y="101" text-anchor="middle" class="mono">julia&gt;</text>
+<text x="105" y="120" text-anchor="middle" class="muted">normal mode</text>
+<rect x="420" y="14" width="200" height="46" rx="6" class="box"/>
+<text x="520" y="33" text-anchor="middle" class="mono">(@v1.12) pkg&gt;</text>
+<text x="520" y="50" text-anchor="middle" class="muted">packages: add, st, up, activate</text>
+<rect x="420" y="82" width="200" height="46" rx="6" class="box"/>
+<text x="520" y="101" text-anchor="middle" class="mono">help?&gt;</text>
+<text x="520" y="118" text-anchor="middle" class="muted">documentation of a name</text>
+<rect x="420" y="150" width="200" height="46" rx="6" class="box"/>
+<text x="520" y="169" text-anchor="middle" class="mono">shell&gt;</text>
+<text x="520" y="186" text-anchor="middle" class="muted">run a terminal command</text>
+<path d="M190 96 C 300 96, 300 37, 418 37" class="arrow"/>
+<path d="M190 105 L 418 105" class="arrow"/>
+<path d="M190 114 C 300 114, 300 173, 418 173" class="arrow"/>
+<text x="300" y="55" text-anchor="middle" class="mono acctext">]</text>
+<text x="300" y="99" text-anchor="middle" class="mono acctext">?</text>
+<text x="300" y="158" text-anchor="middle" class="mono acctext">;</text>
+<text x="105" y="160" text-anchor="middle" class="muted small">Press the key on an empty line to enter a mode.</text>
+<text x="105" y="176" text-anchor="middle" class="muted small">Backspace on an empty line returns to julia&gt;.</text>
+</svg>
+<figcaption>The REPL's four modes. The prompt always tells you where you are.</figcaption>
+</figure>
+
+<p>While you are here, install Pluto, which Part 7 needs. Press <code>]</code> and type:</p>
+<pre><code>add Pluto</code></pre>
+<p>Press <kbd>Backspace</kbd> to return to the <code>julia&gt;</code> prompt and <kbd>Ctrl</kbd>+<kbd>D</kbd> (or <code>exit()</code>) to leave. Later, <code>juliaup update</code> in the terminal brings Julia up to date.</p>
+
+<!-- ============================================================ -->
+<h2 id="vscode"><span class="num">PART 3</span>VS Code and the Julia extension</h2>
+
+<p>The REPL is where you experiment; VS Code is where you write files. Its Julia extension links the two: you edit a file, press a key, and the line runs in a REPL inside the editor.</p>
+
+<ol>
+  <li>Install <a href="https://code.visualstudio.com/">VS Code</a>. On Windows, during setup, tick the options starting <em>Add "Open with Code" action</em>.</li>
+  <li>Open the Extensions view (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>X</kbd>, or <kbd>⌘</kbd>+<kbd>Shift</kbd>+<kbd>X</kbd> on a Mac), search for <strong>Julia</strong>, and install the one by <code>julialang</code>. It finds your juliaup installation by itself.</li>
+  <li>Open your course folder: <em>File › Open Folder</em>, choose <code>ec991</code>.</li>
+  <li>Create a file <code>hello.jl</code> with these two lines, put the cursor on the first and press <kbd>Shift</kbd>+<kbd>Enter</kbd>. A Julia REPL opens at the bottom and runs the line. Press it again for the second line.</li>
+</ol>
+<pre><code>β = 0.96
+sum(β^t for t in 0:100)</code></pre>
+
+<p>Shortcuts worth learning on day one (Mac users: <kbd>⌘</kbd> for <kbd>Ctrl</kbd> except where shown):</p>
+<div class="tbl"><table>
+<tr><th>Keys</th><th>What it does</th></tr>
+<tr><td><kbd>Shift</kbd>+<kbd>Enter</kbd></td><td>Run the current line or selection in the REPL and move down</td></tr>
+<tr><td><kbd>Ctrl</kbd>+<kbd>F5</kbd></td><td>Run the whole file</td></tr>
+<tr><td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd></td><td>Command palette. Try <code>&gt; Julia: Start REPL</code> and <code>&gt; Git: Clone</code></td></tr>
+<tr><td><kbd>Ctrl</kbd>+<kbd>`</kbd></td><td>Toggle the integrated terminal</td></tr>
+<tr><td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>G</kbd></td><td>Source control pane (Git), used in Part 6</td></tr>
+</table></div>
+
+<p>Plots appear in a separate pane inside VS Code. Hovering over a variable in the editor shows its value once the code has run. If you ever want a REPL outside VS Code, start it with <code>julia --project --threads auto</code> from the folder; inside VS Code both of those are set for you.</p>
+
+<!-- ============================================================ -->
+<h2 id="packages"><span class="num">PART 4</span>Packages and environments</h2>
+
+<p>Julia keeps a record of which packages a project uses in two files: <code>Project.toml</code> (what you asked for) and <code>Manifest.toml</code> (the exact versions that were resolved). Together they let someone else, or you on another machine, reproduce your setup exactly. Four package-mode commands do almost everything:</p>
+
+<div class="tbl"><table>
+<tr><th>Command (after <code>]</code>)</th><th>Meaning</th></tr>
+<tr><td><code>activate .</code></td><td>Use the project in the current folder (creates one if none exists)</td></tr>
+<tr><td><code>add Plots</code></td><td>Add a package to the active project</td></tr>
+<tr><td><code>instantiate</code></td><td>Install everything listed in the project's <code>Project.toml</code> and <code>Manifest.toml</code></td></tr>
+<tr><td><code>st</code></td><td>Show which project is active and what is installed</td></tr>
+</table></div>
+
+<figure class="diagram" aria-label="Diagram of the global and project environments">
+<svg viewBox="0 0 640 200" role="img">
+<rect x="20" y="20" width="280" height="160" rx="6" class="box"/>
+<text x="36" y="44" class="acctext">Global environment</text>
+<text x="36" y="62" class="mono muted">~/.julia/environments/v1.12/</text>
+<text x="36" y="90" class="mono">Project.toml</text>
+<text x="56" y="108" class="mono muted">Pluto</text>
+<text x="36" y="140" class="muted small">Tools you use everywhere. The prompt</text>
+<text x="36" y="156" class="muted small">reads (@v1.12) pkg&gt; when it is active.</text>
+<rect x="340" y="20" width="280" height="160" rx="6" class="accbox"/>
+<text x="356" y="44" class="acctext">Project environment</text>
+<text x="356" y="62" class="mono muted">~/ec991/</text>
+<text x="356" y="90" class="mono">Project.toml</text>
+<text x="376" y="108" class="mono muted">Plots</text>
+<text x="356" y="128" class="mono">Manifest.toml</text>
+<text x="376" y="146" class="mono muted">Plots 1.40.x, GR …, 180 lines</text>
+<text x="356" y="170" class="muted small">(ec991) pkg&gt; after activate .</text>
+</svg>
+<figcaption>Two environments. Packages you <code>add</code> go to whichever one is active, so read the prompt first.</figcaption>
+</figure>
+<p>Read the prompt. <code>(@v1.12) pkg&gt;</code> means the global environment, shared by everything; <code>(ec991) pkg&gt;</code> means the project in your folder. Keep course packages in the project and only tools like Pluto in the global environment. The classic mistake is to <code>add</code> a package while the wrong environment is active and then wonder why <code>using Plots</code> fails elsewhere; the fix is <code>activate .</code> in the right folder.</p>
+
+<p>Try it. In the VS Code REPL (it opens in your <code>ec991</code> folder), press <code>]</code>, then:</p>
+<pre><code>activate .
+add Plots
+st</code></pre>
+<p>Two new files appear in the folder. Pluto notebooks (Part 7) manage their own environment inside the notebook file, so you will not type these commands for notebooks, but you will for every script.</p>
+
+<!-- ============================================================ -->
+<h2 id="smoke"><span class="num">PART 5</span>The smoke test</h2>
+
+<p>Download <code>week01_check.jl</code> from Moodle or from the course repository on GitHub (Part 6) into your <code>ec991</code> folder. It needs no packages beyond the standard library. Run it from the terminal, or open it in VS Code and press <kbd>Ctrl</kbd>+<kbd>F5</kbd>:</p>
+<pre><code>julia week01_check.jl</code></pre>
+<div class="term"><span class="dim">$ julia week01_check.jl</span>
+
+EC991 week 1 check, Julia 1.12.6 on x86_64-apple-darwin24.0.0
+
+  Julia 1.10 or newer                  <span class="ok">PASS</span>
+  Pluto installed                      <span class="ok">PASS</span>
+  Broadcasting works                   <span class="ok">PASS</span>
+  Maximisation over a grid works       <span class="ok">PASS</span>
+  for t in T:-1:1 loop works           <span class="ok">PASS</span>
+  Closed-form arithmetic               <span class="ok">PASS</span>
+  Threads available: 1                 <span class="ok">PASS</span>
+
+All checks passed. You are ready for the week 2 lab.</div>
+<p>You should see seven lines ending in <code>PASS</code>. A <code>FAIL</code> comes with a hint on the same line. Read the script: it does, in miniature, what the week 2 lab does at full scale, a maximisation over a grid with infeasible choices set to minus infinity, and a backward loop.</p>
+
+<div class="callout ok">
+  <span class="tag">Checkpoint</span>
+  <p>If the smoke test passes, your Julia installation is done. Everything from here on is about working habits rather than installation.</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="git"><span class="num">PART 6</span>Git and GitHub in practice</h2>
+
+<p><strong>Git</strong> records the history of a folder as a sequence of <em>commits</em>, snapshots with a message, an author and a time. <strong>GitHub</strong> is a website that hosts Git repositories so that you can back them up, share them and collaborate. Three reasons you want this: your code is never lost, you can always go back to a version that worked, and when an AI agent edits your files you can see exactly what it changed.</p>
+
+<h3>Set up GitHub</h3>
+<ol>
+  <li>Create an account at <a href="https://github.com">github.com</a> with your Essex email, or add it to an existing account.</li>
+  <li>Apply for the <a href="https://education.github.com/pack">GitHub Student Developer Pack</a>. It is free with a student email and includes GitHub Copilot Pro, which Part 9 uses as a free source of AI models.</li>
+</ol>
+
+<h3>Your first repository</h3>
+<ol>
+  <li>On GitHub click <strong>New repository</strong>. Name it <code>ec991-work</code>, make it <em>private</em>, tick <em>Add a README</em>, choose the <em>Julia</em> template for <code>.gitignore</code>. Create it.</li>
+  <li>Click <strong>&lt;&gt; Code</strong> and copy the HTTPS address.</li>
+  <li>In VS Code, open the command palette, run <code>&gt; Git: Clone</code>, paste the address, and choose where to put it (your <code>ec991</code> folder is fine). Say yes to opening it. The first time, VS Code will ask you to sign in to GitHub in the browser.</li>
+  <li>Copy <code>hello.jl</code> into this folder. Open the Source Control pane (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>G</kbd>). You will see it listed under Changes. Click <strong>+</strong> to stage it, type the message <code>add hello.jl</code>, click <strong>Commit</strong>, then <strong>Sync Changes</strong> to push it to GitHub.</li>
+  <li>Refresh the GitHub page. Your file is there, with your message next to it.</li>
+</ol>
+
+<figure class="diagram" aria-label="Diagram of the Git workflow">
+<svg viewBox="0 0 680 190" role="img">
+<rect x="10" y="40" width="140" height="56" rx="6" class="accbox"/>
+<text x="80" y="64" text-anchor="middle">Working folder</text>
+<text x="80" y="82" text-anchor="middle" class="muted">files you edit</text>
+<rect x="185" y="40" width="140" height="56" rx="6" class="box"/>
+<text x="255" y="64" text-anchor="middle">Staging area</text>
+<text x="255" y="82" text-anchor="middle" class="muted">what the next commit holds</text>
+<rect x="360" y="40" width="140" height="56" rx="6" class="box"/>
+<text x="430" y="64" text-anchor="middle">Local history</text>
+<text x="430" y="82" text-anchor="middle" class="mono muted">.git/</text>
+<rect x="535" y="40" width="135" height="56" rx="6" class="box"/>
+<text x="602" y="64" text-anchor="middle">GitHub</text>
+<text x="602" y="82" text-anchor="middle" class="muted">origin</text>
+<path d="M150 68 L 183 68" class="arrow"/><text x="167" y="30" text-anchor="middle" class="mono small">git add</text>
+<path d="M325 68 L 358 68" class="arrow"/><text x="342" y="30" text-anchor="middle" class="mono small">git commit</text>
+<path d="M500 68 L 533 68" class="arrow"/><text x="517" y="30" text-anchor="middle" class="mono small">git push</text>
+<path d="M602 96 L 602 140 L 80 140 L 80 98" class="accarrow"/>
+<text x="341" y="160" text-anchor="middle" class="mono small">git pull</text>
+<text x="341" y="178" text-anchor="middle" class="muted small">VS Code's Source Control pane does the same four steps with buttons: +, Commit, Sync</text>
+</svg>
+<figcaption>Where a change lives at each step. <code>git status</code> and <code>git diff</code> look at the left end; GitHub shows the right end.</figcaption>
+</figure>
+<p>The same four steps from the command line, which you will see in every tutorial and which the AI agent in Part 9 also uses:</p>
+<pre><code>git status                   <span class="c"># what has changed since the last commit</span>
+git add hello.jl             <span class="c"># stage it (git add . stages everything)</span>
+git commit -m "add hello.jl" <span class="c"># record the snapshot</span>
+git push                     <span class="c"># send it to GitHub</span>
+git pull                     <span class="c"># fetch what changed on GitHub (e.g. edits from another machine)</span>
+git diff                     <span class="c"># show exactly what changed in unstaged files</span>
+git log --oneline            <span class="c"># the history, one line per commit</span></code></pre>
+
+<p>Three habits. Commit small and often, with a message that says what and why. Use <code>.gitignore</code> for anything generated (output files, compiled PDFs, Julia's <code>Manifest.toml</code> is a matter of taste; keep it for course work). Never commit secrets such as API keys. And one escape hatch: if your local copy is a mess and GitHub has the version you want, <code>git reset --hard origin/main</code> throws away local changes and matches the server. It is destructive, so back up first.</p>
+
+<h3>Clone the course repository</h3>
+<p>Everything for this course, this page, the notebooks, the slides and the lab files, is on Moodle and on the course GitHub repository, <a href="https://github.com/Aseem-Patel/EC991">github.com/Aseem-Patel/EC991</a>. Clone it next to your own repository with <code>&gt; Git: Clone</code>, and update it before every tutorial with <code>&gt; Git: Pull</code> (or <code>git pull</code>). Do not edit files inside the course repository; copy them into <code>ec991-work</code> first, otherwise pulling will conflict with your changes.</p>
+
+<p class="small">Want more? The QuantEcon lecture on <a href="https://julia.quantecon.org/software_engineering/version_control.html">version control</a> covers branches, pull requests, forks and merge conflicts with the same VS Code workflow, and the GitLens extension shows who changed each line and when.</p>
+
+<!-- ============================================================ -->
+<h2 id="pluto"><span class="num">PART 7</span>Pluto notebooks</h2>
+
+<p>A <strong>Pluto</strong> notebook is a web page of Julia cells that runs in your browser. It differs from Jupyter in one important way: it is <em>reactive</em>. Change a cell and every cell that depends on it re-runs, like a spreadsheet. There is no hidden state, so a notebook always means what it shows. That makes Pluto an excellent place to explore a model and a poor place to run a long estimation. We use it in the labs for the exploring, and scripts for the heavy work.</p>
+
+<p>Run it from VS Code. Open your <code>ec991</code> folder, open the integrated terminal (<kbd>Ctrl</kbd>+<kbd>`</kbd>), type <code>julia</code> to get a REPL, then:</p>
+<pre><code>import Pluto
+Pluto.run()</code></pre>
+<p>Leave that terminal alone: it is now the Pluto server, and closing it closes Pluto. A browser tab opens on the welcome page. Download <code>week01_julia_basics.jl</code> from Moodle or the course repository into your <code>ec991</code> folder, paste its full path into the <em>Open a notebook</em> box and click <em>Open</em>. The first time it opens, Pluto installs Plots and PlutoUI inside the notebook's own environment.</p>
+<figure><img src="pluto_welcome.png" alt="Pluto's welcome page, with a box labelled Open a notebook that takes a path or URL" width="1280" height="800"><figcaption>Pluto's welcome page. Paste the notebook's path into the box under <em>Open a notebook</em>.</figcaption></figure>
+<div class="callout warn">
+  <span class="tag">Do not run the notebook as a script</span>
+  <p>The notebook is a <code>.jl</code> file, so VS Code will happily run it with <kbd>Ctrl</kbd>+<kbd>F5</kbd> or <kbd>Shift</kbd>+<kbd>Enter</kbd>. Outside Pluto that stops with <code>Package Plots not found in current path</code>: a script looks for packages in your active environment, and only Pluto installs a notebook's packages for you. Open it through Pluto as above. If you do want to run it as a script, first type <code>] add Plots PlutoUI</code> in that environment.</p>
+</div>
+
+<p>Three rules that trip up everyone the first time:</p>
+<ol>
+  <li><strong>One definition per cell.</strong> A variable or function is defined in exactly one cell. To change it, edit that cell; do not define it again below.</li>
+  <li><strong>Several lines in one cell need a wrapper.</strong> Use <code>begin ... end</code> when other cells should see the results, and <code>let ... end</code> for scratch work that stays local.</li>
+  <li><strong>Packages install themselves.</strong> Write <code>using Plots</code> and Pluto adds it to the notebook's environment, recorded inside the <code>.jl</code> file, so your notebook is reproducible by anyone who opens it.</li>
+</ol>
+<figure class="diagram" aria-label="Diagram of Pluto reactivity">
+<svg viewBox="0 0 640 170" role="img">
+<rect x="20" y="20" width="180" height="50" rx="6" class="accbox"/>
+<text x="110" y="42" text-anchor="middle" class="mono">β = 0.96</text>
+<text x="110" y="60" text-anchor="middle" class="acctext small">you edit this cell</text>
+<rect x="250" y="20" width="200" height="50" rx="6" class="box"/>
+<text x="350" y="42" text-anchor="middle" class="mono">v = sum(β^t for t in 0:10)</text>
+<text x="350" y="60" text-anchor="middle" class="muted small">re-runs by itself</text>
+<rect x="490" y="20" width="130" height="50" rx="6" class="box"/>
+<text x="555" y="42" text-anchor="middle" class="mono">plot(…, v)</text>
+<text x="555" y="60" text-anchor="middle" class="muted small">re-draws by itself</text>
+<rect x="250" y="100" width="200" height="50" rx="6" class="box"/>
+<text x="350" y="122" text-anchor="middle" class="mono">u(c) = c^(1-γ)/(1-γ)</text>
+<text x="350" y="140" text-anchor="middle" class="muted small">does not depend on β: untouched</text>
+<path d="M200 45 L 248 45" class="accarrow"/>
+<path d="M450 45 L 488 45" class="accarrow"/>
+</svg>
+<figcaption>Reactivity. Pluto tracks which cells use which names and re-runs exactly the dependents, in the right order.</figcaption>
+</figure>
+<figure><img src="pluto_notebook.png" alt="The week 1 notebook open in Pluto: a title, explanatory text, and code cells showing their results above the code" width="1280" height="900"><figcaption>The notebook in Pluto. Text cells show rendered text; a code cell shows its result just above the code.</figcaption></figure>
+
+<div class="tbl"><table>
+<tr><th>Keys</th><th>What it does</th></tr>
+<tr><td><kbd>Shift</kbd>+<kbd>Enter</kbd></td><td>Run the cell</td></tr>
+<tr><td><kbd>Ctrl</kbd>+<kbd>Enter</kbd></td><td>Run the cell and add a new one below</td></tr>
+<tr><td><kbd>Ctrl</kbd>+<kbd>S</kbd></td><td>Run all changed cells (Pluto saves continuously anyway)</td></tr>
+<tr><td>Eye icon (left of a cell)</td><td>Hide or show the code, useful for text cells</td></tr>
+<tr><td>Export (top right)</td><td>Save as HTML or PDF, or copy the <code>.jl</code> file</td></tr>
+</table></div>
+
+<p>A Pluto notebook is a plain <code>.jl</code> file, so it lives happily in Git and can even be run as a script. VS Code also runs Jupyter notebooks with a Julia kernel if you prefer that format; the course material is in Pluto, but the code is the same.</p>
+
+<!-- ============================================================ -->
+<h2 id="basics"><span class="num">PART 8</span>Julia basics for week 2</h2>
+
+<p>The notebook <code>week01_julia_basics.jl</code> is the core of this tutorial. It covers exactly what the week 2 lab needs, in eight short sections, each ending with an exercise and a check cell that turns green when you have it right:</p>
+<ol>
+  <li>Numbers, variables and Greek letters</li>
+  <li>Functions, including keyword arguments</li>
+  <li>Arrays, ranges, 1-based indexing, matrices</li>
+  <li>Broadcasting with the dot: <code>u.(a)</code></li>
+  <li>Loops (including <code>for t in T:-1:1</code>), <code>while</code> with a tolerance, comprehensions, the ternary, <code>maximum</code> and <code>argmax</code></li>
+  <li>Packages and plotting</li>
+  <li>Interactivity with a slider</li>
+  <li>Two habits: time your code, test against a closed form</li>
+</ol>
+<p>Exercise 5 has you compute a present value with a loop and a running total, then check it against the one-line version. When all three check cells are green, you are ready for the week 2 lab.</p>
+<figure><img src="pluto_exercise.png" alt="An exercise cell with the placeholder missing, followed by a check cell showing a red cross and the message Not yet" width="760" height="170"><figcaption>What an exercise looks like before you solve it. Replace <code>missing</code> with your answer and the cell below turns green.</figcaption></figure>
+
+<h3>Julia and Python side by side</h3>
+<p>For those who know Python (NumPy), or who plan to work in it, here is the same operation in both. A file <code>week01_python_basics.py</code> with the notebook's content in Python is on Moodle and in the course repository. The differences that matter: Julia indexes from 1 and includes the end of a range; Python indexes from 0 and excludes it. Julia broadcasts with a dot; NumPy broadcasts automatically.</p>
+
+<div class="tbl"><table class="compare">
+<tr><th>Task</th><th>Julia</th><th>Python / NumPy</th></tr>
+<tr><td>Grid of 7 points</td><td><code>a = range(0, 3, length=7)</code></td><td><code>a = np.linspace(0, 3, 7)</code></td></tr>
+<tr><td>First, last element</td><td><code>a[1], a[end]</code></td><td><code>a[0], a[-1]</code></td></tr>
+<tr><td>CRRA utility</td><td><code>u(c) = c^(1-γ)/(1-γ)</code></td><td><code>def u(c): return c**(1-g)/(1-g)</code></td></tr>
+<tr><td>Apply to a grid</td><td><code>u.(a .+ 1)</code></td><td><code>u(a + 1)</code></td></tr>
+<tr><td>Backward loop</td><td><code>for t in T:-1:1</code></td><td><code>for t in range(T, 0, -1):</code></td></tr>
+<tr><td>Infeasible choice</td><td><code>c &gt; 0 ? u(c) : -Inf</code></td><td><code>u(c) if c &gt; 0 else -np.inf</code></td></tr>
+<tr><td>Max and its index</td><td><code>maximum(v), argmax(v)</code></td><td><code>v.max(), v.argmax()</code></td></tr>
+<tr><td>Zero matrix</td><td><code>zeros(n, T+1)</code></td><td><code>np.zeros((n, T+1))</code></td></tr>
+<tr><td>Comprehension</td><td><code>[f(x) for x in a]</code></td><td><code>[f(x) for x in a]</code></td></tr>
+<tr><td>Plot</td><td><code>plot(a, u.(a))</code></td><td><code>plt.plot(a, u(a))</code></td></tr>
+<tr><td>Time it</td><td><code>@time f(x)</code></td><td><code>%timeit f(x)</code> (in Jupyter)</td></tr>
+</table></div>
+
+<!-- ============================================================ -->
+<h2 id="agent"><span class="num">PART 9</span>An AI coding agent: opencode</h2>
+
+<p>An <strong>agent</strong> is a language model wrapped in a loop that can read your files, edit them, and run commands, showing you the result each time. Four words help keep that straight. The <em>model</em> is text in, text out, with no memory and no access to your disk. The <em>harness</em> is the programme around it that builds the context, runs the tools and shows you what happened; opencode is a harness. <em>Tools</em> are the actions it can take: read a file, write a file, run a command. <em>Skills</em> or instruction files (an <code>AGENTS.md</code> in your project) encode your own judgement so you do not have to repeat it.</p>
+
+<figure class="diagram" aria-label="Diagram of the agent loop">
+<svg viewBox="0 0 680 230" role="img">
+<rect x="20" y="80" width="110" height="56" rx="6" class="accbox"/>
+<text x="75" y="104" text-anchor="middle">You</text>
+<text x="75" y="122" text-anchor="middle" class="muted small">ask, then verify</text>
+<rect x="200" y="80" width="170" height="56" rx="6" class="box"/>
+<text x="285" y="104" text-anchor="middle">Harness</text>
+<text x="285" y="122" text-anchor="middle" class="muted small">opencode: builds context, runs tools</text>
+<rect x="440" y="14" width="150" height="50" rx="6" class="box"/>
+<text x="515" y="36" text-anchor="middle">Model</text>
+<text x="515" y="53" text-anchor="middle" class="muted small">text in, text out</text>
+<rect x="440" y="100" width="150" height="50" rx="6" class="box"/>
+<text x="515" y="122" text-anchor="middle">Tools</text>
+<text x="515" y="139" text-anchor="middle" class="muted small">read, edit, run a command</text>
+<rect x="440" y="170" width="150" height="46" rx="6" class="box"/>
+<text x="515" y="190" text-anchor="middle">Your files</text>
+<text x="515" y="206" text-anchor="middle" class="mono muted small">ec991-work/, git</text>
+<path d="M130 108 L 198 108" class="arrow"/>
+<text x="164" y="100" text-anchor="middle" class="small muted">request</text>
+<path d="M370 100 C 400 100, 400 39, 438 39" class="arrow"/>
+<path d="M438 50 C 405 50, 405 112, 372 112" class="arrow"/>
+<text x="404" y="30" text-anchor="middle" class="small muted">prompt</text>
+<text x="404" y="90" text-anchor="middle" class="small muted">next step</text>
+<path d="M370 120 L 438 120" class="arrow"/>
+<path d="M515 150 L 515 168" class="arrow"/>
+<path d="M440 193 L 75 193 L 75 138" class="accarrow"/>
+<text x="250" y="186" text-anchor="middle" class="mono small acctext">git diff, run it, then commit</text>
+<text x="285" y="160" text-anchor="middle" class="muted small">AGENTS.md is read by the harness at the start of every session</text>
+</svg>
+<figcaption>The loop you supervise. The model never touches your disk; the harness does, through tools, and Git shows you what it did.</figcaption>
+</figure>
+<p>We use <a href="https://opencode.ai">opencode</a>: open source, runs in the terminal or inside VS Code, and works with many model providers, including free ones. If you already use Claude Code, Codex, Cursor or Copilot Chat, you may keep using it; the habits below are the same.</p>
+
+<h3>Install</h3>
+<div class="os" data-os-group>
+  <div class="os-tabs" role="tablist">
+    <button role="tab" data-os="mac" aria-selected="true">macOS</button>
+    <button role="tab" data-os="win" aria-selected="false">Windows</button>
+    <button role="tab" data-os="linux" aria-selected="false">Linux</button>
+  </div>
+  <div class="os-pane active" data-os="mac">
+<pre><code>curl -fsSL https://opencode.ai/install | bash
+opencode --version</code></pre>
+    <p>Homebrew: <code>brew install anomalyco/tap/opencode</code>.</p>
+  </div>
+  <div class="os-pane" data-os="win">
+    <p>The opencode documentation recommends running it inside WSL (Windows Subsystem for Linux): in an administrator PowerShell run <code>wsl --install</code>, restart, open the Ubuntu app, then use the Linux command. If you would rather stay native, any of these works from PowerShell:</p>
+<pre><code>npm install -g opencode-ai      <span class="c"># needs Node.js from nodejs.org</span>
+scoop install opencode          <span class="c"># or: choco install opencode</span>
+opencode --version</code></pre>
+  </div>
+  <div class="os-pane" data-os="linux">
+<pre><code>curl -fsSL https://opencode.ai/install | bash
+opencode --version</code></pre>
+  </div>
+</div>
+
+<h3>Connect a model</h3>
+<p>opencode needs a provider. Start it in any folder with <code>opencode</code>, type <code>/connect</code>, and pick one. Then <code>/models</code> to choose a model. Options, best first for a student budget:</p>
+<div class="tbl"><table>
+<tr><th>Provider</th><th>Cost</th><th>How</th></tr>
+<tr><td>GitHub Copilot</td><td>Free with the Student Developer Pack</td><td><code>/connect</code> › GitHub Copilot › open github.com/login/device and enter the code. Gives access to several strong models. Some models need a higher plan.</td></tr>
+<tr><td>OpenRouter</td><td>Free models available (filter by price = free; names end in <code>:free</code>)</td><td>Create a key at openrouter.ai/settings/keys, then <code>/connect</code> › OpenRouter › paste key</td></tr>
+<tr><td>Google Gemini</td><td>Free tier, rate limited, no card</td><td>Key from aistudio.google.com, then <code>/connect</code> › Google</td></tr>
+<tr><td>Anthropic, OpenAI</td><td>Pay per use</td><td><code>/connect</code> › provider › paste an API key</td></tr>
+</table></div>
+
+<div class="callout warn">
+  <span class="tag">Keys are secrets</span>
+  <p>An API key is a password that spends money. opencode stores it outside your project, which is right. Never paste a key into a file you commit, a chat, or a notebook. If one leaks, revoke it on the provider's site immediately.</p>
+</div>
+
+<p>Inside VS Code: run <code>opencode</code> once in the integrated terminal and the extension installs itself. Afterwards <kbd>⌘</kbd>+<kbd>Esc</kbd> (Mac) or <kbd>Ctrl</kbd>+<kbd>Esc</kbd> opens it in a split terminal, with your current file and selection shared as context.</p>
+
+<h3>Your first supervised session</h3>
+<p>Do this in your <code>ec991-work</code> repository, with a clean Git state (<code>git status</code> shows nothing to commit). Git is what makes supervision possible: every change the agent makes is a diff you can read.</p>
+<ol>
+  <li>Start <code>opencode</code> in the folder. Press <kbd>Tab</kbd> until the footer says <strong>Plan</strong>. In plan mode the agent proposes changes and makes none.</li>
+  <li>Type a small, checkable request:
+<pre><code>In hello.jl, add a function pv(y; β=0.96, T=10) that returns the present
+value of a constant income y received in periods 0 to T. Add a check that
+pv(1.0; T=10_000) is within 1e-6 of 1/(1-β), and print the result.</code></pre></li>
+  <li>Read the plan. Does it do only what you asked? Press <kbd>Tab</kbd> to switch to <strong>Build</strong> and tell it to go ahead.</li>
+  <li><strong>Verify.</strong> In another terminal: <code>git diff</code>. Read every changed line. Then <code>julia hello.jl</code>: does the check pass? If a line is unclear, ask the agent to explain that specific line, and do not accept the explanation if it does not match what the code does.</li>
+  <li>Commit only after you have read it: <code>git commit -am "agent: add pv() with closed-form check, reviewed"</code>. If the diff is wrong, say so to the agent and iterate, or <code>/undo</code>.</li>
+  <li>Type <code>/init</code>. The agent reads your repository and writes an <code>AGENTS.md</code> file describing it. Open the file, correct anything wrong, and add one line of your own: <em>"Every numerical function must come with a check against a closed form or a known limit."</em> From now on every session starts by reading that file. Commit it.</li>
+</ol>
+
+<div class="callout">
+  <span class="tag">Course policy on AI tools</span>
+  <p>You may use AI assistants for the problem sets and in the labs. One condition: be able to explain and defend every line you hand in. The problem sets assess your understanding of the models and methods, not the agent's. Code you cannot explain when asked in a tutorial is treated as not your work.</p>
+</div>
+
+<p>Two cautions from experience. Agents produce absolute paths, so "file not found" errors are often a relative-versus-absolute confusion. And <code>rm</code> is permanent: check any command that deletes before you let an agent run it. The general rule is the one Oswald teaches: <em>agent drafts, you verify</em>.</p>
+
+<!-- ============================================================ -->
+<h2 id="session"><span class="num">PART 10</span>How the session runs</h2>
+
+<p>The tutorial opens with a short talk on why these tools are here: Julia, VS Code, Git, Pluto and an AI coding agent, one reason each. After that you work through this page <strong>in order</strong>, on your own laptop and at your own pace, and I walk around to unblock anyone who is stuck. Each part ends with something you can see working:</p>
+<ol>
+  <li><strong>Terminal and Git</strong> (Part 1): <code>git --version</code> prints a version.</li>
+  <li><strong>Julia</strong> (Part 2): <code>1 + 1</code> in the REPL, and <code>juliaup status</code> shows a version.</li>
+  <li><strong>VS Code and a project</strong> (Parts 3 and 4): <kbd>Shift</kbd>+<kbd>Enter</kbd> runs a line; <code>Project.toml</code> appears in your folder.</li>
+  <li><strong>Smoke test</strong> (Part 5): <code>week01_check.jl</code> prints seven <code>PASS</code> lines.</li>
+  <li><strong>Git and GitHub</strong> (Part 6): your first commit is visible on github.com.</li>
+  <li><strong>Pluto and Julia basics</strong> (Parts 7 and 8): exercises 2, 4 and 5 in the notebook turn green.</li>
+  <li><strong>opencode</strong> (Part 9): one agent change reviewed with <code>git diff</code>, run, and committed; <code>AGENTS.md</code> exists.</li>
+</ol>
+<p>Stuck? Check the troubleshooting table in Part 11 first, then ask. Finished early? Do sections 6 to 8 of the notebook, then the Julia and Python table in Part 8.</p>
+<p>For week 2: finish the notebook, including sections 6 to 8, and pull the course repository (<a href="https://github.com/Aseem-Patel/EC991">github.com/Aseem-Patel/EC991</a>).</p>
+
+<!-- ============================================================ -->
+<h2 id="checklist"><span class="num">PART 11</span>Checklist and troubleshooting</h2>
+
+<p>Tick these off. The page remembers your ticks on this device.</p>
+<ul class="check" id="checklist-items">
+  <li><input type="checkbox" id="ck1"><label for="ck1"><code>git --version</code> and <code>juliaup status</code> both print a version</label></li>
+  <li><input type="checkbox" id="ck2"><label for="ck2">VS Code runs a line of Julia with <kbd>Shift</kbd>+<kbd>Enter</kbd></label></li>
+  <li><input type="checkbox" id="ck3"><label for="ck3">The smoke test <code>week01_check.jl</code> passes every line</label></li>
+  <li><input type="checkbox" id="ck4"><label for="ck4">GitHub account created, Student Developer Pack applied for</label></li>
+  <li><input type="checkbox" id="ck5"><label for="ck5"><code>ec991-work</code> exists on GitHub with at least two commits</label></li>
+  <li><input type="checkbox" id="ck6"><label for="ck6">Course repository cloned (github.com/Aseem-Patel/EC991)</label></li>
+  <li><input type="checkbox" id="ck7"><label for="ck7">Pluto opens <code>week01_julia_basics.jl</code> and exercises 2, 4 and 5 are green</label></li>
+  <li><input type="checkbox" id="ck8"><label for="ck8">opencode installed and connected to a provider</label></li>
+  <li><input type="checkbox" id="ck9"><label for="ck9">One agent change reviewed with <code>git diff</code>, run, and committed</label></li>
+  <li><input type="checkbox" id="ck10"><label for="ck10"><code>AGENTS.md</code> in your repository, with your own rule added</label></li>
+</ul>
+<p class="progress" id="progress"></p>
+
+<h3>Common problems</h3>
+<div class="tbl"><table>
+<tr><th>Symptom</th><th>Cause and fix</th></tr>
+<tr><td><code>julia</code>: command not found</td><td>The terminal was open before the install. Close it and open a new one.</td></tr>
+<tr><td><code>Package Plots not found</code></td><td>Wrong environment active. In the REPL: <code>] activate .</code> then <code>] instantiate</code> or <code>] add Plots</code>.</td></tr>
+<tr><td><code>Package Plots not found</code> when running the notebook</td><td>You ran the <code>.jl</code> notebook as a script. Open it through Pluto (Part 7), or <code>] add Plots PlutoUI</code> first.</td></tr>
+<tr><td>Prompt says <code>(@v1.12) pkg&gt;</code> but you expected your project</td><td>Run <code>activate .</code> from inside the project folder.</td></tr>
+<tr><td>Pluto: "Multiple definitions for x"</td><td>You defined the same name in two cells. Delete one.</td></tr>
+<tr><td>Pluto: "Multiple expressions in one cell"</td><td>Wrap the cell in <code>begin ... end</code> or <code>let ... end</code>.</td></tr>
+<tr><td>The first plot is slow</td><td>Normal. Julia compiles Plots on first use; the second plot is instant.</td></tr>
+<tr><td>Git refuses to commit</td><td>Set <code>user.name</code> and <code>user.email</code> (Part 1).</td></tr>
+<tr><td><code>git pull</code> reports a conflict</td><td>You edited a file the server also changed. Open it, choose <em>Accept Current</em> or <em>Accept Incoming</em> in VS Code, save, stage, commit.</td></tr>
+<tr><td>opencode says no provider configured</td><td>Run <code>/connect</code> again; check stored credentials with <code>opencode auth list</code> in the terminal.</td></tr>
+<tr><td>Windows: strange <code>^M</code> characters in diffs</td><td>Line endings. Run the two <code>core.autocrlf</code> and <code>core.eol</code> settings from Part 1.</td></tr>
+</table></div>
+
+<footer>
+  <p>EC991 Topics in Macroeconomics, University of Essex, Autumn 2026. Written by Aseem Patel. The Julia, VS Code, environment and Git sections follow the <a href="https://julia.quantecon.org/getting_started_julia/getting_started.html">QuantEcon Julia lectures</a> by Jesse Perla, Thomas Sargent and John Stachurski (setup, <a href="https://julia.quantecon.org/software_engineering/tools_editors.html">tools and editors</a>, <a href="https://julia.quantecon.org/software_engineering/version_control.html">version control</a>). The AI-agent section adapts the prework and kickoff session of Florian Oswald's <a href="https://floswald.github.io/AgenticProgramming/">Intro to Programming</a> course. Pluto: <a href="https://plutojl.org">plutojl.org</a>. opencode: <a href="https://opencode.ai/docs">opencode.ai/docs</a>. Tool versions and provider offers change; where this page and the official documentation disagree, the documentation is right.</p>
+</footer>
+</div>
+
+<script>
+(function () {
+  // OS tabs: one choice applies to every tab group, remembered per device.
+  var groups = document.querySelectorAll('[data-os-group]');
+  function setOS(os) {
+    groups.forEach(function (g) {
+      g.querySelectorAll('[role=tab]').forEach(function (b) { b.setAttribute('aria-selected', b.dataset.os === os ? 'true' : 'false'); });
+      g.querySelectorAll('.os-pane').forEach(function (p) { p.classList.toggle('active', p.dataset.os === os); });
+    });
+    try { localStorage.setItem('ec991-os', os); } catch (e) {}
+  }
+  groups.forEach(function (g) {
+    g.querySelectorAll('[role=tab]').forEach(function (b) { b.addEventListener('click', function () { setOS(b.dataset.os); }); });
+  });
+  var saved = null;
+  try { saved = localStorage.getItem('ec991-os'); } catch (e) {}
+  if (!saved) {
+    var ua = navigator.userAgent || '';
+    saved = /Windows/.test(ua) ? 'win' : /Linux/.test(ua) && !/Android/.test(ua) ? 'linux' : 'mac';
+  }
+  setOS(saved);
+
+  // Copy buttons on code blocks.
+  document.querySelectorAll('pre').forEach(function (pre) {
+    var btn = document.createElement('button');
+    btn.className = 'copy'; btn.type = 'button'; btn.textContent = 'Copy';
+    btn.addEventListener('click', function () {
+      var text = pre.querySelector('code').innerText.replace(/[ \t]+#.*$/gm, '').replace(/\n{2,}/g, '\n').trim();
+      var done = function () { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = 'Copy'; }, 1200); };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, function () { selectText(pre); });
+      } else { selectText(pre); }
+    });
+    pre.appendChild(btn);
+  });
+  function selectText(el) {
+    var r = document.createRange(); r.selectNodeContents(el.querySelector('code'));
+    var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+  }
+
+  // Checklist persistence.
+  var boxes = document.querySelectorAll('#checklist-items input');
+  var prog = document.getElementById('progress');
+  function update() {
+    var n = 0; boxes.forEach(function (b) { if (b.checked) n++; });
+    prog.textContent = n === boxes.length ? 'All ' + n + ' done. See you in the week 2 lab.' : n + ' of ' + boxes.length + ' done.';
+  }
+  boxes.forEach(function (b) {
+    try { b.checked = localStorage.getItem('ec991-' + b.id) === '1'; } catch (e) {}
+    b.addEventListener('change', function () {
+      try { localStorage.setItem('ec991-' + b.id, b.checked ? '1' : '0'); } catch (e) {}
+      update();
+    });
+  });
+  update();
+})();
+</script>
