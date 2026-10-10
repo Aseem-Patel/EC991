@@ -15,7 +15,7 @@ This repository holds the course materials: lecture slides, lab slides, Julia no
 
 | Week | Topic | Lecture | Lab |
 | --- | --- | --- | --- |
-| 1 | Why heterogeneity matters; your computing toolkit | [Slides](week01/lecture/week01_motivation.pdf) | [Slides](week01/lab/week01_tutorial_slides.pdf) · [Setup guide](https://aseem-patel.github.io/EC991/setup/week01_tutorial.html) · [Pluto notebook](week01/lab/week01_julia_basics.jl) · [Python version](week01/lab/week01_python_basics.py) |
+| 1 | Introduction and Computing Toolkit | [Slides](week01/lecture/week01_motivation.pdf) | [Slides](week01/lab/week01_tutorial_slides.pdf) · [Setup guide](https://aseem-patel.github.io/EC991/setup/week01_tutorial.html) · [Pluto notebook](week01/lab/week01_julia_basics.jl) · [Python version](week01/lab/week01_python_basics.py) |
 
 Later weeks appear here as they are released.
 
@@ -58,6 +58,10 @@ You may use AI assistants for the problem sets and in the labs, provided you can
 ## Questions
 
 For problems with setup or with the code in this repository, open an [issue](https://github.com/Aseem-Patel/EC991/issues). For anything about your own work, email me or come to the support hours.
+
+## Acknowledgements
+
+The content of this course builds on the lecture notes of Tomás R. Martinez. All errors are mine.
 
 ## Licence
 
