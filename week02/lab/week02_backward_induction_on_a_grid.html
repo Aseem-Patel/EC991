@@ -1,0 +1,526 @@
+<title>Backward Induction on a Grid</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@500;600&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: same worksheet as "VFI on a Grid": one reading column, wide worksheet bands for the date-by-date tables and charts. */
+:root {
+  --bg: #f6f7f9;
+  --paper: #ffffff;
+  --fg: #1c2230;
+  --muted: #5b6474;
+  --rule: #d9dde5;
+  --blue: #0000b2;
+  --blue-soft: #e4e6fb;
+  --verm: #cc092f;
+  --verm-soft: #fbe6ea;
+  --teal: #007a80;
+  --teal-soft: #dff1f1;
+  --grey-cell: #eef0f4;
+  --display: "Spectral", Georgia, "Times New Roman", serif;
+  --body: "Source Sans 3", "Helvetica Neue", Arial, sans-serif;
+  --mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #14181f; --paper: #1c2129; --fg: #e8ebf1; --muted: #a2abbb; --rule: #333a46;
+    --blue: #8b93ff; --blue-soft: #262a4a; --verm: #ff6f87; --verm-soft: #4a2230;
+    --teal: #5fd0d4; --teal-soft: #173638; --grey-cell: #242a34; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #14181f; --paper: #1c2129; --fg: #e8ebf1; --muted: #a2abbb; --rule: #333a46;
+  --blue: #8b93ff; --blue-soft: #262a4a; --verm: #ff6f87; --verm-soft: #4a2230;
+  --teal: #5fd0d4; --teal-soft: #173638; --grey-cell: #242a34; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 17px; line-height: 1.5; padding-block: 32px 64px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.wrap { max-width: 1040px; margin: 0 auto; }
+.prose { max-width: 680px; }
+h1 { font-family: var(--display); font-weight: 600; font-size: clamp(30px, 4.5vw, 42px); line-height: 1.1; margin: 0 0 12px; text-wrap: balance; }
+h2 { font-family: var(--display); font-weight: 600; font-size: 26px; line-height: 1.2; margin: 48px 0 10px; text-wrap: balance; }
+h3 { font-family: var(--body); font-weight: 600; font-size: 17px; margin: 22px 0 6px; }
+p { margin: 0 0 12px; }
+.eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--verm); margin-bottom: 6px; }
+.k { color: var(--blue); font-weight: 600; }
+code, .mono { font-family: var(--mono); font-size: 0.88em; }
+mjx-container { color: var(--fg); }
+.eq { margin: 10px 0 14px; overflow-x: auto; }
+.small { font-size: 14px; color: var(--muted); }
+ul, ol { padding-left: 22px; margin: 6px 0 12px; }
+li { margin-bottom: 6px; }
+
+.sheet { background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; padding: 18px; margin: 18px 0; min-width: 0; }
+.controls { display: flex; flex-wrap: wrap; gap: 14px 22px; align-items: flex-end; padding-bottom: 14px; border-bottom: 1px solid var(--rule); margin-bottom: 14px; }
+.ctl { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.ctl label, .ctl .lbl { font-size: 13px; color: var(--muted); letter-spacing: 0.02em; }
+.seg { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--rule); border-radius: 4px; overflow: hidden; }
+.seg button { background: transparent; color: var(--fg); border: 0; padding: 6px 12px; font: inherit; font-size: 15px; cursor: pointer; }
+.seg button + button { border-left: 1px solid var(--rule); }
+.seg button[aria-pressed="true"] { background: var(--blue-soft); color: var(--blue); font-weight: 600; }
+input[type=range] { width: 150px; accent-color: var(--blue); }
+.btnrow { display: flex; flex-wrap: wrap; gap: 8px; }
+.btn { background: var(--blue); color: var(--paper); border: 0; border-radius: 4px; padding: 8px 14px; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; }
+.btn.secondary { background: transparent; color: var(--blue); border: 1px solid var(--blue); }
+.btn:disabled { opacity: 0.45; cursor: default; }
+.btn:focus-visible, .seg button:focus-visible, td.cell:focus-visible, input:focus-visible { outline: 2px solid var(--verm); outline-offset: 2px; }
+.status { display: flex; flex-wrap: wrap; gap: 10px 26px; font-family: var(--mono); font-size: 14px; margin: 0 0 12px; font-variant-numeric: tabular-nums; }
+.status span b { color: var(--blue); font-weight: 500; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 13px; background: var(--verm-soft); color: var(--verm); font-family: var(--body); font-weight: 600; }
+.badge.ok { background: var(--blue-soft); color: var(--blue); }
+
+/* tables */
+.tablewrap { overflow-x: auto; margin: 8px 0 4px; }
+table.bell { border-collapse: separate; border-spacing: 2px; font-family: var(--mono); font-size: 13px; font-variant-numeric: tabular-nums; }
+table.bell th, table.bell td { padding: 6px 8px; text-align: right; white-space: nowrap; }
+table.bell th { font-weight: 500; color: var(--muted); }
+table.bell th.lab { text-align: left; font-family: var(--body); font-size: 13px; }
+table.bell tr.input th { color: var(--fg); background: var(--blue-soft); border-radius: 3px; }
+table.bell tr.input th.lab { background: transparent; color: var(--blue); font-weight: 600; }
+table.bell td.cell { background: var(--grey-cell); border-radius: 3px; cursor: pointer; }
+table.bell td.cell.inf { color: var(--muted); background: transparent; border: 1px dashed var(--rule); }
+table.bell td.cell.best { background: var(--verm-soft); color: var(--verm); font-weight: 500; }
+table.bell td.cell.sel { outline: 2px solid var(--blue); outline-offset: -1px; }
+table.bell td.out { background: var(--verm-soft); color: var(--verm); font-weight: 500; border-radius: 3px; }
+table.bell th.state { text-align: right; color: var(--fg); }
+table.bell th.gap, table.bell td.gap { width: 14px; padding: 0; background: transparent; }
+table.bell td.empty { color: var(--muted); background: transparent; border: 1px dashed var(--rule); border-radius: 3px; text-align: center; }
+table.bell td.done { background: var(--grey-cell); border-radius: 3px; }
+table.bell td.term { background: var(--teal-soft); color: var(--teal); border-radius: 3px; }
+table.bell td.now { background: var(--verm-soft); color: var(--verm); font-weight: 500; border-radius: 3px; }
+table.bell td.feed { background: var(--blue-soft); color: var(--blue); border-radius: 3px; }
+table.bell th.colnow { color: var(--verm); font-weight: 600; }
+table.bell th.colfeed { color: var(--blue); font-weight: 600; }
+table.bell td.path { outline: 2px solid var(--verm); outline-offset: -2px; font-weight: 600; }
+.decomp { margin-top: 12px; padding: 12px 14px; border-left: 3px solid var(--blue); background: var(--blue-soft); border-radius: 0 4px 4px 0; font-size: 15px; }
+.decomp .mono { display: block; margin-top: 6px; line-height: 1.7; overflow-x: auto; white-space: nowrap; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 13px; color: var(--muted); margin-top: 10px; }
+.legend i { display: inline-block; width: 12px; height: 12px; border-radius: 2px; vertical-align: -2px; margin-right: 6px; }
+
+/* charts */
+.charts { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 6px; }
+@media (max-width: 720px) { .charts { grid-template-columns: 1fr; } }
+.chart { min-width: 0; }
+.chart h3 { margin: 0 0 4px; font-size: 15px; }
+.chart > svg { width: 100%; height: auto; display: block; }
+.chart > svg text { font-family: var(--mono); font-size: 10px; fill: var(--muted); }
+.chart .grid { stroke: var(--rule); stroke-width: 1; }
+.chart .ax { stroke: var(--muted); stroke-width: 1; }
+.chart .l-t { stroke: var(--blue); stroke-width: 2; fill: none; }
+.chart .l-now { stroke: var(--verm); stroke-width: 2.4; fill: none; }
+.chart .l-ex { stroke: var(--teal); stroke-width: 1.6; stroke-dasharray: 5 3; fill: none; }
+.chart .dot { fill: var(--verm); }
+.chart .dot-b { fill: var(--blue); }
+.chart .lab-t { font-size: 10px; }
+.chartlegend { font-size: 13px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 4px; }
+.chartlegend i { display: inline-block; width: 18px; height: 0; border-top: 2px solid; vertical-align: middle; margin-right: 5px; }
+.steps { padding-left: 22px; }
+.steps li { margin-bottom: 8px; }
+pre.code { background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; padding: 14px 16px; overflow-x: auto; font-family: var(--mono); font-size: 13.5px; line-height: 1.55; }
+.foot { color: var(--muted); font-size: 14px; margin-top: 48px; border-top: 1px solid var(--rule); padding-top: 12px; }
+@media (prefers-reduced-motion: no-preference) { table.bell td { transition: background 0.15s; } }
+</style>
+
+<script>
+window.MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] }, svg: { fontCache: 'global' } };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.js"></script>
+
+<div class="wrap">
+<div class="prose">
+<div class="eyebrow">EC991 week 2 lab, finite horizon: slides 14 to 16</div>
+<h1>Backward induction, one period at a time</h1>
+
+<p>The household now lives for $T$ periods and income $y_t$ can change with the date. The problem looks different at every date, because the horizon gets shorter, so the value function carries a date:</p>
+<div class="eq">$$V_t(a) \;=\; \max_{a' \in \mathcal{A}} \; u\big(R a + y_t - a'\big) + \beta\, V_{t+1}(a'), \qquad t = T, T-1, \dots, 1,$$</div><div class=\"eq\">$$V_{T+1}(a) = 0 .$$</div>
+<p>The right-hand side is the same table as in VFI on a grid. One thing changes. In VFI the input row is a <span class="k">guess</span> that we update until it stops changing. Here the input row is $V_{t+1}$, which we have <span class="k">already computed exactly</span>. At $t = T$ it is the terminal condition, zero. So each table is filled in once, and after $T$ tables we are done. There is no convergence check.</p>
+</div>
+
+<!-- ============ WORKSHEET ============ -->
+<h2 id="sheet">The worksheet</h2>
+<div class="prose">
+<p>Press "Go back one period" to fill in the table for the next date, starting from $t = T$. The value matrix below the table fills from right to left. Click any cell of the table to see how its number was built.</p>
+</div>
+
+<div class="sheet">
+  <div class="controls">
+    <div class="ctl"><label for="na">Grid points $n_a$: <b id="naLabel">7</b></label><input type="range" id="na" min="4" max="10" step="1" value="7"></div>
+    <div class="ctl"><label for="Th">Horizon $T$: <b id="TLabel">4</b></label><input type="range" id="Th" min="2" max="8" step="1" value="4"></div>
+    <div class="ctl"><span class="lbl">Problem</span>
+      <div class="seg" role="group" aria-label="Problem">
+        <button id="pConst" aria-pressed="true">constant income</button>
+        <button id="pRetire" aria-pressed="false">income falls at $T$</button>
+        <button id="pCake" aria-pressed="false">cake eating</button>
+      </div></div>
+    <div class="ctl"><span class="lbl">&nbsp;</span>
+      <div class="btnrow">
+        <button class="btn" id="back">Go back one period</button>
+        <button class="btn secondary" id="all">Solve all periods</button>
+        <button class="btn secondary" id="reset">Reset to $t = T+1$</button>
+      </div></div>
+  </div>
+
+  <div class="status" id="status"></div>
+  <p class="small" id="params"></p>
+
+  <h3 id="tabTitle">The Bellman table at date t</h3>
+  <div class="tablewrap"><table class="bell" id="bell"></table></div>
+  <div class="legend">
+    <span><i style="background:var(--blue-soft)"></i>input row: $V_{t+1}(a'_k)$, already known</span>
+    <span><i style="background:var(--grey-cell)"></i>cell: $u(Ra_i + y_t - a'_k) + \beta V_{t+1}(a'_k)$</span>
+    <span><i style="background:var(--verm-soft)"></i>row maximum, and the output $V_t(a_i)$ it gives</span>
+    <span><i style="border:1px dashed var(--rule)"></i>infeasible: $c \le 0$</span>
+  </div>
+  <div class="decomp" id="decomp">Click a cell of the table to see its three ingredients.</div>
+
+  <h3>The value matrix $V_t(a_i)$, filled from the right</h3>
+  <div class="tablewrap"><table class="bell" id="vmat"></table></div>
+  <div class="legend">
+    <span><i style="background:var(--teal-soft)"></i>terminal condition $V_{T+1} = 0$</span>
+    <span><i style="background:var(--verm-soft)"></i>column just computed</span>
+    <span><i style="background:var(--blue-soft)"></i>column it was computed from</span>
+    <span><i style="border:1px dashed var(--rule)"></i>not yet computed</span>
+  </div>
+
+  <div class="charts">
+    <div class="chart">
+      <h3>Value functions $V_t(a)$ computed so far</h3>
+      <svg id="vchart" viewBox="0 0 480 260"></svg>
+      <div class="chartlegend"><span><i style="border-color:var(--verm)"></i>latest date</span><span><i style="border-color:var(--blue)"></i>later dates, fainter the closer to $T$</span></div>
+    </div>
+    <div class="chart">
+      <h3>Consumption policies $c_t(a)$ computed so far</h3>
+      <svg id="cchart" viewBox="0 0 480 260"></svg>
+      <div class="chartlegend"><span><i style="border-color:var(--verm)"></i>latest date</span><span><i style="border-color:var(--blue)"></i>later dates</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ POLICIES ============ -->
+<div class="prose">
+<h2 id="policy">The policy functions, one per date</h2>
+<p>Each table records, row by row, the column of its maximum. That gives a policy for every date, not one policy for all dates:</p>
+<div class="eq">$$k^*_t(i) = \arg\max_{k} \; u\big(R a_i + y_t - a_k\big) + \beta\, V_{t+1}(a_k),$$</div><div class=\"eq\">$$a'_t(a_i) = a_{k^*_t(i)}, \qquad c_t(a_i) = R a_i + y_t - a'_t(a_i).$$</div>
+<ol class="steps">
+<li><b>Store the index</b> $k^*_t(i)$ for every state and date: an $n_a \times T$ matrix, <code>pol[i, t]</code>.</li>
+<li><b>Turn indices into asset levels</b>: <code>apol = a[pol]</code>, again an $n_a \times T$ matrix.</li>
+<li><b>Consumption from the budget at each date</b>: $c_t(a_i) = R a_i + y_t - a'_t(a_i)$. Income now depends on $t$.</li>
+<li><b>Simulate forward</b> from a starting asset level: $i_{t+1} = k^*_t(i_t)$ for $t = 1, \dots, T$. Backward to solve, forward to simulate.</li>
+</ol>
+</div>
+
+<div class="sheet">
+  <div class="status" id="pstatus"></div>
+  <div class="tablewrap"><table class="bell" id="pmat"></table></div>
+  <div class="legend"><span>each cell: $a'_t(a_i)$ and, below it, $c_t(a_i)$</span><span><i style="border:2px solid var(--verm)"></i>the simulated path</span></div>
+
+  <h3>Simulate forward</h3>
+  <div class="controls" style="border:0; padding:0; margin:6px 0 10px">
+    <div class="ctl"><label for="a0">Starting assets $a_1$: <b id="a0Label"></b></label><input type="range" id="a0" min="1" max="7" step="1" value="7"></div>
+  </div>
+  <div class="tablewrap"><table class="bell" id="sim"></table></div>
+  <div class="charts" id="simcharts">
+    <div class="chart">
+      <h3>Assets $a_t$ along the path</h3>
+      <svg id="achart" viewBox="0 0 480 240"></svg>
+    </div>
+    <div class="chart">
+      <h3>Consumption $c_t$ along the path</h3>
+      <svg id="pchart" viewBox="0 0 480 240"></svg>
+      <div class="chartlegend" id="pleg"></div>
+    </div>
+  </div>
+</div>
+
+<div class="prose">
+<h2>The same thing as code</h2>
+<p>The inner double loop is the one from the infinite-horizon solver. Only the outer loop changes: it runs over dates instead of iterations, and it stops after $T$ passes. This is <code>solve_backward</code> in <code>src/backward.jl</code>.</p>
+<pre class="code">V = zeros(na, T + 1)                  # column T+1: terminal condition V_{T+1} = 0
+pol = zeros(Int, na, T)
+for t in T:-1:1                       # one table per date, from T back to 1
+    for i in 1:na                     # one row of the table
+        best, kbest = -Inf, 0
+        for k in 1:na                 # one cell in that row
+            c = R * a[i] + y[t] - a[k]
+            c &lt;= 0 &amp;&amp; continue
+            v = u(c) + beta * V[k, t + 1]   # the input row is V_{t+1}: known, not a guess
+            v &gt; best &amp;&amp; (best, kbest = v, k)
+        end
+        V[i, t], pol[i, t] = best, kbest
+    end
+end
+apol = a[pol]                         # a'_t(a_i)
+cpol = [y[t] + R * a[i] - apol[i, t] for i in 1:na, t in 1:T]   # c_t(a_i)</pre>
+<p>Compare it with the infinite-horizon loop:</p>
+<ul>
+<li><b>Input row.</b> VFI uses a guess $V_\ell$ that is wrong until convergence. Backward induction uses $V_{t+1}$, which is exact.</li>
+<li><b>Stopping rule.</b> VFI stops when $\max_i |V_\ell - V_{\ell-1}|$ is small. Backward induction stops after $T$ passes.</li>
+<li><b>Output.</b> VFI returns one $V$ and one policy. Backward induction returns a matrix of each, one column per date.</li>
+<li><b>The link.</b> With constant income and $V_{T+1} = 0$, the column $V_t$ is exactly the VFI iterate $V_{T+1-t}$ started from a guess of zero. Backward induction is VFI from zero, stopped after $T$ steps and kept column by column.</li>
+</ul>
+</div>
+
+<div class="foot">Companion to <span class="mono">week02_lab_deterministic_vfi.pdf</span> and the EC991Week2 package. The tables are computed live in this page with the same formulas as <span class="mono">src/backward.jl</span> and <span class="mono">src/checks.jl</span>.</div>
+</div>
+
+<script>
+(function () {
+  const PROBLEMS = {
+    const:  { beta: 1 / 1.05, R: 1.03, gamma: 2, phi: 0.02, amin: -0.02, amax: 3, inc: T => Array(T).fill(1), text: '$\\beta = 1/1.05$, $R = 1.03$, $\\gamma = 2$, $y_t = 1$ at every date, grid on $[-0.02, 3]$.' },
+    retire: { beta: 1 / 1.05, R: 1.03, gamma: 2, phi: 0.02, amin: -0.02, amax: 3, inc: T => Array.from({ length: T }, (_, t) => t === T - 1 ? 0.2 : 1), text: '$\\beta = 1/1.05$, $R = 1.03$, $\\gamma = 2$, $y_t = 1$ until $T-1$ and $y_T = 0.2$, grid on $[-0.02, 3]$. Watch the household save for the last period.' },
+    cake:   { beta: 0.95, R: 1, gamma: 1, phi: 0, amin: 0, amax: 1, inc: T => Array(T).fill(0), text: '$\\beta = 0.95$, $R = 1$, $u = \\log$, $y_t = 0$, grid on $[0, 1]$. The closed form is $c_t = \\frac{1-\\beta}{1-\\beta^{T-t+1}}\\, a_t$ (slide 16).' }
+  };
+  let prob = 'const', na = 7, T = 4, P, a = [], y = [], V = [], pol = [], cells = null, tcur = null, sel = null, i0 = 6;
+
+  const u = c => P.gamma === 1 ? Math.log(c) : (Math.pow(c, 1 - P.gamma) - 1) / (1 - P.gamma);
+  const linspace = (lo, hi, n) => Array.from({ length: n }, (_, i) => lo + (hi - lo) * i / (n - 1));
+  const fmt = (x, d = 3) => x === null || x === undefined ? '' : (x === -Infinity ? '−∞' : x.toFixed(d));
+
+  function table(t) {            // the Bellman table at date t (1-based), input V[t+1]
+    const Vin = V[t + 1], rows = [], V1 = [], p = [];
+    for (let i = 0; i < na; i++) {
+      const row = []; let best = -Infinity, kb = -1;
+      for (let k = 0; k < na; k++) {
+        const c = P.R * a[i] + y[t - 1] - a[k];
+        if (c <= 1e-12 || Vin[k] === -Infinity) { row.push(c <= 1e-12 ? null : -Infinity); continue; }
+        const v = u(c) + P.beta * Vin[k]; row.push(v);
+        if (v > best) { best = v; kb = k; }
+      }
+      rows.push(row); V1.push(best); p.push(kb);
+    }
+    return { rows, V1, pol: p };
+  }
+  function reset() {
+    P = PROBLEMS[prob]; a = linspace(P.amin, P.amax, na); y = P.inc(T);
+    V = Array(T + 2).fill(null); pol = Array(T + 1).fill(null);
+    V[T + 1] = a.map(() => 0); tcur = null; cells = null; sel = null;
+    const s = document.getElementById('a0'); s.max = na; i0 = Math.min(i0, na - 1); if (+s.value > na) s.value = na; i0 = +s.value - 1;
+    render();
+  }
+  function back() {
+    const t = tcur === null ? T : tcur - 1;
+    if (t < 1) return;
+    const r = table(t); V[t] = r.V1; pol[t] = r.pol; cells = r; tcur = t; sel = null;
+    render();
+  }
+  function all() { while (tcur === null || tcur > 1) back(); }
+
+  // ---------- rendering ----------
+  function typeset(els) {
+    if (!(window.MathJax && MathJax.typesetPromise)) return;
+    if (MathJax.typesetClear) MathJax.typesetClear(els);
+    MathJax.typesetPromise(els).catch(() => {});
+  }
+  function render() {
+    document.getElementById('naLabel').textContent = na;
+    document.getElementById('TLabel').textContent = T;
+    document.getElementById('a0Label').textContent = `a${i0 + 1} = ${fmt(a[i0], 2)}`;
+    document.getElementById('back').disabled = tcur === 1;
+    document.getElementById('all').disabled = tcur === 1;
+    renderStatus(); renderTable(); renderDecomp(); renderVmat(); renderCharts(); renderPolicies(); renderSim();
+    typeset(['status', 'params', 'tabTitle', 'bell', 'decomp', 'vmat', 'pstatus', 'pmat', 'sim', 'pleg'].map(id => document.getElementById(id)));
+  }
+  function renderStatus() {
+    let s = `<span>$T$ = <b>${T}</b></span><span>income $y_t$ = <b>${y.map(v => fmt(v, 1)).join(', ')}</b></span>`;
+    s += tcur === null ? `<span class="badge">nothing computed yet: only $V_{T+1} = 0$ is known</span>`
+      : tcur === 1 ? `<span class="badge ok">done: $T$ passes, no convergence check needed</span>`
+      : `<span>last computed: <b>$V_{${tcur}}$</b> from $V_{${tcur + 1}}$</span><span>passes left: <b>${tcur - 1}</b></span>`;
+    document.getElementById('status').innerHTML = s;
+    document.getElementById('params').innerHTML = 'Parameters: ' + P.text;
+  }
+  function renderTable() {
+    const t = tcur === null ? T : tcur;
+    const shown = cells || table(T);
+    const Vin = V[t + 1];
+    document.getElementById('tabTitle').innerHTML = tcur === null
+      ? `Preview: the table at $t = T = ${T}$, before you press the button`
+      : `The Bellman table at date $t = ${t}$`;
+    let h = `<thead><tr><th class="lab">candidate $a'_k$</th>`;
+    a.forEach(ak => { h += `<th>${fmt(ak, 2)}</th>`; });
+    h += `<th class="gap"></th><th class="lab">output</th><th class="lab">choice</th></tr>`;
+    h += `<tr class="input"><th class="lab">input $V_{${t + 1}}(a'_k)$${t === T ? ' = 0' : ''}</th>`;
+    Vin.forEach(v => { h += `<th>${fmt(v)}</th>`; });
+    h += `<th class="gap"></th><th class="lab" style="color:var(--verm)">$V_{${t}}(a_i)$</th><th class="lab">$a'_{${t}}(a_i)$</th></tr></thead><tbody>`;
+    for (let i = 0; i < na; i++) {
+      h += `<tr><th class="state">state $a_{${i + 1}}$ = ${fmt(a[i], 2)}</th>`;
+      for (let k = 0; k < na; k++) {
+        const v = shown.rows[i][k];
+        const cls = ['cell', v === null || v === -Infinity ? 'inf' : '', shown.pol[i] === k ? 'best' : '', sel && sel[0] === i && sel[1] === k ? 'sel' : ''].join(' ');
+        h += `<td class="${cls}" data-i="${i}" data-k="${k}" tabindex="0">${v === null ? 'c ≤ 0' : fmt(v)}</td>`;
+      }
+      const pk = shown.pol[i];
+      h += `<td class="gap"></td><td class="out">${fmt(shown.V1[i])}</td><td>${pk < 0 ? 'none' : fmt(a[pk], 2) + `<span style="color:var(--muted)"> (k=${pk + 1})</span>`}</td></tr>`;
+    }
+    const el = document.getElementById('bell');
+    el.innerHTML = h + '</tbody>';
+    el.querySelectorAll('td.cell').forEach(td => {
+      const pick = () => { sel = [+td.dataset.i, +td.dataset.k]; renderTable(); renderDecomp(); typeset([document.getElementById('decomp'), el]); };
+      td.addEventListener('click', pick);
+      td.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); } });
+    });
+  }
+  function renderDecomp() {
+    const el = document.getElementById('decomp');
+    if (!sel) { el.innerHTML = 'Click a cell of the table to see its three ingredients.'; return; }
+    const t = tcur === null ? T : tcur, [i, k] = sel, c = P.R * a[i] + y[t - 1] - a[k], Vk = V[t + 1][k];
+    if (c <= 1e-12) {
+      el.innerHTML = `Row $a_{${i + 1}}$, column $a'_{${k + 1}}$ at date $t = ${t}$. Consumption would be $c = R a_i + y_t - a'_k$ = ${fmt(P.R, 2)} × ${fmt(a[i], 3)} + ${fmt(y[t - 1], 1)} − ${fmt(a[k], 3)} = <b>${fmt(c)}</b> ≤ 0. The choice is infeasible and can never be the row maximum.`;
+      return;
+    }
+    if (Vk === -Infinity) {
+      el.innerHTML = `Row $a_{${i + 1}}$, column $a'_{${k + 1}}$ at date $t = ${t}$. Consumption today is fine, but $V_{${t + 1}}(a'_k) = -\\infty$: arriving at date ${t + 1} with these assets leaves nothing to eat later. The cell is $-\\infty$ and is never chosen.`;
+      return;
+    }
+    el.innerHTML = `Row $a_{${i + 1}}$, column $a'_{${k + 1}}$ at date $t = ${t}$${(cells || table(T)).pol[i] === k ? ', the row maximum' : ''}. A formula and a lookup:
+      <span class="mono">
+      c = R·a_i + y_t − a'_k = ${fmt(P.R, 2)}·${fmt(a[i], 3)} + ${fmt(y[t - 1], 1)} − ${fmt(a[k], 3)} = ${fmt(c, 4)}<br>
+      u(c) = ${fmt(u(c), 4)}   (formula)<br>
+      β·V_${t + 1}(a'_k) = ${fmt(P.beta, 4)} × ${fmt(Vk, 4)} = ${fmt(P.beta * Vk, 4)}   (lookup: column ${t + 1} of the value matrix, already known)<br>
+      cell = <b>${fmt(u(c) + P.beta * Vk, 4)}</b></span>`;
+  }
+  function renderVmat() {
+    let h = `<thead><tr><th class="lab">state</th>`;
+    for (let t = 1; t <= T + 1; t++) {
+      const cls = t === tcur ? 'colnow' : (tcur !== null && t === tcur + 1 ? 'colfeed' : '');
+      h += `<th class="${cls}">$V_{${t}}$</th>`;
+    }
+    h += `</tr></thead><tbody>`;
+    for (let i = 0; i < na; i++) {
+      h += `<tr><th class="state">$a_{${i + 1}}$ = ${fmt(a[i], 2)}</th>`;
+      for (let t = 1; t <= T + 1; t++) {
+        if (V[t] === null) { h += `<td class="empty">?</td>`; continue; }
+        const cls = t === T + 1 ? 'term' : t === tcur ? 'now' : (t === tcur + 1 ? 'feed' : 'done');
+        h += `<td class="${cls}">${fmt(V[t][i])}</td>`;
+      }
+      h += `</tr>`;
+    }
+    document.getElementById('vmat').innerHTML = h + '</tbody>';
+  }
+  // charts
+  function niceTicks(lo, hi, n) {
+    const span = hi - lo, raw = span / n, mag = Math.pow(10, Math.floor(Math.log10(raw)));
+    const step = [1, 2, 2.5, 5, 10].map(m => m * mag).find(st => span / st <= n) || mag * 10;
+    const t = []; for (let v = Math.ceil(lo / step) * step; v <= hi + 1e-12; v += step) t.push(+v.toFixed(10)); return t;
+  }
+  function fmtTick(v) { return Math.abs(v) >= 100 ? v.toFixed(0) : Math.abs(v) >= 10 ? v.toFixed(1) : v.toFixed(2); }
+  function frame(xs, ys, xlabel, ylabel, H = 260) {
+    const W = 480, L = 46, Rm = 26, Tp = 24, B = 32;
+    const fin = ys.filter(v => isFinite(v));
+    const xmin = Math.min(...xs), xmax = Math.max(...xs);
+    let ymin = fin.length ? Math.min(...fin) : 0, ymax = fin.length ? Math.max(...fin) : 1;
+    if (ymax - ymin < 1e-9) { ymin -= 1; ymax += 1; }
+    const pad = (ymax - ymin) * 0.08; ymin -= pad; ymax += pad;
+    const X = v => L + (v - xmin) / (xmax - xmin || 1) * (W - L - Rm);
+    const Y = v => Tp + (ymax - v) / (ymax - ymin) * (H - Tp - B);
+    let s = '';
+    niceTicks(ymin, ymax, 5).forEach(v => { s += `<line class="grid" x1="${L}" x2="${W - Rm}" y1="${Y(v)}" y2="${Y(v)}"></line><text x="${L - 6}" y="${Y(v) + 3}" text-anchor="end">${fmtTick(v)}</text>`; });
+    niceTicks(xmin, xmax, 6).forEach(v => { s += `<text x="${X(v)}" y="${H - B + 14}" text-anchor="middle">${Number.isInteger(v) && xmax > 1.5 && xs.every(Number.isInteger) ? v : fmtTick(v)}</text>`; });
+    s += `<line class="ax" x1="${L}" x2="${W - Rm}" y1="${H - B}" y2="${H - B}"></line>`;
+    s += `<text x="${(L + W - Rm) / 2}" y="${H - 4}" text-anchor="middle">${xlabel}</text><text x="${L - 6}" y="11" text-anchor="end">${ylabel}</text>`;
+    return { s, X, Y };
+  }
+  function line(xs, ys, X, Y, cls, op) {
+    let d = '', pen = false;
+    xs.forEach((x, i) => { if (!isFinite(ys[i])) { pen = false; return; } d += (pen ? 'L' : 'M') + X(x) + ' ' + Y(ys[i]) + ' '; pen = true; });
+    return d ? `<path class="${cls}" d="${d}"${op !== undefined ? ` stroke-opacity="${op}"` : ''}></path>` : '';
+  }
+  function cpolAt(t) { return pol[t] ? a.map((ai, i) => pol[t][i] < 0 ? -Infinity : P.R * ai + y[t - 1] - a[pol[t][i]]) : null; }
+  function renderCharts() {
+    const ts = []; for (let t = T; t >= 1; t--) if (V[t]) ts.push(t);
+    const allV = ts.flatMap(t => V[t]).concat(V[T + 1]);
+    let f = frame(a, allV, 'assets a', 'V_t');
+    let g = f.s;
+    ts.forEach(t => {
+      const latest = t === tcur, op = latest ? 1 : 0.25 + 0.6 * (T - t) / Math.max(1, T - 1);
+      g += line(a, V[t], f.X, f.Y, latest ? 'l-now' : 'l-t', latest ? undefined : op.toFixed(2));
+      const last = a.length - 1;
+      g += `<text class="lab-t" x="${f.X(a[last]) + 4}" y="${f.Y(V[t][last]) + 3}">t=${t}</text>`;
+    });
+    if (!ts.length) g += `<text x="240" y="130" text-anchor="middle">press "Go back one period"</text>`;
+    document.getElementById('vchart').innerHTML = g;
+    const allC = ts.flatMap(t => cpolAt(t));
+    f = frame(a, allC.length ? allC : [0, 1], 'assets a', 'c_t');
+    g = f.s;
+    ts.forEach(t => {
+      const latest = t === tcur, op = latest ? 1 : 0.25 + 0.6 * (T - t) / Math.max(1, T - 1), c = cpolAt(t);
+      g += line(a, c, f.X, f.Y, latest ? 'l-now' : 'l-t', latest ? undefined : op.toFixed(2));
+      const last = a.length - 1;
+      g += `<text class="lab-t" x="${f.X(a[last]) + 4}" y="${f.Y(c[last]) + 3}">t=${t}</text>`;
+    });
+    if (!ts.length) g += `<text x="240" y="130" text-anchor="middle">no policies yet</text>`;
+    document.getElementById('cchart').innerHTML = g;
+  }
+  function simulate() {
+    if (tcur !== 1) return null;
+    const idx = [i0], c = [];
+    for (let t = 1; t <= T; t++) {
+      const i = idx[t - 1], k = pol[t][i];
+      if (k < 0) return { idx, c, dead: true };
+      c.push(P.R * a[i] + y[t - 1] - a[k]); idx.push(k);
+    }
+    return { idx, c, dead: false };
+  }
+  function renderPolicies() {
+    const ps = document.getElementById('pstatus');
+    if (tcur !== 1) { ps.innerHTML = `<span class="badge">solve all $T$ periods to see the full policy matrix; columns fill in as you go back</span>`; }
+    else ps.innerHTML = `<span class="badge ok">all $T$ policies computed</span><span>$a'_t(a_i)$ from the stored index, $c_t(a_i)$ from the budget at date $t$</span>`;
+    const sim = simulate();
+    let h = `<thead><tr><th class="lab">state</th>`;
+    for (let t = 1; t <= T; t++) h += `<th>$t = ${t}$</th>`;
+    h += `</tr></thead><tbody>`;
+    for (let i = 0; i < na; i++) {
+      h += `<tr><th class="state">$a_{${i + 1}}$ = ${fmt(a[i], 2)}</th>`;
+      for (let t = 1; t <= T; t++) {
+        if (!pol[t]) { h += `<td class="empty">?</td>`; continue; }
+        const k = pol[t][i], onPath = sim && sim.idx[t - 1] === i;
+        h += k < 0 ? `<td class="done${onPath ? ' path' : ''}" style="color:var(--muted)">none</td>`
+          : `<td class="done${onPath ? ' path' : ''}">a'=${fmt(a[k], 2)}<br><span style="color:var(--muted)">c=${fmt(P.R * a[i] + y[t - 1] - a[k], 3)}</span></td>`;
+      }
+      h += `</tr>`;
+    }
+    document.getElementById('pmat').innerHTML = h + '</tbody>';
+  }
+  function renderSim() {
+    const el = document.getElementById('sim'), sim = simulate();
+    const ac = document.getElementById('achart'), pc = document.getElementById('pchart'), leg = document.getElementById('pleg');
+    if (!sim) {
+      el.innerHTML = `<tbody><tr><td style="text-align:left; color:var(--muted); font-family:var(--body)">Solve all periods first: the simulation at $t = 1$ needs the policy for $t = 1$, which is the last one computed.</td></tr></tbody>`;
+      document.getElementById('simcharts').hidden = true; leg.innerHTML = ''; return;
+    }
+    document.getElementById('simcharts').hidden = false;
+    const ts = Array.from({ length: T }, (_, t) => t + 1);
+    const apath = sim.idx.map(i => a[i]);
+    const isCake = prob === 'cake';
+    const exact = isCake ? ts.map(t => (1 - P.beta) / (1 - Math.pow(P.beta, T - t + 1)) * apath[t - 1]) : null;
+    let h = `<thead><tr><th class="lab"></th>${ts.map(t => `<th>$t = ${t}$</th>`).join('')}<th>$t = ${T + 1}$</th></tr></thead><tbody>`;
+    h += `<tr><th class="lab">assets $a_t$</th>${apath.map(v => `<td>${fmt(v, 3)}</td>`).join('')}</tr>`;
+    h += `<tr><th class="lab">income $y_t$</th>${y.map(v => `<td>${fmt(v, 1)}</td>`).join('')}<td></td></tr>`;
+    h += `<tr><th class="lab">consumption $c_t$</th>${sim.c.map(v => `<td class="out">${fmt(v, 4)}</td>`).join('')}<td></td></tr>`;
+    if (isCake) h += `<tr><th class="lab">closed form at $a_t$</th>${exact.map(v => `<td>${fmt(v, 4)}</td>`).join('')}<td></td></tr>`;
+    el.innerHTML = h + '</tbody>';
+    let f = frame([...ts, T + 1], apath, 'date t', 'a_t', 240);
+    let g = f.s + line([...ts, T + 1], apath, f.X, f.Y, 'l-t');
+    apath.forEach((v, j) => { g += `<circle class="dot-b" cx="${f.X(j + 1)}" cy="${f.Y(v)}" r="3.5"></circle>`; });
+    ac.innerHTML = g;
+    f = frame(ts, [...sim.c, ...(exact || [])], 'date t', 'c_t', 240);
+    g = f.s + (exact ? line(ts, exact, f.X, f.Y, 'l-ex') : '') + line(ts, sim.c, f.X, f.Y, 'l-now');
+    sim.c.forEach((v, j) => { g += `<circle class="dot" cx="${f.X(j + 1)}" cy="${f.Y(v)}" r="3.5"></circle>`; });
+    pc.innerHTML = g;
+    leg.innerHTML = `<span><i style="border-color:var(--verm)"></i>grid solution</span>` + (exact ? `<span><i style="border-color:var(--teal); border-top-style:dashed"></i>closed form; the gap is grid coarseness</span>` : '');
+  }
+
+  // ---------- controls ----------
+  const segs = { pConst: 'const', pRetire: 'retire', pCake: 'cake' };
+  Object.keys(segs).forEach(id => document.getElementById(id).addEventListener('click', () => {
+    prob = segs[id]; Object.keys(segs).forEach(j => document.getElementById(j).setAttribute('aria-pressed', j === id ? 'true' : 'false')); reset();
+  }));
+  document.getElementById('na').addEventListener('input', e => { na = +e.target.value; const s = document.getElementById('a0'); s.max = na; s.value = na; i0 = na - 1; reset(); });
+  document.getElementById('Th').addEventListener('input', e => { T = +e.target.value; reset(); });
+  document.getElementById('a0').addEventListener('input', e => { i0 = +e.target.value - 1; render(); });
+  document.getElementById('back').addEventListener('click', back);
+  document.getElementById('all').addEventListener('click', all);
+  document.getElementById('reset').addEventListener('click', reset);
+
+  reset();
+  back();
+})();
+</script>

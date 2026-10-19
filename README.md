@@ -16,6 +16,7 @@ This repository holds the course materials: lecture slides, lab slides, Julia no
 | Week | Topic | Lecture | Lab |
 | --- | --- | --- | --- |
 | 1 | Lecture: Motivation – Household Heterogeneity<br>Lab: Introduction and Computing Toolkit | [Slides](week01/lecture/week01_motivation.pdf) | [Slides](week01/lab/week01_tutorial_slides.pdf) · [Setup guide](https://aseem-patel.github.io/EC991/setup/week01_tutorial.html) · [Pluto notebook](week01/lab/week01_julia_basics.jl) · [Python version](week01/lab/week01_python_basics.py) |
+| 2 | Lecture: The Consumption–Savings Problem<br>Lab: Dynamic Programming and Value Function Iteration | [Slides](week02/lecture/week02_consumption_savings.pdf) | [Slides](week02/lab/week02_lab_deterministic_vfi.pdf) · [Code guide](https://aseem-patel.github.io/EC991/week02/lab/week02_code_guide.html) · [Pluto notebook](week02/lab/week02_lab.jl) · [Code package](week02/lab/EC991Week2) · Standalone notebooks: [infinite horizon (VFI)](week02/lab/week02_vfi_standalone.jl), [finite horizon (backward induction)](week02/lab/week02_backward_induction_standalone.jl) · Interactive pages: [VFI on a grid](https://aseem-patel.github.io/EC991/week02/lab/week02_vfi_on_a_grid.html), [backward induction on a grid](https://aseem-patel.github.io/EC991/week02/lab/week02_backward_induction_on_a_grid.html) |
 
 Later weeks appear here as they are released.
 

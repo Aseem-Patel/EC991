@@ -1,0 +1,509 @@
+<title>VFI on a Grid</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@500;600&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column, a wide "worksheet" band for the Bellman table and charts, Q&A cards after. */
+:root {
+  --bg: #f6f7f9;
+  --paper: #ffffff;
+  --fg: #1c2230;
+  --muted: #5b6474;
+  --rule: #d9dde5;
+  --blue: #0000b2;
+  --blue-soft: #e4e6fb;
+  --verm: #cc092f;
+  --verm-soft: #fbe6ea;
+  --amber-soft: #fff3d6;
+  --grey-cell: #eef0f4;
+  --display: "Spectral", Georgia, "Times New Roman", serif;
+  --body: "Source Sans 3", "Helvetica Neue", Arial, sans-serif;
+  --mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #14181f; --paper: #1c2129; --fg: #e8ebf1; --muted: #a2abbb; --rule: #333a46;
+    --blue: #8b93ff; --blue-soft: #262a4a; --verm: #ff6f87; --verm-soft: #4a2230;
+    --amber-soft: #4a3d1e; --grey-cell: #242a34; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #14181f; --paper: #1c2129; --fg: #e8ebf1; --muted: #a2abbb; --rule: #333a46;
+  --blue: #8b93ff; --blue-soft: #262a4a; --verm: #ff6f87; --verm-soft: #4a2230;
+  --amber-soft: #4a3d1e; --grey-cell: #242a34; color-scheme: dark;
+}
+body { background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 17px; line-height: 1.5; padding-block: 32px 64px; padding-inline: 16px; }
+.wrap { max-width: 1040px; margin: 0 auto; }
+.prose { max-width: 680px; }
+h1 { font-family: var(--display); font-weight: 600; font-size: clamp(30px, 4.5vw, 42px); line-height: 1.1; margin: 0 0 12px; text-wrap: balance; }
+h2 { font-family: var(--display); font-weight: 600; font-size: 26px; line-height: 1.2; margin: 48px 0 10px; text-wrap: balance; }
+h3 { font-family: var(--body); font-weight: 600; font-size: 17px; margin: 22px 0 6px; }
+p { margin: 0 0 12px; }
+.lede { font-size: 19px; color: var(--muted); }
+.eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--verm); margin-bottom: 6px; }
+.k { color: var(--blue); font-weight: 600; }
+.n { color: var(--verm); font-weight: 600; }
+code, .mono { font-family: var(--mono); font-size: 0.88em; }
+mjx-container { color: var(--fg); }
+.eq { margin: 10px 0 14px; overflow-x: auto; }
+
+/* worksheet */
+.sheet { background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; padding: 18px; margin: 18px 0; }
+.controls { display: flex; flex-wrap: wrap; gap: 14px 22px; align-items: flex-end; padding-bottom: 14px; border-bottom: 1px solid var(--rule); margin-bottom: 14px; }
+.ctl { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.ctl label { font-size: 13px; color: var(--muted); letter-spacing: 0.02em; }
+.seg { display: inline-flex; border: 1px solid var(--rule); border-radius: 4px; overflow: hidden; }
+.seg button { background: transparent; color: var(--fg); border: 0; padding: 6px 12px; font: inherit; font-size: 15px; cursor: pointer; }
+.seg button + button { border-left: 1px solid var(--rule); }
+.seg button[aria-pressed="true"] { background: var(--blue-soft); color: var(--blue); font-weight: 600; }
+input[type=range] { width: 160px; accent-color: var(--blue); }
+.btn { background: var(--blue); color: #fff; border: 0; border-radius: 4px; padding: 8px 14px; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; }
+.btn.secondary { background: transparent; color: var(--blue); border: 1px solid var(--blue); }
+.btn:disabled { opacity: 0.45; cursor: default; }
+.btn:focus-visible, .seg button:focus-visible, td.cell:focus-visible { outline: 2px solid var(--verm); outline-offset: 2px; }
+.status { display: flex; flex-wrap: wrap; gap: 10px 26px; font-family: var(--mono); font-size: 14px; margin: 0 0 12px; font-variant-numeric: tabular-nums; }
+.status span b { color: var(--blue); font-weight: 500; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 13px; background: var(--verm-soft); color: var(--verm); font-family: var(--body); font-weight: 600; }
+.badge.ok { background: var(--blue-soft); color: var(--blue); }
+
+/* number line */
+.line { width: 100%; height: 64px; display: block; }
+.line text { font-family: var(--mono); font-size: 11px; fill: var(--muted); }
+.line .ax { stroke: var(--rule); stroke-width: 1.5; }
+.line .pt { fill: var(--blue); }
+.line .pt.first { fill: var(--verm); }
+
+/* Bellman table */
+.tablewrap { overflow-x: auto; margin: 8px 0 4px; }
+table.bell { border-collapse: separate; border-spacing: 2px; font-family: var(--mono); font-size: 13px; font-variant-numeric: tabular-nums; }
+table.bell th, table.bell td { padding: 6px 8px; text-align: right; white-space: nowrap; }
+table.bell th { font-weight: 500; color: var(--muted); }
+table.bell th.lab { text-align: left; font-family: var(--body); font-size: 13px; }
+table.bell tr.input th { color: var(--fg); background: var(--blue-soft); border-radius: 3px; }
+table.bell tr.input th.lab { background: transparent; color: var(--blue); font-weight: 600; }
+table.bell td.cell { background: var(--grey-cell); border-radius: 3px; cursor: pointer; }
+table.bell td.cell.inf { color: var(--muted); background: transparent; border: 1px dashed var(--rule); }
+table.bell td.cell.best { background: var(--verm-soft); color: var(--verm); font-weight: 500; }
+table.bell td.cell.sel { outline: 2px solid var(--blue); outline-offset: -1px; }
+table.bell td.out { background: var(--verm-soft); color: var(--verm); font-weight: 500; border-radius: 3px; }
+table.bell td.pol { color: var(--fg); }
+table.bell th.state { text-align: right; color: var(--fg); }
+table.bell th.gap, table.bell td.gap { width: 14px; padding: 0; background: transparent; }
+.decomp { margin-top: 12px; padding: 12px 14px; border-left: 3px solid var(--blue); background: var(--blue-soft); border-radius: 0 4px 4px 0; font-size: 15px; }
+.decomp .mono { display: block; margin-top: 6px; line-height: 1.7; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 13px; color: var(--muted); margin-top: 10px; }
+.legend i { display: inline-block; width: 12px; height: 12px; border-radius: 2px; vertical-align: -2px; margin-right: 6px; }
+
+/* charts */
+.charts { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 6px; }
+@media (max-width: 720px) { .charts { grid-template-columns: 1fr; } }
+.chart { min-width: 0; }
+.chart h3 { margin: 0 0 4px; font-size: 15px; }
+.chart > svg { width: 100%; height: auto; display: block; }
+.chart > svg text { font-family: var(--mono); font-size: 10px; fill: var(--muted); }
+.chart .grid { stroke: var(--rule); stroke-width: 1; }
+.chart .ax { stroke: var(--muted); stroke-width: 1; }
+.chart .l-in { stroke: var(--blue); stroke-width: 2; fill: none; }
+.chart .l-out { stroke: var(--verm); stroke-width: 2; fill: none; }
+.chart .l-star { stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 4 3; fill: none; }
+.chart .l-45 { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 2 3; fill: none; }
+.chart .dot { fill: var(--verm); }
+.chart .dot-in { fill: var(--blue); }
+.chartlegend { font-size: 13px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 4px; }
+.chartlegend i { display: inline-block; width: 18px; height: 0; border-top: 2px solid; vertical-align: middle; margin-right: 5px; }
+.dist { font-family: var(--mono); font-size: 13px; margin-top: 14px; overflow-x: auto; }
+.dist table { border-collapse: collapse; }
+.dist th, .dist td { padding: 3px 10px; text-align: right; border-bottom: 1px solid var(--rule); font-weight: 400; color: var(--fg); }
+.dist th { color: var(--muted); }
+
+/* Q&A */
+ul { padding-left: 22px; margin: 6px 0 12px; }
+li { margin-bottom: 6px; }
+.steps { padding-left: 22px; }
+.steps li { margin-bottom: 8px; }
+.small { font-size: 14px; color: var(--muted); }
+table.bell td.ok { color: var(--blue); }
+table.bell td.bad { color: var(--verm); font-weight: 600; }
+.simpath { font-family: var(--mono); font-size: 13px; line-height: 2; overflow-x: auto; white-space: nowrap; padding-bottom: 4px; font-variant-numeric: tabular-nums; }
+.simpath .st { display: inline-block; padding: 1px 8px; border-radius: 3px; background: var(--grey-cell); }
+.simpath .st.end { background: var(--verm-soft); color: var(--verm); }
+.simpath .ar { color: var(--muted); margin: 0 6px; }
+.foot { color: var(--muted); font-size: 14px; margin-top: 48px; border-top: 1px solid var(--rule); padding-top: 12px; }
+@media (prefers-reduced-motion: no-preference) { table.bell td.cell { transition: background 0.15s; } }
+</style>
+
+<script>
+window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$']] }, svg: { fontCache: 'global' } };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.js"></script>
+
+<div class="wrap">
+<div class="prose">
+<div class="eyebrow">EC991 week 2 lab, infinite horizon: slides 9 to 13</div>
+<h1>Value function iteration, one grid point at a time</h1>
+
+<p>The problem is the one on the slides. The household picks next period's assets $a'$ from a grid, consumes what is left, and the value of being at $a$ today is</p>
+<div class="eq">$$V(a) \;=\; \max_{a' \in \mathcal{A}} \; u\big(R a + y - a'\big) + \beta\, V(a'), \qquad \mathcal{A} = \{a_1, \dots, a_{n_a}\},\quad a_1 = -\phi .$$</div>
+<p>Read the right-hand side as a recipe with two ingredients. The first, $u(Ra + y - a')$, is a <span class="k">formula</span>: hand it any $c$ and it returns a number. The second, $V(a')$, is a <span class="k">lookup</span>: it is only known at the $n_a$ points where it is stored. Because $a'$ is only ever chosen from the grid, $V$ is only ever read where it is stored, and no interpolation is needed.</p>
+</div>
+
+<!-- ============ WORKSHEET ============ -->
+<h2 id="sheet">The worksheet</h2>
+<div class="prose">
+<p>Parameters are those of slide 13: $\beta = 1/1.05$, $y = 1$, $\phi = 0.02$, $\gamma = 2$, grid on $[-\phi, 3]$. Only the grid is coarser, so that the whole table fits on one screen. Click any cell to see how its number was built.</p>
+</div>
+
+<div class="sheet">
+  <div class="controls">
+    <div class="ctl"><label for="na">Grid points $n_a$: <b id="naLabel">7</b></label><input type="range" id="na" min="4" max="10" step="1" value="7"></div>
+    <div class="ctl"><label>Initial guess $V_0$</label>
+      <div class="seg" role="group" aria-label="Initial guess">
+        <button id="gGood" aria-pressed="true">$u(ra+y)/(1-\beta)$</button>
+        <button id="gZero" aria-pressed="false">zeros</button>
+      </div></div>
+    <div class="ctl"><label>Gross return $R$</label>
+      <div class="seg" role="group" aria-label="Return">
+        <button id="rLow" aria-pressed="true">1.03, so $\beta R &lt; 1$</button>
+        <button id="rHigh" aria-pressed="false">1.10, so $\beta R &gt; 1$</button>
+      </div></div>
+    <div class="ctl" style="flex-direction:row; gap:8px; align-items:center">
+      <button class="btn" id="apply">Apply $T$ once</button>
+      <button class="btn secondary" id="run">Run to convergence</button>
+      <button class="btn secondary" id="reset">Reset to $V_0$</button>
+    </div>
+  </div>
+
+  <div class="status" id="status"></div>
+
+  <svg class="line" id="numline" viewBox="0 0 1000 64" preserveAspectRatio="none" aria-label="Asset grid"></svg>
+
+  <div class="tablewrap"><table class="bell" id="bell"></table></div>
+  <div class="legend">
+    <span><i style="background:var(--blue-soft)"></i>input row: the current guess, read off at each candidate $a'_k$</span>
+    <span><i style="background:var(--grey-cell)"></i>cell: $u(Ra_i + y - a'_k) + \beta V_\ell(a'_k)$</span>
+    <span><i style="background:var(--verm-soft)"></i>row maximum, and the output column it feeds</span>
+    <span><i style="border:1px dashed var(--rule)"></i>infeasible: $c \le 0$</span>
+  </div>
+  <div class="decomp" id="decomp">Click a cell of the table to see its three ingredients.</div>
+
+  <div class="charts">
+    <div class="chart">
+      <h3>The column of numbers, before and after one step</h3>
+      <svg id="vchart" viewBox="0 0 480 260"></svg>
+      <div class="chartlegend"><span><i style="border-color:var(--blue)"></i>input $V_\ell$</span><span><i style="border-color:var(--verm)"></i>output $TV_\ell$</span><span><i style="border-color:var(--muted); border-top-style:dashed"></i>fixed point $V^*$</span></div>
+    </div>
+    <div class="chart">
+      <h3>The policy this step picks, against the 45-degree line</h3>
+      <svg id="pchart" viewBox="0 0 480 260"></svg>
+      <div class="chartlegend"><span><i style="border-color:var(--verm)"></i>$a'(a_i)$, a grid point for every $i$</span><span><i style="border-color:var(--muted); border-top-style:dotted"></i>$a' = a$</span></div>
+    </div>
+  </div>
+
+  <div class="dist" id="dist"></div>
+</div>
+
+<!-- ============ POLICY ============ -->
+<div class="prose">
+<h2 id="policy">From the converged $V$ to the policy functions</h2>
+<p>VFI hands back one thing: the column of numbers $V^*(a_i)$, one per grid point. It does not hand back the household's decisions. To get them, fill in the table one more time with $V^*$ in the input row. In each row, the column holding the maximum is the choice.</p>
+<div class="eq">$$k^*(i) \;=\; \arg\max_{k} \; u\big(R a_i + y - a_k\big) + \beta\, V^*(a_k),$$</div><div class="eq">$$a'(a_i) = a_{k^*(i)}, \qquad c(a_i) = R a_i + y - a'(a_i).$$</div>
+<p>Four steps, and each is one column of the table below.</p>
+<ol class="steps">
+<li><b>Find the column of the row maximum.</b> That is an integer $k^*(i)$ between $1$ and $n_a$. The code stores it in <code>pol[i]</code>.</li>
+<li><b>Turn the index into an asset level.</b> $a'(a_i) = a_{k^*(i)}$. In code, <code>apol = a[pol]</code>. It is a grid point by construction.</li>
+<li><b>Get consumption from the budget constraint.</b> $c(a_i) = R a_i + y - a'(a_i)$. In code, <code>cpol = y .+ R .* a .- apol</code>. Consumption is not on any grid, and does not need to be.</li>
+<li><b>Check the policies against theory</b> before using them: $c &gt; 0$, $a'$ increasing in $a$, $a'(a) &lt; a$ above the limit when $\beta R &lt; 1$, and the top state not mapping to itself.</li>
+</ol>
+<p>In practice there is no separate pass. The last Bellman step of the loop already filled the table with $V_{\ell-1} \approx V^*$ and recorded the row maxima. The table below uses the exact fixed point for the current settings of the worksheet.</p>
+</div>
+
+<div class="sheet">
+  <div class="status" id="pstatus"></div>
+  <div class="tablewrap"><table class="bell" id="ptable"></table></div>
+  <div class="charts">
+    <div class="chart">
+      <h3>Savings policy $a'(a)$</h3>
+      <svg id="apchart" viewBox="0 0 480 260"></svg>
+      <div class="chartlegend"><span><i style="border-color:var(--verm)"></i>$a'(a_i) = a_{k^*(i)}$</span><span><i style="border-color:var(--muted); border-top-style:dotted"></i>$a' = a$</span></div>
+    </div>
+    <div class="chart">
+      <h3>Consumption policy $c(a)$</h3>
+      <svg id="cchart" viewBox="0 0 480 260"></svg>
+      <div class="chartlegend"><span><i style="border-color:var(--blue)"></i>$c(a_i) = R a_i + y - a'(a_i)$</span></div>
+    </div>
+  </div>
+  <h3>Using the policy: follow the indices</h3>
+  <p class="small">Start at the top of the grid and apply $i_{t+1} = k^*(i_t)$ until the household stops moving. Every step lands on a grid point.</p>
+  <div class="simpath" id="simpath"></div>
+</div>
+
+<div class="prose">
+<h2>The same thing said once more, as code</h2>
+<p>The slide's double loop and the table are the same object. Row $i$ of the table is one pass through the inner loop, the input row is <code>V0</code>, the output column is <code>V1</code>, and the choice of column is <code>pol</code>.</p>
+<pre class="mono" style="background:var(--paper); border:1px solid var(--rule); border-radius:6px; padding:14px 16px; overflow-x:auto; font-size:13.5px; line-height:1.55">for i in 1:na                        # one row of the table
+    best, kbest = -Inf, 0
+    for k in 1:na                    # one cell in that row
+        c = R * a[i] + y - a[k]      # off the grid, and fine: u is a formula
+        c &lt;= 0 &amp;&amp; continue           # dashed cell
+        v = u(c) + beta * V0[k]      # V0[k] is a lookup, never an interpolation
+        v &gt; best &amp;&amp; (best, kbest = v, k)
+    end
+    V1[i], pol[i] = best, kbest      # red output column; pol is an index
+end</pre>
+<p>Press "Apply $T$ once" and you have executed this block once. Press "Run to convergence" and you have wrapped it in the Step 4 loop. That is all value function iteration is.</p>
+<p>Once the loop has stopped, two more lines give the policy functions. They are the same lines as in <code>solve_vfi</code> in <code>src/vfi.jl</code>.</p>
+<pre class="mono" style="background:var(--paper); border:1px solid var(--rule); border-radius:6px; padding:14px 16px; overflow-x:auto; font-size:13.5px; line-height:1.55">apol = a[pol]                    # index k*(i) -> asset level a'(a_i)
+cpol = y .+ R .* a .- apol       # budget constraint -> c(a_i)</pre>
+</div>
+
+<div class="foot">Companion to <span class="mono">week02_lab_deterministic_vfi.pdf</span> and the EC991Week2 package. The table is computed live in this page with the same formulas as <span class="mono">src/bellman.jl</span>.</div>
+</div>
+
+<script>
+(function () {
+  const P = { beta: 1 / 1.05, y: 1, phi: 0.02, gamma: 2, amax: 3 };
+  let na = 7, R = 1.03, guess = 'good';
+  let a = [], V = [], ell = 0, dists = [], Vstar = [], T = null, sel = null;
+
+  const u = c => (Math.pow(c, 1 - P.gamma) - 1) / (1 - P.gamma);
+  const linspace = (lo, hi, n) => Array.from({ length: n }, (_, i) => lo + (hi - lo) * i / (n - 1));
+  const fmt = (x, d = 3) => (x === null || !isFinite(x)) ? '' : x.toFixed(d);
+
+  function initialGuess() {
+    return guess === 'zero' ? a.map(() => 0) : a.map(ai => u((R - 1) * ai + P.y) / (1 - P.beta));
+  }
+  function bellman(V0) {
+    const cells = [], V1 = [], pol = [];
+    for (let i = 0; i < na; i++) {
+      const row = []; let best = -Infinity, kb = 0;
+      for (let k = 0; k < na; k++) {
+        const c = R * a[i] + P.y - a[k];
+        if (c <= 0) { row.push(null); continue; }
+        const v = u(c) + P.beta * V0[k]; row.push(v);
+        if (v > best) { best = v; kb = k; }
+      }
+      cells.push(row); V1.push(best); pol.push(kb);
+    }
+    return { cells, V1, pol };
+  }
+  function fixedPoint() {
+    let v = a.map(ai => u((R - 1) * ai + P.y) / (1 - P.beta));
+    for (let it = 0; it < 20000; it++) {
+      const { V1 } = bellman(v);
+      let d = 0; for (let i = 0; i < na; i++) d = Math.max(d, Math.abs(V1[i] - v[i]));
+      v = V1; if (d < 1e-11) break;
+    }
+    return v;
+  }
+  function reset() {
+    a = linspace(-P.phi, P.amax, na); V = initialGuess(); ell = 0; dists = []; sel = null;
+    Vstar = fixedPoint(); T = bellman(V); render();
+  }
+  function step(silent) {
+    T = bellman(V);
+    let d = 0; for (let i = 0; i < na; i++) d = Math.max(d, Math.abs(T.V1[i] - V[i]));
+    V = T.V1.slice(); ell++; dists.push(d); T = bellman(V);
+    if (!silent) render();
+  }
+  function converged() { return dists.length && dists[dists.length - 1] < 1e-6; }
+  function run() { let n = 0; while (!converged() && n < 5000) { step(true); n++; } render(); }
+
+  // ---------- rendering ----------
+  function render() {
+    document.getElementById('naLabel').textContent = na;
+    renderStatus(); renderLine(); renderTable(); renderDecomp(); renderV(); renderPolicy(); renderDist(); renderPolicySection();
+    typeset([document.getElementById('status'), document.getElementById('decomp'), document.getElementById('bell'), document.getElementById('pstatus'), document.getElementById('ptable')]);
+  }
+  function typeset(els) {
+    if (!(window.MathJax && MathJax.typesetPromise)) return;
+    if (MathJax.typesetClear) MathJax.typesetClear(els);
+    MathJax.typesetPromise(els).catch(() => {});
+  }
+  function renderStatus() {
+    const d = dists.length ? dists[dists.length - 1] : null;
+    let s = `<span>iteration $\\ell$ = <b>${ell}</b></span>`;
+    s += `<span>$\\beta R$ = <b>${fmt(P.beta * R, 4)}</b></span>`;
+    s += `<span>$\\Delta a$ = <b>${fmt(a[1] - a[0])}</b></span>`;
+    if (d !== null) s += `<span>$d_\\ell = \\max_i |V_\\ell - V_{\\ell-1}|$ = <b>${d.toExponential(2)}</b></span>`;
+    s += converged() ? `<span class="badge ok">converged: $d_\\ell &lt; 10^{-6}$</span>` : (ell === 0 ? `<span class="badge">input row is the guess $V_0$</span>` : '');
+    if (T.pol.every((k, i) => k === i)) s += `<span class="badge">every state maps to itself: the grid is too coarse to move one step down</span>`;
+    document.getElementById('status').innerHTML = s;
+  }
+  function renderLine() {
+    const svg = document.getElementById('numline');
+    const x = v => 40 + (v + P.phi) / (P.amax + P.phi) * 920;
+    let s = `<line class="ax" x1="30" y1="30" x2="970" y2="30"></line>`;
+    a.forEach((ai, i) => {
+      s += `<circle class="pt ${i === 0 ? 'first' : ''}" cx="${x(ai)}" cy="30" r="5"></circle>`;
+      s += `<text x="${x(ai)}" y="52" text-anchor="middle">a${i + 1}=${fmt(ai, 2)}</text>`;
+    });
+    s += `<text x="30" y="14">grid $\\mathcal{A}$, a1 = -phi (borrowing limit) in red</text>`;
+    svg.innerHTML = s.replace('$\\mathcal{A}$', 'A');
+  }
+  function renderTable() {
+    const t = document.getElementById('bell');
+    let h = `<thead><tr><th class="lab">candidate $a'_k$</th>`;
+    a.forEach((ak, k) => { h += `<th>${fmt(ak, 2)}</th>`; });
+    h += `<th class="gap"></th><th class="lab">output</th><th class="lab">choice</th></tr>`;
+    h += `<tr class="input"><th class="lab">input $V_{${ell}}(a'_k)$</th>`;
+    V.forEach(v => { h += `<th>${fmt(v)}</th>`; });
+    h += `<th class="gap"></th><th class="lab" style="color:var(--verm)">$V_{${ell + 1}}(a_i)$</th><th class="lab">$a'(a_i)$</th></tr></thead><tbody>`;
+    for (let i = 0; i < na; i++) {
+      h += `<tr><th class="state">state $a_{${i + 1}}$ = ${fmt(a[i], 2)}</th>`;
+      for (let k = 0; k < na; k++) {
+        const v = T.cells[i][k];
+        const cls = ['cell', v === null ? 'inf' : '', T.pol[i] === k && v !== null ? 'best' : '', sel && sel[0] === i && sel[1] === k ? 'sel' : ''].join(' ');
+        h += `<td class="${cls}" data-i="${i}" data-k="${k}" tabindex="0">${v === null ? 'c ≤ 0' : fmt(v)}</td>`;
+      }
+      h += `<td class="gap"></td><td class="out">${fmt(T.V1[i])}</td><td class="pol">${fmt(a[T.pol[i]], 2)}<span style="color:var(--muted)"> (k=${T.pol[i] + 1})</span></td></tr>`;
+    }
+    t.innerHTML = h + '</tbody>';
+    t.querySelectorAll('td.cell').forEach(td => {
+      const pick = () => { sel = [+td.dataset.i, +td.dataset.k]; renderTable(); renderDecomp(); typeset([document.getElementById('decomp'), t]); };
+      td.addEventListener('click', pick);
+      td.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); } });
+    });
+  }
+  function renderDecomp() {
+    const el = document.getElementById('decomp');
+    if (!sel) { el.innerHTML = 'Click a cell of the table to see its three ingredients.'; return; }
+    const [i, k] = sel, ai = a[i], ak = a[k], c = R * ai + P.y - ak;
+    if (c <= 0) {
+      el.innerHTML = `Row $a_{${i + 1}}$, column $a'_{${k + 1}}$. Consumption would be $c = R a_i + y - a'_k$ = ${fmt(R, 2)} × ${fmt(ai, 3)} + 1 − ${fmt(ak, 3)} = <b>${fmt(c)}</b> ≤ 0. The choice is infeasible, so the cell gets $-\\infty$ and can never be the row maximum.`;
+      return;
+    }
+    const isBest = T.pol[i] === k;
+    el.innerHTML = `Row $a_{${i + 1}}$, column $a'_{${k + 1}}$${isBest ? ', the row maximum' : ''}. Two ingredients, one a formula and one a lookup:
+      <span class="mono">
+      c  = R·a_i + y − a'_k  = ${fmt(R, 2)}·${fmt(ai, 3)} + 1 − ${fmt(ak, 3)} = ${fmt(c, 4)}   (off the grid, and that is fine)<br>
+      u(c) = (c^(1−γ) − 1)/(1−γ) = ${fmt(u(c), 4)}   (formula, evaluated at c)<br>
+      β·V_${ell}(a'_k) = ${fmt(P.beta, 4)} × ${fmt(V[k], 4)} = ${fmt(P.beta * V[k], 4)}   (lookup: column ${k + 1} of the input row)<br>
+      cell = ${fmt(u(c), 4)} + ${fmt(P.beta * V[k], 4)} = <b>${fmt(T.cells[i][k], 4)}</b></span>`;
+  }
+  function chartFrame(svg, xs, ys, xlabel, ylabel) {
+    const W = 480, H = 260, L = 46, Rm = 12, Tp = 24, B = 32;
+    const xmin = Math.min(...xs), xmax = Math.max(...xs);
+    let ymin = Math.min(...ys), ymax = Math.max(...ys);
+    if (ymax - ymin < 1e-9) { ymin -= 1; ymax += 1; }
+    const pad = (ymax - ymin) * 0.08; ymin -= pad; ymax += pad;
+    const X = v => L + (v - xmin) / (xmax - xmin) * (W - L - Rm);
+    const Y = v => Tp + (ymax - v) / (ymax - ymin) * (H - Tp - B);
+    let s = '';
+    const yt = niceTicks(ymin, ymax, 5);
+    yt.forEach(v => { s += `<line class="grid" x1="${L}" x2="${W - Rm}" y1="${Y(v)}" y2="${Y(v)}"></line><text x="${L - 6}" y="${Y(v) + 3}" text-anchor="end">${fmtTick(v)}</text>`; });
+    const xt = niceTicks(xmin, xmax, 6);
+    xt.forEach(v => { s += `<text x="${X(v)}" y="${H - B + 14}" text-anchor="middle">${fmtTick(v)}</text>`; });
+    s += `<line class="ax" x1="${L}" x2="${W - Rm}" y1="${H - B}" y2="${H - B}"></line>`;
+    s += `<text x="${(L + W - Rm) / 2}" y="${H - 4}" text-anchor="middle">${xlabel}</text>`;
+    s += `<text x="${L - 6}" y="11" text-anchor="end">${ylabel}</text>`;
+    return { s, X, Y };
+  }
+  function niceTicks(lo, hi, n) {
+    const span = hi - lo, raw = span / n, mag = Math.pow(10, Math.floor(Math.log10(raw)));
+    const step = [1, 2, 2.5, 5, 10].map(m => m * mag).find(st => span / st <= n) || mag * 10;
+    const t = []; for (let v = Math.ceil(lo / step) * step; v <= hi + 1e-12; v += step) t.push(+v.toFixed(10)); return t;
+  }
+  function fmtTick(v) { return Math.abs(v) >= 100 ? v.toFixed(0) : Math.abs(v) >= 10 ? v.toFixed(1) : v.toFixed(2); }
+  function path(xs, ys, X, Y, cls) { return `<path class="${cls}" d="${xs.map((x, i) => (i ? 'L' : 'M') + X(x) + ' ' + Y(ys[i])).join(' ')}"></path>`; }
+  function renderV() {
+    const svg = document.getElementById('vchart');
+    const all = [...V, ...T.V1, ...Vstar];
+    const { s, X, Y } = chartFrame(svg, a, all, 'assets a', 'V');
+    let g = s + path(a, Vstar, X, Y, 'l-star') + path(a, V, X, Y, 'l-in') + path(a, T.V1, X, Y, 'l-out');
+    a.forEach((ai, i) => { g += `<circle class="dot-in" cx="${X(ai)}" cy="${Y(V[i])}" r="3.5"></circle><circle class="dot" cx="${X(ai)}" cy="${Y(T.V1[i])}" r="3.5"></circle>`; });
+    svg.innerHTML = g;
+  }
+  function renderPolicy() {
+    const svg = document.getElementById('pchart');
+    const ap = T.pol.map(k => a[k]);
+    const { s, X, Y } = chartFrame(svg, a, [...a, ...ap], 'assets today a', "a'");
+    let g = s + path([a[0], a[na - 1]], [a[0], a[na - 1]], X, Y, 'l-45');
+    // step function: hold a'(a_i) until a_{i+1}
+    let d = '';
+    for (let i = 0; i < na; i++) {
+      const x0 = X(a[i]), x1 = X(i + 1 < na ? a[i + 1] : a[i]), y = Y(ap[i]);
+      d += (i ? `L${x0} ${y} ` : `M${x0} ${y} `) + (i + 1 < na ? `L${x1} ${y} ` : '');
+    }
+    g += `<path class="l-out" d="${d}"></path>`;
+    a.forEach((ai, i) => { g += `<circle class="dot" cx="${X(ai)}" cy="${Y(ap[i])}" r="4"></circle>`; });
+    const top = T.pol[na - 1] === na - 1;
+    if (top) g += `<text x="${X(a[na - 1]) - 6}" y="${Y(ap[na - 1]) - 8}" text-anchor="end" style="fill:var(--verm)">top state maps to itself: truncation</text>`;
+    svg.innerHTML = g;
+  }
+  function renderDist() {
+    const el = document.getElementById('dist');
+    if (!dists.length) { el.innerHTML = ''; return; }
+    const show = dists.length <= 8 ? dists.map((d, i) => [i + 1, d]) : [...dists.slice(0, 4).map((d, i) => [i + 1, d]), null, ...dists.slice(-3).map((d, j) => [dists.length - 2 + j, d])];
+    let h = `<table><tr><th>ℓ</th><th>d_ℓ</th><th>d_ℓ / d_ℓ₋₁</th><th>β</th></tr>`;
+    show.forEach(r => {
+      if (!r) { h += `<tr><td colspan="4" style="text-align:center;color:var(--muted)">⋯ ${dists.length - 7} more iterations ⋯</td></tr>`; return; }
+      const [l, d] = r, prev = l > 1 ? dists[l - 2] : null;
+      h += `<tr><td>${l}</td><td>${d.toExponential(3)}</td><td>${prev ? (d / prev).toFixed(4) : ''}</td><td>${P.beta.toFixed(4)}</td></tr>`;
+    });
+    el.innerHTML = h + '</table>';
+  }
+
+  function stepD(xs, ys, X, Y) {
+    let d = '';
+    for (let i = 0; i < xs.length; i++) {
+      const x0 = X(xs[i]), x1 = X(i + 1 < xs.length ? xs[i + 1] : xs[i]), y = Y(ys[i]);
+      d += (i ? `L${x0} ${y} ` : `M${x0} ${y} `) + (i + 1 < xs.length ? `L${x1} ${y} ` : '');
+    }
+    return d;
+  }
+  function renderPolicySection() {
+    const S = bellman(Vstar), pol = S.pol;
+    const apol = pol.map(k => a[k]), cpol = a.map((ai, i) => R * ai + P.y - apol[i]);
+    const agree = T.pol.filter((k, i) => k === pol[i]).length;
+    const mono = apol.every((v, i) => i === 0 || v >= apol[i - 1]);
+    const top = pol[na - 1] === na - 1;
+    let s = `<span>policy from $V^*$</span><span>current worksheet step agrees at <b>${agree}</b> of <b>${na}</b> states</span>`;
+    s += mono ? `<span class="badge ok">$a'(a)$ increasing</span>` : `<span class="badge">$a'(a)$ not increasing</span>`;
+    s += cpol.every(c => c > 0) ? `<span class="badge ok">$c &gt; 0$ everywhere</span>` : `<span class="badge">some $c \\le 0$</span>`;
+    s += top ? `<span class="badge">top state maps to itself: truncation, raise $a_{\\max}$</span>` : `<span class="badge ok">$a'(a_{n_a}) &lt; a_{n_a}$: no truncation</span>`;
+    document.getElementById('pstatus').innerHTML = s;
+    let h = `<thead><tr><th class="lab">state</th><th class="lab">$a_i$</th><th class="lab">1. column $k^*(i)$</th><th class="lab">2. $a'(a_i) = a_{k^*}$</th><th class="lab">3. $c(a_i) = Ra_i + y - a'$</th><th class="lab">$a' - a_i$</th><th class="lab">4. check</th></tr></thead><tbody>`;
+    for (let i = 0; i < na; i++) {
+      const move = apol[i] - a[i];
+      let chk, cls;
+      if (i === na - 1 && top) { chk = 'truncated'; cls = 'bad'; }
+      else if (i === 0) { chk = move === 0 ? 'stays at the limit' : 'moves up'; cls = 'ok'; }
+      else if (P.beta * R < 1) { chk = move < 0 ? 'dissaves' : (move === 0 ? 'stays put (coarse grid)' : 'saves'); cls = move < 0 ? 'ok' : 'bad'; }
+      else { chk = move > 0 ? 'saves' : 'stays put'; cls = move > 0 ? 'ok' : 'bad'; }
+      h += `<tr><th class="state">$a_{${i + 1}}$</th><td>${fmt(a[i], 3)}</td><td class="out">${pol[i] + 1}</td><td>${fmt(apol[i], 3)}</td><td>${fmt(cpol[i], 4)}</td><td>${(move >= 0 ? '+' : '') + fmt(move, 3)}</td><td class="${cls}">${chk}</td></tr>`;
+    }
+    document.getElementById('ptable').innerHTML = h + '</tbody>';
+    // charts
+    const sv = document.getElementById('apchart');
+    let f = chartFrame(sv, a, [...a, ...apol], 'assets today a', "a'");
+    let g = f.s + path([a[0], a[na - 1]], [a[0], a[na - 1]], f.X, f.Y, 'l-45') + `<path class="l-out" d="${stepD(a, apol, f.X, f.Y)}"></path>`;
+    a.forEach((ai, i) => { g += `<circle class="dot" cx="${f.X(ai)}" cy="${f.Y(apol[i])}" r="4"></circle>`; });
+    sv.innerHTML = g;
+    const sc = document.getElementById('cchart');
+    f = chartFrame(sc, a, cpol, 'assets today a', 'c');
+    g = f.s + `<path class="l-in" d="${stepD(a, cpol, f.X, f.Y)}"></path>`;
+    a.forEach((ai, i) => { g += `<circle class="dot-in" cx="${f.X(ai)}" cy="${f.Y(cpol[i])}" r="4"></circle>`; });
+    sc.innerHTML = g;
+    // simulation by indices
+    let i = na - 1, seen = new Set(), out = [];
+    for (let t = 0; t < 60; t++) {
+      out.push(i); if (seen.has(i)) break; seen.add(i);
+      if (pol[i] === i) break; i = pol[i];
+    }
+    const last = out[out.length - 1];
+    document.getElementById('simpath').innerHTML = out.map((k, t) => `<span class="st ${t === out.length - 1 ? 'end' : ''}">t=${t}: a${k + 1} = ${fmt(a[k], 2)}</span>`).join('<span class="ar">→</span>') +
+      `<span class="ar"></span><span style="color:var(--muted)">${pol[last] === last ? `stays at a${last + 1} forever${last === 0 ? ', the borrowing limit' : ''}` : ''}</span>`;
+  }
+
+  // ---------- controls ----------
+  document.getElementById('na').addEventListener('input', e => { na = +e.target.value; reset(); });
+  const setSeg = (onId, offId) => { document.getElementById(onId).setAttribute('aria-pressed', 'true'); document.getElementById(offId).setAttribute('aria-pressed', 'false'); };
+  document.getElementById('gGood').addEventListener('click', () => { guess = 'good'; setSeg('gGood', 'gZero'); reset(); });
+  document.getElementById('gZero').addEventListener('click', () => { guess = 'zero'; setSeg('gZero', 'gGood'); reset(); });
+  document.getElementById('rLow').addEventListener('click', () => { R = 1.03; setSeg('rLow', 'rHigh'); reset(); });
+  document.getElementById('rHigh').addEventListener('click', () => { R = 1.10; setSeg('rHigh', 'rLow'); reset(); });
+  document.getElementById('apply').addEventListener('click', () => step(false));
+  document.getElementById('run').addEventListener('click', run);
+  document.getElementById('reset').addEventListener('click', reset);
+
+  reset();
+})();
+</script>
