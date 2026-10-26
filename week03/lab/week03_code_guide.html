@@ -1,0 +1,637 @@
+<title>EC991 Week 3 Code Guide</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Public+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column, 68ch, numbered parts; same house style as the week 1 setup guide. */
+:root {
+  --bg: #fbf9f7;
+  --surface: #f3efeb;
+  --surface-2: #e9e3dd;
+  --fg: #1f1a18;
+  --fg-muted: #6b625d;
+  --rule: #d9d0c9;
+  --accent: #cc092f;        /* vermell, the course colour */
+  --accent-ink: #ffffff;
+  --link: #0000b2;
+  --code-bg: #f0ebe6;
+  --ok: #1f7a3a;
+  --ok-bg: #e3f2e7;
+  --warn: #8a5a00;
+  --warn-bg: #fbefd4;
+  --display: "Newsreader", Georgia, "Times New Roman", serif;
+  --body: "Public Sans", -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  --mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #171412; --surface: #211d1a; --surface-2: #2b2522; --fg: #ece6e0; --fg-muted: #a69c94;
+    --rule: #3a322d; --accent: #ff4d6d; --accent-ink: #1a0b0f; --link: #8f9bff; --code-bg: #1f1b18;
+    --ok: #7fd49a; --ok-bg: #1b3022; --warn: #f2c56b; --warn-bg: #352a12; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #171412; --surface: #211d1a; --surface-2: #2b2522; --fg: #ece6e0; --fg-muted: #a69c94;
+  --rule: #3a322d; --accent: #ff4d6d; --accent-ink: #1a0b0f; --link: #8f9bff; --code-bg: #1f1b18;
+  --ok: #7fd49a; --ok-bg: #1b3022; --warn: #f2c56b; --warn-bg: #352a12; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 16.5px; line-height: 1.6; margin: 0; }
+.wrap { max-width: 72ch; margin: 0 auto; padding-block: 2.5rem 5rem; padding-inline: 20px; }
+header.masthead { border-bottom: 2px solid var(--accent); padding-bottom: 1.25rem; margin-bottom: 2rem; }
+.eyebrow { font-family: var(--body); text-transform: uppercase; letter-spacing: .12em; font-size: .75rem; color: var(--accent); font-weight: 600; margin: 0 0 .5rem; }
+h1 { font-family: var(--display); font-weight: 500; font-size: clamp(2rem, 5vw, 3rem); line-height: 1.1; margin: 0 0 .75rem; text-wrap: balance; letter-spacing: -.01em; }
+.lede { font-size: 1.1rem; color: var(--fg-muted); margin: 0; max-width: 60ch; }
+.meta { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; margin-top: 1rem; font-size: .9rem; color: var(--fg-muted); }
+.meta b { color: var(--fg); font-weight: 600; }
+h2 { font-family: var(--display); font-weight: 500; font-size: 1.85rem; line-height: 1.15; margin: 3rem 0 .75rem; text-wrap: balance; display: flex; gap: .75rem; align-items: baseline; }
+h2 .num { font-family: var(--body); font-size: .8rem; font-weight: 600; color: var(--accent); letter-spacing: .08em; flex: none; }
+h3 { font-family: var(--body); font-weight: 600; font-size: 1.05rem; margin: 2rem 0 .5rem; }
+p { margin: 0 0 1rem; }
+a { color: var(--link); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+ul, ol { padding-left: 1.4rem; margin: 0 0 1rem; }
+li { margin-bottom: .35rem; }
+li > ul { margin-top: .35rem; }
+code { font-family: var(--mono); font-size: .86em; background: var(--code-bg); padding: .1em .35em; border-radius: 3px; }
+pre { position: relative; background: var(--code-bg); border: 1px solid var(--rule); border-radius: 6px; padding: .85rem 1rem; overflow-x: auto; margin: 0 0 1rem; font-size: .85rem; line-height: 1.5; }
+pre code { background: none; padding: 0; font-size: inherit; }
+pre .c { color: var(--fg-muted); }
+pre .copy { position: absolute; top: .4rem; right: .4rem; font: 600 .7rem var(--body); letter-spacing: .05em; text-transform: uppercase; color: var(--fg-muted); background: var(--surface); border: 1px solid var(--rule); border-radius: 4px; padding: .2rem .5rem; cursor: pointer; }
+pre .copy:hover { color: var(--fg); }
+kbd { font-family: var(--mono); font-size: .8em; border: 1px solid var(--rule); border-bottom-width: 2px; border-radius: 4px; padding: .05em .4em; background: var(--surface); }
+.toc { background: var(--surface); border-radius: 6px; padding: 1.1rem 1.25rem; margin: 1.5rem 0 0; }
+.toc h3 { margin: 0 0 .5rem; font-size: .8rem; text-transform: uppercase; letter-spacing: .1em; color: var(--fg-muted); }
+.toc ol { margin: 0; columns: 2; column-gap: 2rem; font-size: .95rem; }
+.toc li { break-inside: avoid; }
+@media (max-width: 560px) { .toc ol { columns: 1; } }
+.callout { border-left: 3px solid var(--accent); background: var(--surface); padding: .9rem 1.1rem; margin: 0 0 1.25rem; border-radius: 0 6px 6px 0; }
+.callout.ok { border-color: var(--ok); background: var(--ok-bg); }
+.callout.warn { border-color: var(--warn); background: var(--warn-bg); }
+.callout p:last-child { margin: 0; }
+.callout .tag { display: block; font-size: .72rem; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; margin-bottom: .3rem; color: var(--fg-muted); }
+.callout.ok .tag { color: var(--ok); }
+.callout.warn .tag { color: var(--warn); }
+/* OS tabs */
+.os { border: 1px solid var(--rule); border-radius: 6px; margin: 0 0 1.25rem; overflow: hidden; }
+.os-tabs { display: flex; background: var(--surface); border-bottom: 1px solid var(--rule); }
+.os-tabs button { flex: 1; font: 600 .85rem var(--body); padding: .55rem .5rem; background: none; border: 0; color: var(--fg-muted); cursor: pointer; border-bottom: 2px solid transparent; }
+.os-tabs button[aria-selected="true"] { color: var(--fg); border-bottom-color: var(--accent); }
+.os-pane { display: none; padding: 1rem 1rem .25rem; }
+.os-pane.active { display: block; }
+.os-pane pre { margin-bottom: .85rem; }
+/* tables */
+.tbl { overflow-x: auto; margin: 0 0 1.25rem; }
+table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+th, td { text-align: left; padding: .5rem .6rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font-size: .75rem; text-transform: uppercase; letter-spacing: .08em; color: var(--fg-muted); font-weight: 600; }
+td code { white-space: nowrap; }
+/* checklist */
+.check { list-style: none; padding: 0; }
+.check li { display: flex; gap: .7rem; align-items: flex-start; padding: .45rem 0; border-bottom: 1px solid var(--rule); margin: 0; }
+.check input { margin-top: .35rem; accent-color: var(--accent); width: 1rem; height: 1rem; flex: none; }
+.check label { cursor: pointer; }
+.progress { font-size: .85rem; color: var(--fg-muted); margin-top: .5rem; }
+.plan td:first-child { font-family: var(--mono); font-size: .85rem; white-space: nowrap; }
+.compare td:first-child { font-weight: 500; white-space: nowrap; }
+.compare code { white-space: pre; }
+figure { margin: 1.25rem 0; }
+figure img { width: 100%; height: auto; display: block; border: 1px solid var(--rule); border-radius: 6px; }
+figcaption { font-size: .85rem; color: var(--fg-muted); margin-top: .45rem; }
+.diagram { background: var(--surface); border-radius: 6px; padding: .75rem .75rem .25rem; margin: 1.25rem 0; }
+.diagram svg { width: 100%; height: auto; display: block; }
+.diagram text { fill: var(--fg); font-family: var(--body); font-size: 13px; }
+.diagram .mono { font-family: var(--mono); font-size: 12.5px; }
+.diagram .muted { fill: var(--fg-muted); font-size: 12px; }
+.diagram .small { font-size: 11.5px; }
+.diagram .box { fill: var(--bg); stroke: var(--rule); stroke-width: 1.2; }
+.diagram .accbox { fill: var(--bg); stroke: var(--accent); stroke-width: 1.6; }
+.diagram .arrow { stroke: var(--fg-muted); stroke-width: 1.4; fill: none; marker-end: url(#arr); }
+.diagram .accarrow { stroke: var(--accent); stroke-width: 1.6; fill: none; marker-end: url(#arracc); }
+.diagram .arrhead { fill: var(--fg-muted); }
+.diagram .arrheadacc { fill: var(--accent); }
+.diagram .acctext { fill: var(--accent); font-weight: 600; }
+.term { background: #1b1816; color: #e8e2dc; border-radius: 6px; padding: .85rem 1rem; font-family: var(--mono); font-size: .82rem; line-height: 1.5; overflow-x: auto; margin: 0 0 1rem; white-space: pre; }
+.term .ok { color: #7fd49a; } .term .dim { color: #9c928a; }
+footer { margin-top: 4rem; padding-top: 1.25rem; border-top: 1px solid var(--rule); font-size: .88rem; color: var(--fg-muted); }
+.small { font-size: .9rem; color: var(--fg-muted); }
+@media (prefers-reduced-motion: no-preference) { .os-pane.active { animation: fade .15s ease; } }
+@keyframes fade { from { opacity: .4 } to { opacity: 1 } }
+mjx-container { color: var(--fg); }
+.tbl mjx-container { font-size: 95%; }
+</style>
+<script>
+window.MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] }, svg: { fontCache: 'global' } };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.js"></script>
+<div class="wrap">
+<header class="masthead">
+  <p class="eyebrow">EC991 Topics in Macroeconomics · Week 3 Lab</p>
+  <h1>The week 3 code: income risk, Markov chains and interpolation</h1>
+  <p class="lede">Week 2's package solved a saving problem with constant income. This week's package adds the income process and a second way to do the maximisation. This page gets the code onto your laptop, says what is new, and reads each new file against the slides of <i>Solving Aiyagari, Part 1</i>.</p>
+  <div class="meta">
+    <span><b>Lecturer</b> Aseem Patel</span>
+    <span><b>Term</b> Autumn 2026</span>
+    <span><b>Assumes</b> the week 2 code guide</span>
+    <span><b>Code</b> <code>week03/lab/EC991Week3</code></span>
+  </div>
+  <nav class="toc" aria-label="Contents">
+    <h3>Contents</h3>
+    <ol>
+      <li><a href="#pull">Pull the week 3 code</a></li>
+      <li><a href="#new">What is new since week 2</a></li>
+      <li><a href="#folders">The folders again</a></li>
+      <li><a href="#markov">markov.jl: Tauchen and Rouwenhorst</a></li>
+      <li><a href="#grids">grids.jl: the asset grid</a></li>
+      <li><a href="#max">Two ways to do the maximisation</a></li>
+      <li><a href="#vfi">vfi.jl and checks.jl</a></li>
+      <li><a href="#run">Run it: scripts, tests, notebook</a></li>
+      <li><a href="#checklist">Checklist and common problems</a></li>
+    </ol>
+  </nav>
+</header>
+
+<!-- ================= 1 ================= -->
+<h2 id="pull"><span class="num">PART 1</span>Pull the week 3 code</h2>
+<p>As in week 2, you do not clone again. In VS Code, open your <code>EC991</code> folder and choose <b>Pull</b> in the Source Control pane, or from a terminal:</p>
+<pre><code>cd EC991          <span class="c"># wherever you cloned it in week 1</span>
+git pull</code></pre>
+<p>A new folder appears next to <code>week02</code>:</p>
+<pre><code>EC991/
+└── week03/
+    └── lab/
+        ├── week03_solving_aiyagari_part1.pdf   <span class="c"># the tutorial slides</span>
+        ├── week03_lab.jl                       <span class="c"># the Pluto notebook</span>
+        ├── week03_code_guide.html              <span class="c"># this page</span>
+        └── EC991Week3/                         <span class="c"># the package: all the code</span>
+            ├── Project.toml, Manifest.toml, README.md
+            ├── src/
+            ├── run/
+            └── test/</code></pre>
+<p>Then copy the whole <code>lab</code> folder into your own repository and commit it, exactly as in week 2. The notebook finds the package through the folder next to it, so keep the two side by side.</p>
+<div class="os" data-os>
+  <div class="os-tabs" role="tablist">
+    <button role="tab" data-os="mac" aria-selected="true">macOS / Linux</button>
+    <button role="tab" data-os="win" aria-selected="false">Windows (PowerShell)</button>
+  </div>
+  <div class="os-pane active" data-pane="mac">
+<pre><code>cp -R EC991/week03/lab ec991-work/week03</code></pre>
+  </div>
+  <div class="os-pane" data-pane="win">
+<pre><code>Copy-Item -Recurse EC991\week03\lab ec991-work\week03</code></pre>
+  </div>
+</div>
+<div class="callout ok"><span class="tag">You know it worked when</span><p>the folder <code>ec991-work/week03/EC991Week3</code> exists and <code>git log --oneline -1</code> in <code>ec991-work</code> shows your commit.</p></div>
+
+<!-- ================= 2 ================= -->
+<h2 id="new"><span class="num">PART 2</span>What is new since week 2</h2>
+<p>The structure is week 2's: a package with <code>src/</code>, <code>run/</code> and <code>test/</code>, the same names for the same jobs (<code>Household</code>, <code>asset_grid</code>, <code>bellman_step!</code>, <code>solve_vfi</code>, <code>Solution</code>). What changes is the problem, and with it five things:</p>
+<div class="tbl"><table>
+  <thead><tr><th>New</th><th>Where</th><th>Why</th></tr></thead>
+  <tbody>
+    <tr><td>one more state, $y$: $V$ is an $n_a \times n_y$ matrix</td><td><code>bellman.jl</code>, <code>vfi.jl</code></td><td>income is now risky</td></tr>
+    <tr><td>a transition matrix $P$; the expectation is $V P^\top$</td><td><code>bellman.jl</code></td><td>slide 23</td></tr>
+    <tr><td>two ways to discretise the AR(1): Tauchen and Rouwenhorst</td><td><code>markov.jl</code></td><td>slides 10 to 18</td></tr>
+    <tr><td>two interpolants: linear and the natural cubic spline</td><td><code>interpolation.jl</code></td><td>slides 27 to 29</td></tr>
+    <tr><td>a one-dimensional optimiser: golden section and Brent</td><td><code>optimise.jl</code></td><td>slides 26 and 32</td></tr>
+  </tbody>
+</table></div>
+<p>The household now takes an interest rate $r$ and a wage $w$ instead of a fixed income. The lab default is $r = 0.03$, and $w$ follows from the firm's first-order conditions through <code>w_from_r</code>, which week 5 reuses when $r$ is solved for. The other defaults are $\beta = 0.96$, $\gamma = 2$ and $\phi = 0$.</p>
+<p>The package uses no packages beyond <code>Plots</code>. The interpolants and optimisers are written out in a few lines each, as the Bellman step was in week 2, so you can read exactly what they do.</p>
+
+<!-- ================= 3 ================= -->
+<h2 id="folders"><span class="num">PART 3</span>The folders again</h2>
+<p>The rules are week 2's: <code>src/</code> never plots or prints, <code>run/</code> holds no model logic, <code>test/</code> checks against known answers. The files in <code>src/</code> are in the order of the slides:</p>
+<div class="tbl"><table>
+  <thead><tr><th>File</th><th>What it does</th><th>Slides</th></tr></thead>
+  <tbody>
+    <tr><td><code>household.jl</code></td><td>$\beta, \gamma, \phi, r, w$, $R = 1 + r$, CRRA utility, <code>w_from_r</code></td><td>2</td></tr>
+    <tr><td><code>grids.jl</code></td><td>the asset grid, equal or growth-rate spacing</td><td>6 to 9</td></tr>
+    <tr><td><code>markov.jl</code></td><td>Tauchen, Rouwenhorst, stationary distribution, chain moments, simulation</td><td>10 to 18</td></tr>
+    <tr><td><code>bellman.jl</code></td><td>one Bellman step by grid search</td><td>21 to 25</td></tr>
+    <tr><td><code>interpolation.jl</code></td><td><code>LinearInterp</code> and <code>CubicSpline</code></td><td>27 to 29</td></tr>
+    <tr><td><code>optimise.jl</code></td><td><code>golden_section</code> and <code>brent</code></td><td>26</td></tr>
+    <tr><td><code>bellman_interp.jl</code></td><td>one Bellman step by interpolate-then-optimise</td><td>26, 32</td></tr>
+    <tr><td><code>vfi.jl</code></td><td>the initial guess and the iteration, for either step</td><td>24</td></tr>
+    <tr><td><code>checks.jl</code></td><td>chain against AR(1), monotone policy, the gap between two policies</td><td>18, 33</td></tr>
+  </tbody>
+</table></div>
+<p>The marker comments <code># &gt;&gt;&gt; name</code> and <code># &lt;&lt;&lt; name</code> are back too: the notebook uses them to show each block next to its maths.</p>
+
+<!-- ================= 4 ================= -->
+<h2 id="markov"><span class="num">PART 4</span>markov.jl: Tauchen and Rouwenhorst</h2>
+<p>Both functions turn $\log y' = \rho \log y + \sigma \varepsilon$ into a grid <code>logy</code> $= (\log y_1, \dots, \log y_{n_y})$ and a transition matrix <code>P</code>, with <code>P[j, k]</code> the probability of moving from $y_j$ to $y_k$. Each row sums to one.</p>
+<h3>Tauchen (slides 11 to 13)</h3>
+<p>The end points are $-\log y_1 = \log y_{n_y} = m\, \sigma/\sqrt{1-\rho^2}$ with $m = 3$, the points are a distance $d$ apart, and $P_{jk}$ is the area of the conditional density in the bin around $\log y_k$:</p>
+$$P_{jk} = \Phi\!\left(\frac{\log y_k - \rho \log y_j + d/2}{\sigma}\right) - \Phi\!\left(\frac{\log y_k - \rho \log y_j - d/2}{\sigma}\right).$$
+<pre><code>function tauchen(n_y, ρ, σ; m = 3.0)
+    logy_max = m * σ / sqrt(1 - ρ^2)
+    logy = collect(range(-logy_max, logy_max; length = n_y))
+    d = logy[2] - logy[1]
+    P = zeros(n_y, n_y)
+    for j in 1:n_y
+        μ = ρ * logy[j]                       <span class="c"># mean of log y&#x27; given log y_j</span>
+        P[j, 1] = normal_cdf((logy[1] - μ + d / 2) / σ)
+        P[j, n_y] = 1 - normal_cdf((logy[n_y] - μ - d / 2) / σ)
+        for k in 2:n_y-1
+            P[j, k] = normal_cdf((logy[k] - μ + d / 2) / σ) - normal_cdf((logy[k] - μ - d / 2) / σ)
+        end
+    end
+    return logy, P
+end</code></pre>
+<ul>
+  <li><code>μ</code> is the mean of tomorrow's log income given today's, $\rho \log y_j$.</li>
+  <li>The first and last columns use one side of the bin only: the outer bins run to $\pm\infty$.</li>
+  <li><code>normal_cdf</code> is $\Phi$. Base Julia has no error function, so the package carries a standard approximation accurate to about $10^{-7}$.</li>
+</ul>
+<h3>Rouwenhorst (slides 14 to 17, backup slide 34)</h3>
+<p>The end points are $\pm\sqrt{n_y - 1}\, \sigma/\sqrt{1-\rho^2}$. The matrix starts at $2 \times 2$ with $p = (1+\rho)/2$ on the diagonal and grows one state at a time:</p>
+<pre><code>function rouwenhorst(n_y, ρ, σ)
+    p = (1 + ρ) / 2
+    logy_max = sqrt(n_y - 1) * σ / sqrt(1 - ρ^2)
+    P = [p 1-p; 1-p p]
+    for k in 3:n_y
+        Z = zeros(k, k)
+        Z[1:k-1, 1:k-1] .+= p .* P
+        Z[1:k-1, 2:k]   .+= (1 - p) .* P
+        Z[2:k, 1:k-1]   .+= (1 - p) .* P
+        Z[2:k, 2:k]     .+= p .* P
+        Z[2:k-1, :] ./= 2
+        P = Z
+    end
+    return collect(range(-logy_max, logy_max; length = n_y)), P
+end</code></pre>
+<ul>
+  <li>The four lines with <code>.+=</code> are the four corners of the backup slide: $p P$ top left, $(1-p) P$ top right and bottom left, $p P$ bottom right.</li>
+  <li><code>Z[2:k-1, :] ./= 2</code> halves the interior rows, which received two contributions, so every row sums to one.</li>
+</ul>
+<h3>Checking a chain against the AR(1)</h3>
+<p><code>chain_moments(logy, P)</code> returns the chain's standard deviation and autocorrelation under its stationary distribution, from <code>stationary(P)</code>. The script <code>run/discretise_ar1.jl</code> prints them next to the AR(1)'s:</p>
+<div class="term mathjax_ignore">$ julia --project=. run/discretise_ar1.jl
+n_y = 5, σ = 0.1: standard deviation and autocorrelation of log y
+     ρ  AR(1) sd       ac   Tauchen       ac   P_33   Rouwen.       ac
+  0.50    0.1155   0.5000    0.1289   0.4993  0.614    0.1155   0.5000
+  0.90    0.2294   0.9000    0.2912   0.9315  0.915    0.2294   0.9000
+  0.99    0.7089   0.9900    0.9656   1.0000  1.000    0.7089   0.9900
+
+paths on common shocks written to output/discretise_ar1_paths.pdf</div>
+<p>Rouwenhorst matches both moments exactly at every $\rho$. At $\rho = 0.99$, Tauchen's middle state is absorbing, $P_{33} = 1.000$: the chain never moves (slide 15).</p>
+
+<!-- ================= 5 ================= -->
+<h2 id="grids"><span class="num">PART 5</span>grids.jl: the asset grid</h2>
+<p>The grid starts at the borrowing limit, $a_1 = -\phi$, and ends at $a_{n_a}$, an upper bound that must never bind. Growth-rate spacing (slide 8) makes each gap $1 + \nu$ times the previous one:</p>
+$$a_i = a_1 + \big(a_{n_a} - a_1\big)\, \frac{(1+\nu)^{i-1} - 1}{(1+\nu)^{n_a - 1} - 1}, \qquad i = 1, \dots, n_a .$$
+<pre><code>function asset_grid(n_a, a_max; ϕ = 0.0, spacing = :growth, ν = 0.02)
+    a_1 = -ϕ
+    spacing === :equal &amp;&amp; return collect(range(a_1, a_max; length = n_a))
+    spacing === :growth || throw(ArgumentError(&quot;spacing must be :equal or :growth&quot;))
+    return [a_1 + (a_max - a_1) * ((1 + ν)^(i - 1) - 1) / ((1 + ν)^(n_a - 1) - 1) for i in 1:n_a]
+end</code></pre>
+<p>The comprehension on the last line is the formula, one $i$ at a time. The lab default is <code>asset_grid(300, 50.0)</code>: 300 points on $[0, 50]$ with $\nu = 0.02$, so the first gap is 0.003 and the last is about 1. <code>run/compare_grids.jl</code> solves the problem on both grids:</p>
+<div class="term mathjax_ignore">$ julia --project=. run/compare_grids.jl
+equal spacing: every gap 0.167
+growth-rate spacing: first gap 0.0027, last gap 0.983; 184 of the 300 points lie below a = 5
+largest gap between the two saving policies: 0.4814, at a = 50.000 with y_2
+  on [ 0,  5]: 0.1105
+  on [ 5, 50]: 0.4814
+plots written to output/compare_grids.pdf</div>
+<p>The growth-rate grid gives up precision at the top, where its gaps approach 1, to gain it near the constraint, where the policy bends.</p>
+
+<!-- ================= 6 ================= -->
+<h2 id="max"><span class="num">PART 6</span>Two ways to do the maximisation</h2>
+<h3>Grid search: <code>bellman_step!</code> (slides 23 and 25)</h3>
+<p>Week 2's double loop, with one more loop over income today and the expectation computed once, as a matrix product:</p>
+$$V^{n+1}_{ij} = \max_k \ u\big(R a_i + w y_j - a_k\big) + \beta \sum_m V^n_{km} P_{jm}, \qquad \sum_m V^n_{km} P_{jm} = (V^n P^\top)_{kj} .$$
+<pre><code>function bellman_step!(V1, pol, V0, hh::Household, a, y, P)
+    (; β, R, w) = hh
+    EV = V0 * P&<span class="c">#x27;                             # EV[k, j] = E[V0(a_k, y&#x27;) | y_j]</span>
+    n_a, n_y = length(a), length(y)
+    for j in 1:n_y, i in 1:n_a               <span class="c"># state (a_i, y_j)</span>
+        best, kbest = -Inf, 1
+        for k in 1:n_a                       <span class="c"># candidate a&#x27;_k</span>
+            c = R * a[i] + w * y[j] - a[k]
+            c &lt;= 0 &amp;&amp; continue               <span class="c"># infeasible: value -∞, never chosen</span>
+            v = utility(c, hh) + β * EV[k, j]
+            if v &gt; best
+                best, kbest = v, k
+            end
+        end
+        V1[i, j], pol[i, j] = best, kbest
+    end
+    return V1, pol
+end</code></pre>
+<ul>
+  <li><code>EV = V0 * P'</code> computes every continuation value at once: row $k$ is the choice $a_k$, column $j$ is income today.</li>
+  <li><code>(; β, R, w) = hh</code> unpacks three fields of the household.</li>
+  <li><code>pol[i, j]</code> stores the index of the best $a_k$, so the policy can only take grid values. That is the issue on slide 25.</li>
+</ul>
+<h3>Linear interpolation: <code>LinearInterp</code> (slide 28)</h3>
+<p>For $a_k \leq a' \leq a_{k+1}$: $\hat V(a') = V_k + \frac{a' - a_k}{a_{k+1} - a_k}(V_{k+1} - V_k)$.</p>
+<pre><code>struct LinearInterp{T&lt;:Real}
+    x::Vector{T}
+    v::Vector{T}
+end
+function (f::LinearInterp)(x)
+    k = clamp(searchsortedlast(f.x, x), 1, length(f.x) - 1)
+    return f.v[k] + (x - f.x[k]) / (f.x[k+1] - f.x[k]) * (f.v[k+1] - f.v[k])
+end</code></pre>
+<p>A <code>struct</code> that you can call like a function: <code>f = LinearInterp(a, V[:, 1])</code> stores the points, and <code>f(2.5)</code> evaluates. <code>searchsortedlast</code> finds the gap $k$ with $a_k \leq a'$.</p>
+<h3>The natural cubic spline: <code>CubicSpline</code> (slide 29, backup slides 35 and 36)</h3>
+<p>Building the spline solves one tridiagonal linear system for the curvatures $M_k$, then turns them into the four coefficients of each piece. Calling it only finds the gap and evaluates a cubic:</p>
+<pre><code>struct CubicSpline{T&lt;:Real}
+    x::Vector{T}
+    b::Matrix{T}            <span class="c"># b[k, :] = (b_k0, b_k1, b_k2, b_k3)</span>
+end
+function CubicSpline(x::AbstractVector, v::AbstractVector)
+    n = length(x)
+    h = diff(x)
+    Δ = diff(v) ./ h
+    <span class="c"># the tridiagonal system for M_2, ..., M_{n-1}, solved by forward</span>
+    <span class="c"># elimination and back substitution</span>
+    M = zeros(n)
+    if n &gt; 2
+        lo = h[2:n-2]                        <span class="c"># below the diagonal</span>
+        di = [2 * (h[k-1] + h[k]) for k in 2:n-1]
+        up = h[2:n-2]                        <span class="c"># above the diagonal</span>
+        rhs = [6 * (Δ[k] - Δ[k-1]) for k in 2:n-1]
+        for k in 2:n-2
+            μ = lo[k-1] / di[k-1]
+            di[k] -= μ * up[k-1]
+            rhs[k] -= μ * rhs[k-1]
+        end
+        m = n - 2
+        M[m+1] = rhs[m] / di[m]
+        for k in m-1:-1:1
+            M[k+1] = (rhs[k] - up[k] * M[k+2]) / di[k]
+        end
+    end
+    b = zeros(n - 1, 4)
+    for k in 1:n-1
+        b[k, 1] = v[k]
+        b[k, 2] = Δ[k] - h[k] * (2M[k] + M[k+1]) / 6
+        b[k, 3] = M[k] / 2
+        b[k, 4] = (M[k+1] - M[k]) / (6h[k])
+    end
+    return CubicSpline(collect(float.(x)), b)
+end
+function (f::CubicSpline)(x)
+    k = clamp(searchsortedlast(f.x, x), 1, length(f.x) - 1)
+    t = x - f.x[k]
+    return f.b[k, 1] + t * (f.b[k, 2] + t * (f.b[k, 3] + t * f.b[k, 4]))
+end</code></pre>
+<ul>
+  <li>The loops in the middle solve the system by elimination down the diagonal, then back substitution. It solves a tridiagonal system in a number of steps proportional to $n_a$, cheap enough to repeat every iteration.</li>
+  <li>The last function evaluates $b_{k0} + t(b_{k1} + t(b_{k2} + t\, b_{k3}))$ with $t = a' - a_k$: the cubic on slide 29, written to need three multiplications.</li>
+</ul>
+<h3>The optimisers: <code>golden_section</code> and <code>brent</code></h3>
+<p>Both maximise a function of one variable on an interval and return the maximiser, the maximum and the number of evaluations. Golden section shrinks the bracket by the same factor, 0.618, every step:</p>
+<pre><code>function golden_section(f, lo, hi; tol = 1e-8)
+    g = (sqrt(5) - 1) / 2
+    x1, x2 = hi - g * (hi - lo), lo + g * (hi - lo)
+    f1, f2 = f(x1), f(x2)
+    evals = 2
+    while hi - lo &gt; tol
+        if f1 &gt;= f2                          <span class="c"># the peak is in [lo, x2]</span>
+            hi, x2, f2 = x2, x1, f1
+            x1 = hi - g * (hi - lo); f1 = f(x1)
+        else                                 <span class="c"># the peak is in [x1, hi]</span>
+            lo, x1, f1 = x1, x2, f2
+            x2 = lo + g * (hi - lo); f2 = f(x2)
+        end
+        evals += 1
+    end
+    return f1 &gt;= f2 ? (x1, f1, evals) : (x2, f2, evals)
+end</code></pre>
+<p>Brent's method tries a parabola through the best three points first and falls back on a golden-section step when the parabola cannot be trusted; near a smooth peak it needs far fewer evaluations. The code is longer and you do not need to follow every line; the docstring in <code>src/optimise.jl</code> explains each part.</p>
+<h3>Interpolate, then optimise: <code>bellman_step_interp!</code> (slides 26 and 32)</h3>
+$$\varphi(a') = u\big(R a_i + w y_j - a'\big) + \beta \sum_m P_{jm}\, \hat V^n(a', y_m), \qquad V^{n+1}_{ij} = \max_{a_1 \leq a' \leq a_{n_a}} \varphi(a').$$
+<pre><code>function bellman_step_interp!(V1, apol, V0, hh::Household, a, y, P;
+                              interp = :linear, routine = :brent, tol = 1e-8)
+    (; β, R, w) = hh
+    n_a, n_y = length(a), length(y)
+    build = interp === :linear ? LinearInterp : interp === :cubic ? CubicSpline :
+            throw(ArgumentError(&quot;interp must be :linear or :cubic&quot;))
+    search = routine === :brent ? brent : routine === :golden ? golden_section :
+             throw(ArgumentError(&quot;routine must be :brent or :golden&quot;))
+    V̂ = [build(a, V0[:, m]) for m in 1:n_y]          <span class="c"># once per iteration, per y_m</span>
+    c_min = 1e-10
+    for j in 1:n_y, i in 1:n_a
+        cash = R * a[i] + w * y[j]
+        φ(ap) = utility(cash - ap, hh) + β * sum(P[j, m] * V̂[m](ap) for m in 1:n_y)
+        hi = min(a[end], cash - c_min)
+        best_a, best_v = a[1], φ(a[1])                <span class="c"># the corner: constraint binds</span>
+        if hi &gt; a[1]
+            x, fx, _ = search(φ, a[1], hi; tol)
+            fx &gt; best_v &amp;&amp; ((best_a, best_v) = (x, fx))
+        end
+        V1[i, j], apol[i, j] = best_v, best_a
+    end
+    return V1, apol
+end</code></pre>
+<ul>
+  <li><b>Construct once:</b> <code>V̂</code> holds one interpolant per income level tomorrow, built at the start of the step.</li>
+  <li><b>Evaluate many times:</b> <code>φ</code> calls all three inside the optimiser, at every trial $a'$.</li>
+  <li><b>The corner:</b> the optimiser searches the interior; comparing with <code>φ(a[1])</code> catches the states where the borrowing constraint binds.</li>
+  <li><code>apol[i, j]</code> is the chosen $a'$ itself, not an index.</li>
+</ul>
+
+<!-- ================= 7 ================= -->
+<h2 id="vfi"><span class="num">PART 7</span>vfi.jl and checks.jl</h2>
+<p><code>solve_vfi</code> is week 2's loop with two changes: it carries $y$ and $P$, and it takes the Bellman step as an argument, so the same function runs grid search or interpolate-then-optimise.</p>
+<pre><code>function solve_vfi(hh::Household, a, y, P; step = bellman_step!, tol = 1e-7, maxiter = 1200, kwargs...)
+    V0 = initial_guess(hh, a, y)
+    V1 = similar(V0)
+    gridsearch = step === bellman_step!
+    pol = gridsearch ? ones(Int, size(V0)) : similar(V0)   <span class="c"># index k, or a&#x27; itself</span>
+    distances = eltype(V0)[]
+    for n in 1:maxiter
+        step(V1, pol, V0, hh, a, y, P; kwargs...)          <span class="c"># V1 = T V0</span>
+        d = maximum(abs.(V1 .- V0))
+        push!(distances, d)
+        if d &lt; tol                                         <span class="c"># Step 4: converged</span>
+            apol = gridsearch ? a[pol] : copy(pol)
+            cpol = hh.R .* a .+ hh.w .* y&<span class="c">#x27; .- apol</span>
+            return Solution(collect(a), collect(y), copy(V1), gridsearch ? copy(pol) : nothing,
+                            apol, cpol, n, distances)
+        end
+        V0, V1 = V1, V0                                    <span class="c"># the update becomes the guess</span>
+    end
+    error(&quot;value function iteration did not converge in $maxiter iterations&quot;)
+end</code></pre>
+<pre><code>sol      = solve_vfi(hh, a, y, P)                                        <span class="c"># grid search</span>
+sol_lin  = solve_vfi(hh, a, y, P; step = bellman_step_interp!)           <span class="c"># linear + Brent</span>
+sol_cub  = solve_vfi(hh, a, y, P; step = bellman_step_interp!, interp = :cubic)
+sol_gold = solve_vfi(hh, a, y, P; step = bellman_step_interp!, routine = :golden)</code></pre>
+<p>Keywords after <code>step</code> are passed on to the step. The <code>Solution</code> holds <code>V</code>, <code>apol</code>, <code>cpol</code>, the iteration count and every distance; <code>pol</code> holds grid indices after grid search and is <code>nothing</code> otherwise.</p>
+<p><code>checks.jl</code> has three functions: <code>chain_vs_ar1</code> for slide 18, <code>policy_monotone</code> for what theory says about the policy (increasing in $a$ and in $y$), and <code>compare_policies</code>, which reads one policy off at the other's grid points by linear interpolation and reports the largest gap.</p>
+
+<!-- ================= 8 ================= -->
+<h2 id="run"><span class="num">PART 8</span>Run it: scripts, tests, notebook</h2>
+<p>From inside <code>ec991-work/week03/EC991Week3</code>:</p>
+<pre><code>julia --project=. -e "using Pkg; Pkg.instantiate()"   <span class="c"># once</span>
+julia --project=. run/discretise_ar1.jl               <span class="c"># Tauchen vs Rouwenhorst</span>
+julia --project=. run/solve_household.jl              <span class="c"># the 3 x 3 example, then VFI by grid search</span>
+julia --project=. run/compare_grids.jl                <span class="c"># equal vs growth-rate spacing</span>
+julia --project=. run/compare_maximisation.jl         <span class="c"># grid search vs interpolate-then-optimise</span>
+julia --project=. run/make_figures.jl                 <span class="c"># the figures on the slides</span>
+julia --project=. -e "using Pkg; Pkg.test()"          <span class="c"># the checks</span></code></pre>
+<p>Plots go to <code>EC991Week3/output/</code>.</p>
+<h3>VFI by grid search</h3>
+<div class="term mathjax_ignore">$ julia --project=. run/solve_household.jl
+r = 0.03, w = 1.3465, R = 1.03, βR = 0.9888
+y = [0.723, 1.0, 1.383];  P = [0.9025 0.095 0.0025; 0.0475 0.905 0.0475; 0.0025 0.095 0.9025]
+
+3 x 3 example: the Bellman update, starting from V0 = u(r a + w y)/(1 - β)
+  at the state (a_1, y_1):
+    choose a&#x27; = a_1 = 0:  c =  0.973,  u(c) + β Σ_m P_1m V_1m = -0.0048
+    choose a&#x27; = a_2 = 1:  c = -0.027,  u(c) + β Σ_m P_1m V_2m = -Inf
+    choose a&#x27; = a_3 = 2:  c = -1.027,  u(c) + β Σ_m P_1m V_3m = -Inf
+  at the state (a_3, y_3):
+    choose a&#x27; = a_1 = 0:  c =  3.923,  u(c) + β Σ_m P_3m V_1m = 11.3606
+    choose a&#x27; = a_2 = 1:  c =  2.923,  u(c) + β Σ_m P_3m V_2m = 11.4965
+    choose a&#x27; = a_3 = 2:  c =  1.923,  u(c) + β Σ_m P_3m V_3m = 11.5342
+  converged in 108 iterations; V = 
+3×3 Matrix{Float64}:
+ 4.048  6.029  7.654
+ 4.585  6.468  8.028
+ 5.094  6.887  8.385
+  policy a&#x27;(a_i, y_j) = 
+3×3 Matrix{Float64}:
+ 0.0  0.0  0.0
+ 1.0  1.0  1.0
+ 2.0  2.0  2.0
+
+Lab default: converged in 290 iterations, last distance 9.867627071002971e-8
+  largest ratio of successive distances 0.9597 (at most β = 0.96)
+  policy increasing in a and in y: (in_a = true, in_y = true)
+  constraint binds for a ≤ 0.029 at y_1, never at y_3
+  at the top of the grid, a&#x27;(50, y_j) = 49.02, 49.02, 50.00
+  (at y_3 the best choice lies between the grid points 49.02 and 50: compare_maximisation.jl finds it)
+
+plots written to output/solve_household.pdf</div>
+<h3>Grid search against interpolate-then-optimise</h3>
+<div class="term mathjax_ignore">$ julia --project=. run/compare_maximisation.jl
+iterations: grid search 290, linear + Brent 291, cubic + Brent 291
+
+one column of V, 7 nodes on [0, 6]: largest error, linear 0.0357, cubic spline 0.0227
+
+at the state a = 2.437, y_2: grid search picks a&#x27; = 2.3367, Brent a&#x27; = 2.3451
+  evaluations: grid search 172, Brent 13, golden section 44 (golden section finds a&#x27; = 2.3451)
+
+largest gaps between the saving policies:
+  linear vs grid search 0.4406 (at a = 50.00), cubic vs grid search 0.4393 (at a = 50.00)
+  linear vs cubic 0.0143: the two interpolated policies agree far more closely
+  the grid gap there is 0.9830: the gaps are less than one grid gap
+  at the top of the grid with y_3: grid search a&#x27; = 50.00, linear + Brent 49.8534, cubic + Brent 49.8418
+
+plots written to output/compare_maximisation.pdf</div>
+<p>The two interpolated policies agree with each other to about 0.01, and each differs from grid search by less than one grid gap. Brent finds the peak in 13 evaluations where golden section needs 44.</p>
+<h3>What the solution looks like</h3>
+<p>The value function rises in assets and in income, and flattens as assets grow: an extra unit of wealth matters less to a household that already has a lot.</p>
+<figure><img src="week03_code_guide_value.png" alt="The value function V(a, y) against assets, one rising concave line for each of the three income levels, highest for high income.">
+<figcaption>The value function $V(a, y)$ at the lab default, one line per income level.</figcaption></figure>
+<p>The saving policy sits above the 45-degree line when income is high and below it when income is low: households build a buffer in good times and draw it down in bad ones. With low income and few assets the borrowing limit binds, $a'(a, y_1) = 0$. Consumption rises with assets and with income.</p>
+<figure><img src="week03_code_guide_policy.png" alt="Left: the saving policy a'(a, y) for assets up to 5, with the 45-degree line; the high-income line lies above it, the low-income line below and touching zero at the left. Right: the consumption policy c(a, y) over the whole grid, rising in assets, highest for high income.">
+<figcaption>Left: the saving policy $a'(a, y)$ near the borrowing limit, with the 45-degree line. Right: the consumption policy $c(a, y)$ on the whole grid. Both from linear interpolation and Brent's method; grid search gives the same shapes with jumps where the grid is coarse. Drawn by <code>run/make_figures.jl</code>.</figcaption></figure>
+<h3>The tests</h3>
+<div class="term mathjax_ignore">     Testing Running tests...
+Test Summary:       | <span class="ok">Pass</span>  Total  Time
+household and grids |    <span class="ok">6</span>      6  1.0s
+Test Summary: | <span class="ok">Pass</span>  Total  Time
+Rouwenhorst   |   <span class="ok">39</span>     39  1.4s
+Test Summary: | <span class="ok">Pass</span>  Total  Time
+Tauchen       |   <span class="ok">12</span>     12  1.0s
+Test Summary:                          | <span class="ok">Pass</span>  Total  Time
+stationary distribution and simulation |    <span class="ok">3</span>      3  0.5s
+Test Summary:      | <span class="ok">Pass</span>  Total  Time
+VFI by grid search |    <span class="ok">8</span>      8  1.0s
+Test Summary: | <span class="ok">Pass</span>  Total  Time
+interpolation |    <span class="ok">5</span>      5  0.5s
+Test Summary:              | <span class="ok">Pass</span>  Total  Time
+one-dimensional optimisers |    <span class="ok">4</span>      4  0.1s
+Test Summary:              | <span class="ok">Pass</span>  Total  Time
+interpolate, then optimise |    <span class="ok">6</span>      6  0.2s
+     Testing EC991Week3 tests passed </div>
+<p>Every test checks against a known answer: Rouwenhorst's moments exactly, the matrix and grid on slides 16 and 17, Tauchen's absorbing state at $\rho = 0.99$, the worked number 11 from slide 28, the contraction, the shape of the policy, and the gap between the two maximisation methods.</p>
+<h3>The notebook</h3>
+<p>Open <code>ec991-work/week03/week03_lab.jl</code> in Pluto, as in week 2. It follows the slides section by section, with the source of each function next to its maths, and ends with four exercises, one of them Chebyshev interpolation from backup slide 37.</p>
+
+<!-- ================= 9 ================= -->
+<h2 id="checklist"><span class="num">PART 9</span>Checklist and common problems</h2>
+<ul class="check" id="checklist-items">
+  <li><input type="checkbox" id="w3-pull"><label for="w3-pull">Pulled the course repository; <code>week03/lab/EC991Week3</code> exists</label></li>
+  <li><input type="checkbox" id="w3-copy"><label for="w3-copy">Copied the lab folder into <code>ec991-work</code> and committed it</label></li>
+  <li><input type="checkbox" id="w3-inst"><label for="w3-inst"><code>Pkg.instantiate()</code> finished without errors</label></li>
+  <li><input type="checkbox" id="w3-ar1"><label for="w3-ar1"><code>run/discretise_ar1.jl</code> shows $P_{33} = 1.000$ for Tauchen at $\rho = 0.99$</label></li>
+  <li><input type="checkbox" id="w3-hh"><label for="w3-hh"><code>run/solve_household.jl</code> converges in 290 iterations</label></li>
+  <li><input type="checkbox" id="w3-test"><label for="w3-test"><code>Pkg.test()</code> ends with "tests passed"</label></li>
+  <li><input type="checkbox" id="w3-nb"><label for="w3-nb">The notebook opens in Pluto with no red cells</label></li>
+</ul>
+<p class="progress" id="progress"></p>
+
+<h3>Common problems</h3>
+<div class="tbl"><table>
+  <thead><tr><th>You see</th><th>Cause and fix</th></tr></thead>
+  <tbody>
+    <tr><td>A Tauchen chain that never changes state</td><td>At high $\rho$ the grid is so wide that each bin holds nearly all of the conditional density: the state is absorbing. Use Rouwenhorst for $\rho$ above about 0.9 (slide 15).</td></tr>
+    <tr><td><code>-Inf</code> in <code>V</code></td><td>A state with no affordable choice: $R a_i + w y_j \leq a_1$. With $\phi = 0$ and positive income it cannot happen; with a large $\phi$ and low income it can. Check the borrowing limit against the lowest income.</td></tr>
+    <tr><td>The policy sits on $a_{n_a}$</td><td>The upper bound binds: households want more assets than the grid allows. Raise <code>a_max</code>, or check $\beta R$: close to 1 (for example $r = 0.04$ with $\beta = 0.96$) and saving may not stop inside any reasonable grid.</td></tr>
+    <tr><td>The spline policy wiggles near the constraint</td><td>The value function bends sharply near $a_1$, and a cubic spline can overshoot there. Add points near the constraint (growth-rate spacing), or use linear interpolation, which cannot overshoot.</td></tr>
+    <tr><td><code>Package EC991Week3 not found</code></td><td>Julia is in your default environment. Run from inside <code>EC991Week3/</code> with <code>--project=.</code>.</td></tr>
+    <tr><td>Errors when you run <code>julia week03_lab.jl</code></td><td>The notebook is meant for Pluto, as in weeks 1 and 2. Open it there.</td></tr>
+    <tr><td><code>value function iteration did not converge</code></td><td>Usually $\beta \geq 1$, or a step that returns <code>-Inf</code> everywhere. Check <code>hh</code> and the grid.</td></tr>
+  </tbody>
+</table></div>
+
+</div>
+
+<script>
+(function () {
+  // OS tabs.
+  function setOS(os) {
+    document.querySelectorAll('.os').forEach(function (box) {
+      box.querySelectorAll('.os-tabs button').forEach(function (b) { b.setAttribute('aria-selected', b.dataset.os === os ? 'true' : 'false'); });
+      box.querySelectorAll('.os-pane').forEach(function (p) { p.classList.toggle('active', p.dataset.pane === os); });
+    });
+    try { localStorage.setItem('ec991-os', os); } catch (e) {}
+  }
+  document.querySelectorAll('.os-tabs button').forEach(function (b) { b.addEventListener('click', function () { setOS(b.dataset.os); }); });
+  var saved = null;
+  try { saved = localStorage.getItem('ec991-os'); } catch (e) {}
+  if (saved !== 'mac' && saved !== 'win') saved = /Windows/.test(navigator.userAgent || '') ? 'win' : 'mac';
+  setOS(saved);
+
+  // Copy buttons on code blocks.
+  document.querySelectorAll('pre').forEach(function (pre) {
+    var btn = document.createElement('button');
+    btn.className = 'copy'; btn.type = 'button'; btn.textContent = 'Copy';
+    btn.addEventListener('click', function () {
+      var text = pre.querySelector('code').innerText.replace(/[ \t]+#.*$/gm, '').replace(/\n{2,}/g, '\n').trim();
+      var done = function () { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = 'Copy'; }, 1200); };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, function () { selectText(pre); });
+      } else { selectText(pre); }
+    });
+    pre.appendChild(btn);
+  });
+  function selectText(el) {
+    var r = document.createRange(); r.selectNodeContents(el.querySelector('code'));
+    var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+  }
+
+  // Checklist, remembered in this browser only.
+  var boxes = document.querySelectorAll('#checklist-items input');
+  var prog = document.getElementById('progress');
+  function update() {
+    var n = 0; boxes.forEach(function (b) { if (b.checked) n++; });
+    prog.textContent = n === boxes.length ? 'All ' + n + ' done.' : n + ' of ' + boxes.length + ' done.';
+  }
+  boxes.forEach(function (b) {
+    try { b.checked = localStorage.getItem('ec991-' + b.id) === '1'; } catch (e) {}
+    b.addEventListener('change', function () {
+      try { localStorage.setItem('ec991-' + b.id, b.checked ? '1' : '0'); } catch (e) {}
+      update();
+    });
+  });
+  update();
+})();
+</script>
