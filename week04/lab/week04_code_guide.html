@@ -1,0 +1,657 @@
+<title>EC991 Week 4 Code Guide</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Public+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column, 68ch, numbered parts; same house style as the week 1 setup guide. */
+:root {
+  --bg: #fbf9f7;
+  --surface: #f3efeb;
+  --surface-2: #e9e3dd;
+  --fg: #1f1a18;
+  --fg-muted: #6b625d;
+  --rule: #d9d0c9;
+  --accent: #cc092f;        /* vermell, the course colour */
+  --accent-ink: #ffffff;
+  --link: #0000b2;
+  --code-bg: #f0ebe6;
+  --ok: #1f7a3a;
+  --ok-bg: #e3f2e7;
+  --warn: #8a5a00;
+  --warn-bg: #fbefd4;
+  --display: "Newsreader", Georgia, "Times New Roman", serif;
+  --body: "Public Sans", -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  --mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #171412; --surface: #211d1a; --surface-2: #2b2522; --fg: #ece6e0; --fg-muted: #a69c94;
+    --rule: #3a322d; --accent: #ff4d6d; --accent-ink: #1a0b0f; --link: #8f9bff; --code-bg: #1f1b18;
+    --ok: #7fd49a; --ok-bg: #1b3022; --warn: #f2c56b; --warn-bg: #352a12; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #171412; --surface: #211d1a; --surface-2: #2b2522; --fg: #ece6e0; --fg-muted: #a69c94;
+  --rule: #3a322d; --accent: #ff4d6d; --accent-ink: #1a0b0f; --link: #8f9bff; --code-bg: #1f1b18;
+  --ok: #7fd49a; --ok-bg: #1b3022; --warn: #f2c56b; --warn-bg: #352a12; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 16.5px; line-height: 1.6; margin: 0; }
+.wrap { max-width: 72ch; margin: 0 auto; padding-block: 2.5rem 5rem; padding-inline: 20px; }
+header.masthead { border-bottom: 2px solid var(--accent); padding-bottom: 1.25rem; margin-bottom: 2rem; }
+.eyebrow { font-family: var(--body); text-transform: uppercase; letter-spacing: .12em; font-size: .75rem; color: var(--accent); font-weight: 600; margin: 0 0 .5rem; }
+h1 { font-family: var(--display); font-weight: 500; font-size: clamp(2rem, 5vw, 3rem); line-height: 1.1; margin: 0 0 .75rem; text-wrap: balance; letter-spacing: -.01em; }
+.lede { font-size: 1.1rem; color: var(--fg-muted); margin: 0; max-width: 60ch; }
+.meta { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; margin-top: 1rem; font-size: .9rem; color: var(--fg-muted); }
+.meta b { color: var(--fg); font-weight: 600; }
+h2 { font-family: var(--display); font-weight: 500; font-size: 1.85rem; line-height: 1.15; margin: 3rem 0 .75rem; text-wrap: balance; display: flex; gap: .75rem; align-items: baseline; }
+h2 .num { font-family: var(--body); font-size: .8rem; font-weight: 600; color: var(--accent); letter-spacing: .08em; flex: none; }
+h3 { font-family: var(--body); font-weight: 600; font-size: 1.05rem; margin: 2rem 0 .5rem; }
+p { margin: 0 0 1rem; }
+a { color: var(--link); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+ul, ol { padding-left: 1.4rem; margin: 0 0 1rem; }
+li { margin-bottom: .35rem; }
+li > ul { margin-top: .35rem; }
+code { font-family: var(--mono); font-size: .86em; background: var(--code-bg); padding: .1em .35em; border-radius: 3px; }
+pre { position: relative; background: var(--code-bg); border: 1px solid var(--rule); border-radius: 6px; padding: .85rem 1rem; overflow-x: auto; margin: 0 0 1rem; font-size: .85rem; line-height: 1.5; }
+pre code { background: none; padding: 0; font-size: inherit; }
+pre .c { color: var(--fg-muted); }
+pre .copy { position: absolute; top: .4rem; right: .4rem; font: 600 .7rem var(--body); letter-spacing: .05em; text-transform: uppercase; color: var(--fg-muted); background: var(--surface); border: 1px solid var(--rule); border-radius: 4px; padding: .2rem .5rem; cursor: pointer; }
+pre .copy:hover { color: var(--fg); }
+kbd { font-family: var(--mono); font-size: .8em; border: 1px solid var(--rule); border-bottom-width: 2px; border-radius: 4px; padding: .05em .4em; background: var(--surface); }
+.toc { background: var(--surface); border-radius: 6px; padding: 1.1rem 1.25rem; margin: 1.5rem 0 0; }
+.toc h3 { margin: 0 0 .5rem; font-size: .8rem; text-transform: uppercase; letter-spacing: .1em; color: var(--fg-muted); }
+.toc ol { margin: 0; columns: 2; column-gap: 2rem; font-size: .95rem; }
+.toc li { break-inside: avoid; }
+@media (max-width: 560px) { .toc ol { columns: 1; } }
+.callout { border-left: 3px solid var(--accent); background: var(--surface); padding: .9rem 1.1rem; margin: 0 0 1.25rem; border-radius: 0 6px 6px 0; }
+.callout.ok { border-color: var(--ok); background: var(--ok-bg); }
+.callout.warn { border-color: var(--warn); background: var(--warn-bg); }
+.callout p:last-child { margin: 0; }
+.callout .tag { display: block; font-size: .72rem; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; margin-bottom: .3rem; color: var(--fg-muted); }
+.callout.ok .tag { color: var(--ok); }
+.callout.warn .tag { color: var(--warn); }
+/* OS tabs */
+.os { border: 1px solid var(--rule); border-radius: 6px; margin: 0 0 1.25rem; overflow: hidden; }
+.os-tabs { display: flex; background: var(--surface); border-bottom: 1px solid var(--rule); }
+.os-tabs button { flex: 1; font: 600 .85rem var(--body); padding: .55rem .5rem; background: none; border: 0; color: var(--fg-muted); cursor: pointer; border-bottom: 2px solid transparent; }
+.os-tabs button[aria-selected="true"] { color: var(--fg); border-bottom-color: var(--accent); }
+.os-pane { display: none; padding: 1rem 1rem .25rem; }
+.os-pane.active { display: block; }
+.os-pane pre { margin-bottom: .85rem; }
+/* tables */
+.tbl { overflow-x: auto; margin: 0 0 1.25rem; }
+table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+th, td { text-align: left; padding: .5rem .6rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font-size: .75rem; text-transform: uppercase; letter-spacing: .08em; color: var(--fg-muted); font-weight: 600; }
+td code { white-space: nowrap; }
+/* checklist */
+.check { list-style: none; padding: 0; }
+.check li { display: flex; gap: .7rem; align-items: flex-start; padding: .45rem 0; border-bottom: 1px solid var(--rule); margin: 0; }
+.check input { margin-top: .35rem; accent-color: var(--accent); width: 1rem; height: 1rem; flex: none; }
+.check label { cursor: pointer; }
+.progress { font-size: .85rem; color: var(--fg-muted); margin-top: .5rem; }
+.plan td:first-child { font-family: var(--mono); font-size: .85rem; white-space: nowrap; }
+.compare td:first-child { font-weight: 500; white-space: nowrap; }
+.compare code { white-space: pre; }
+figure { margin: 1.25rem 0; }
+figure img { width: 100%; height: auto; display: block; border: 1px solid var(--rule); border-radius: 6px; }
+figcaption { font-size: .85rem; color: var(--fg-muted); margin-top: .45rem; }
+.diagram { background: var(--surface); border-radius: 6px; padding: .75rem .75rem .25rem; margin: 1.25rem 0; }
+.diagram svg { width: 100%; height: auto; display: block; }
+.diagram text { fill: var(--fg); font-family: var(--body); font-size: 13px; }
+.diagram .mono { font-family: var(--mono); font-size: 12.5px; }
+.diagram .muted { fill: var(--fg-muted); font-size: 12px; }
+.diagram .small { font-size: 11.5px; }
+.diagram .box { fill: var(--bg); stroke: var(--rule); stroke-width: 1.2; }
+.diagram .accbox { fill: var(--bg); stroke: var(--accent); stroke-width: 1.6; }
+.diagram .arrow { stroke: var(--fg-muted); stroke-width: 1.4; fill: none; marker-end: url(#arr); }
+.diagram .accarrow { stroke: var(--accent); stroke-width: 1.6; fill: none; marker-end: url(#arracc); }
+.diagram .arrhead { fill: var(--fg-muted); }
+.diagram .arrheadacc { fill: var(--accent); }
+.diagram .acctext { fill: var(--accent); font-weight: 600; }
+.term { background: #1b1816; color: #e8e2dc; border-radius: 6px; padding: .85rem 1rem; font-family: var(--mono); font-size: .82rem; line-height: 1.5; overflow-x: auto; margin: 0 0 1rem; white-space: pre; }
+.term .ok { color: #7fd49a; } .term .dim { color: #9c928a; }
+footer { margin-top: 4rem; padding-top: 1.25rem; border-top: 1px solid var(--rule); font-size: .88rem; color: var(--fg-muted); }
+.small { font-size: .9rem; color: var(--fg-muted); }
+@media (prefers-reduced-motion: no-preference) { .os-pane.active { animation: fade .15s ease; } }
+@keyframes fade { from { opacity: .4 } to { opacity: 1 } }
+mjx-container { color: var(--fg); }
+.tbl mjx-container { font-size: 95%; }
+</style>
+<script>
+window.MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] }, svg: { fontCache: 'global' } };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.js"></script>
+<div class="wrap">
+<header class="masthead">
+  <p class="eyebrow">EC991 Topics in Macroeconomics · Week 4 Lab</p>
+  <h1>The week 4 code: the Aiyagari equilibrium, by VFI and EGM</h1>
+  <p class="lede">Week 3's package solved the household problem at a given interest rate. This week's package finds the interest rate. The equilibrium loop is written once, and only the household step changes.</p>
+  <div class="meta">
+    <span><b>Lecturer</b> Aseem Patel</span>
+    <span><b>Term</b> Autumn 2026</span>
+    <span><b>Assumes</b> the week 3 code guide</span>
+    <span><b>Code</b> <code>week04/lab/EC991Week4</code></span>
+  </div>
+  <nav class="toc" aria-label="Contents">
+    <h3>Contents</h3>
+    <ol>
+      <li><a href="#pull">Pull the week 4 code</a></li>
+      <li><a href="#idea">One loop, five household methods</a></li>
+      <li><a href="#folders">The folders again</a></li>
+      <li><a href="#speed">Without interpolation: speeding up the search</a></li>
+      <li><a href="#interp">With interpolation: Howard needs a settled policy</a></li>
+      <li><a href="#egm">egm.jl: the endogenous grid method</a></li>
+      <li><a href="#euler">euler_errors.jl: how accurate?</a></li>
+      <li><a href="#dist">distribution.jl and simulate.jl: the joint distribution</a></li>
+      <li><a href="#eq">equilibrium.jl and statistics.jl</a></li>
+      <li><a href="#run">Run it: scripts, the REPL, tests, notebook</a></li>
+      <li><a href="#checklist">Checklist and common problems</a></li>
+      <li><a href="#gridsearch">The problems grid search brings</a></li>
+    </ol>
+  </nav>
+</header>
+
+<!-- ================= 1 ================= -->
+<h2 id="pull"><span class="num">PART 1</span>Pull the week 4 code</h2>
+<p>In VS Code, open your <code>EC991</code> folder and choose <b>Pull</b> in the Source Control pane, or from a terminal:</p>
+<pre><code>cd EC991          <span class="c"># wherever you cloned it in week 1</span>
+git pull</code></pre>
+<p>A new folder appears next to <code>week03</code>:</p>
+<pre><code>EC991/
+└── week04/
+    └── lab/
+        ├── week04_lab.jl                       <span class="c"># the Pluto notebook</span>
+        ├── week04_code_guide.html              <span class="c"># this page</span>
+        └── EC991Week4/                         <span class="c"># the package: all the code</span>
+            ├── Project.toml, Manifest.toml, README.md
+            ├── src/
+            ├── run/
+            └── test/</code></pre>
+<p>Then copy the whole <code>lab</code> folder into your own repository and commit it, as in earlier weeks. The notebook finds the package through the folder next to it, so keep the two side by side.</p>
+<div class="os" data-os>
+  <div class="os-tabs" role="tablist">
+    <button role="tab" data-os="mac" aria-selected="true">macOS / Linux</button>
+    <button role="tab" data-os="win" aria-selected="false">Windows (PowerShell)</button>
+  </div>
+  <div class="os-pane active" data-pane="mac">
+<pre><code>cp -R EC991/week04/lab ec991-work/week04</code></pre>
+  </div>
+  <div class="os-pane" data-pane="win">
+<pre><code>Copy-Item -Recurse EC991\week04\lab ec991-work\week04</code></pre>
+  </div>
+</div>
+<div class="callout ok"><span class="tag">You know it worked when</span><p>the folder <code>ec991-work/week04/EC991Week4</code> exists and <code>git log --oneline -1</code> in <code>ec991-work</code> shows your commit.</p></div>
+
+<!-- ================= 2 ================= -->
+<h2 id="idea"><span class="num">PART 2</span>One loop, five household methods</h2>
+<p>The lecture's algorithm has six steps, and only Step 3 depends on how you solve the household problem. Every method hands the same object to Step 4: the saving policy (slide 29). So you choose the method with one word:</p>
+<pre><code>eq = solve_equilibrium(Economy(); method = :vfi_grid)     <span class="c"># no interpolation</span>
+eq = solve_equilibrium(Economy(); method = :vfi_interp)   <span class="c"># interpolate V, then optimise</span>
+eq = solve_equilibrium(Economy(); method = :egm)          <span class="c"># invert the Euler equation</span></code></pre>
+<div class="tbl"><table>
+  <thead><tr><th><code>method =</code></th><th>What it does</th><th>What is interpolated</th></tr></thead>
+  <tbody>
+    <tr><td><code>:vfi_grid</code></td><td>VFI, trying every grid point (week 3)</td><td>nothing: $a'$ stays on the grid</td></tr>
+    <tr><td><code>:vfi_fast</code></td><td>the same, with monotonicity, concavity and Howard</td><td>nothing</td></tr>
+    <tr><td><code>:vfi_interp</code></td><td>VFI, interpolating $V$ and optimising with Brent (week 3)</td><td>$V$, so $a'$ can leave the grid</td></tr>
+    <tr><td><code>:vfi_interp_howard</code></td><td>the same, with Howard</td><td>$V$</td></tr>
+    <tr><td><code>:egm</code></td><td>the endogenous grid method</td><td>the saving policy, back onto the grid</td></tr>
+  </tbody>
+</table></div>
+<p>The package still uses no packages beyond <code>Plots</code>.</p>
+
+<!-- ================= 3 ================= -->
+<h2 id="folders"><span class="num">PART 3</span>The folders again</h2>
+<p>The rules are the same: <code>src/</code> never plots or prints, <code>run/</code> holds no model logic, <code>test/</code> checks against known answers. Week 3's files are all here, unchanged apart from two small additions: <code>solve_vfi</code> takes a starting value and Howard's updates, and <code>compare_policies</code> can ignore the top of the grid. The new files, with slide numbers from the week 4 lecture:</p>
+<div class="tbl"><table>
+  <thead><tr><th>File</th><th>What it holds</th><th>Slides</th></tr></thead>
+  <tbody>
+    <tr><td><code>vfi_speedups.jl</code></td><td><code>bellman_step_fast!</code>, <code>howard_update!</code></td><td>5, 6</td></tr>
+    <tr><td><code>egm.jl</code></td><td><code>egm_step!</code>, <code>solve_egm</code></td><td>8 to 14</td></tr>
+    <tr><td><code>euler_errors.jl</code></td><td><code>euler_error</code>, <code>euler_errors</code></td><td>18, 19</td></tr>
+    <tr><td><code>distribution.jl</code></td><td><code>young_weights</code>, <code>policy_on_grid</code>, <code>build_Q</code>, <code>stationary_distribution</code>, <code>absorbing_states</code></td><td>20 to 25</td></tr>
+    <tr><td><code>simulate.jl</code></td><td><code>simulate_panel</code>: Monte Carlo</td><td>20</td></tr>
+    <tr><td><code>equilibrium.jl</code></td><td><code>Economy</code>, <code>setup</code>, <code>capital_demand</code>, <code>solve_household</code>, <code>excess_demand</code>, <code>solve_equilibrium</code></td><td>27 to 30</td></tr>
+    <tr><td><code>statistics.jl</code></td><td><code>model_stats</code>, <code>mpc</code>, <code>conditional_density</code>, <code>joint_table</code></td><td>26, 32, 33</td></tr>
+  </tbody>
+</table></div>
+
+<!-- ================= 4 ================= -->
+<h2 id="speed"><span class="num">PART 4</span>Without interpolation: speeding up the search</h2>
+<h3><code>bellman_step_fast!</code> (slide 6)</h3>
+<p>Week 3's <code>bellman_step!</code>, with two shortcuts. If $k^*$ is the best choice at $a_{i-1}$, the search starts there:</p>
+$$V^{n+1}_{ij} = \max_{k \geq k^*} \ u\big(R a_i + w y_j - a_k\big) + \beta \sum_m V^n_{km} P_{jm} .$$
+<pre><code>function bellman_step_fast!(V1, pol, V0, hh::Household, a, y, P)
+    (; β, R, w) = hh
+    <span class="c"># EV[k, j]: the expected value of V0 at a_k, given income y_j today</span>
+    EV = V0 * P'
+    n_a, n_y = length(a), length(y)
+    <span class="c"># one income today at a time</span>
+    for j in 1:n_y
+        kstart = 1                           <span class="c"># monotonicity: the lowest choice still possible</span>
+        <span class="c"># work up the asset grid at this income</span>
+        for i in 1:n_a
+            <span class="c"># the best value so far, and the index of the choice that gave it</span>
+            best, kbest = -Inf, kstart
+            <span class="c"># try the choices a_k, from the previous state's best upwards</span>
+            for k in kstart:n_a
+                c = R * a[i] + w * y[j] - a[k]
+                c &lt;= 0 &amp;&amp; break              <span class="c"># consumption only falls with k</span>
+                v = utility(c, hh) + β * EV[k, j]
+                v &lt; best &amp;&amp; break            <span class="c"># concavity: the first fall is past the peak</span>
+                best, kbest = v, k
+            end
+            <span class="c"># store the new value and the index of the best choice</span>
+            V1[i, j], pol[i, j] = best, kbest
+            <span class="c"># the next, richer state starts its search here</span>
+            kstart = kbest
+        end
+    end
+    return V1, pol
+end</code></pre>
+<p>The two lines that do the work:</p>
+<div class="tbl"><table>
+  <thead><tr><th>Code</th><th>Why</th></tr></thead>
+  <tbody>
+    <tr><td><code>for k in kstart:n_a</code></td><td>monotone policy: start at the previous state's best choice</td></tr>
+    <tr><td><code>v &lt; best &amp;&amp; break</code></td><td>concave objective: the first fall is past the peak</td></tr>
+  </tbody>
+</table></div>
+<h3><code>howard_update!</code> (slide 5)</h3>
+<p>Hold the policy fixed and update the value $n_H$ times with no maximisation:</p>
+<p>$$W^{k+1}_{ij} = u\big(R a_i + w y_j - g_{ij}\big) + \beta \sum_m P_{jm} W^k\big(g_{ij}, y_m\big).$$</p>
+<pre><code>function howard_update!(W, pol::Matrix{Int}, hh::Household, a, y, P; n_H, interp = :linear)
+    (; β, R, w) = hh
+    <span class="c"># utility under the fixed policy: it never changes, so compute it once</span>
+    U = [utility(R * a[i] + w * y[j] - a[pol[i, j]], hh) for i in eachindex(a), j in eachindex(y)]
+    <span class="c"># empty matrix to hold the expectation</span>
+    EV = similar(W)
+    <span class="c"># n_H cheap updates, with no maximisation</span>
+    for _ in 1:n_H
+        <span class="c"># EV = W * P', written into the existing matrix</span>
+        mul!(EV, W, P')
+        for j in eachindex(y), i in eachindex(a)
+            <span class="c"># utility today + discounted expected value at the fixed choice</span>
+            W[i, j] = U[i, j] + β * EV[pol[i, j], j]
+        end
+    end
+    return W
+end</code></pre>
+<p>The utility term is computed once. With the policy on the grid, the expectation is one matrix product and one look-up. <code>solve_vfi</code> always measures the distance across a maximisation, so <code>tol</code> means the same with and without Howard.</p>
+
+<!-- ================= 5 ================= -->
+<h2 id="interp"><span class="num">PART 5</span>With interpolation: Howard needs a settled policy</h2>
+<div class="callout"><span class="tag">You can skip this for now</span><p>Move on to <a href="#egm">Part 6</a> and return to this part at the end.</p></div>
+<p>Week 3's <code>bellman_step_interp!</code> is unchanged. Howard's update reads $W^k$ at the off-grid choice by interpolating the column <code>EV[:, j]</code>. That gives the same number as interpolating each column of $W$ and weighting by $P_{jm}$, because both interpolants are linear in the stored values.</p>
+<p>Off the grid, the expectation is read from an interpolant $\hat E_j$, which passes through the values $\sum_m W^k_{im} P_{jm}$ at each $a_i$:</p>
+$$W^{k+1}_{ij} = u\big(R a_i + w y_j - g_{ij}\big) + \beta\, \hat E_j\big(g_{ij}\big).$$
+<pre><code>function howard_update!(W, apol::Matrix{&lt;:AbstractFloat}, hh::Household, a, y, P; n_H, interp = :linear)
+    (; β, R, w) = hh
+    <span class="c"># choose the interpolant: linear or cubic spline</span>
+    build = interp === :linear ? LinearInterp : interp === :cubic ? CubicSpline :
+            throw(ArgumentError("interp must be :linear or :cubic"))
+    <span class="c"># utility under the fixed policy: it never changes, so compute it once</span>
+    U = [utility(R * a[i] + w * y[j] - apol[i, j], hh) for i in eachindex(a), j in eachindex(y)]
+    <span class="c"># empty matrix to hold the expectation</span>
+    EV = similar(W)
+    <span class="c"># n_H cheap updates, with no maximisation</span>
+    for _ in 1:n_H
+        <span class="c"># EV = W * P', written into the existing matrix</span>
+        mul!(EV, W, P')
+        for j in eachindex(y)
+            <span class="c"># the expectation at this income, as a function of a'</span>
+            Ê = build(a, EV[:, j])
+            for i in eachindex(a)
+                <span class="c"># read the expectation at the off-grid choice apol[i, j]</span>
+                W[i, j] = U[i, j] + β * Ê(apol[i, j])
+            end
+        end
+    end
+    return W
+end</code></pre>
+<ul>
+  <li><code>apol[i, j]</code> is the chosen $a'$ itself, so this method runs when the policy is off the grid. Julia picks the method from the type of the policy.</li>
+  <li><code>Ê</code> is rebuilt at each update, once per income today, because <code>EV</code> has changed.</li>
+</ul>
+<p>Far from the solution, Howard can fail to converge. Linear interpolation puts kinks in the objective and Brent assumes one peak, so the policy can jump between sweeps, and Howard then evaluates a poor policy many times. So the keyword <code>howard_from</code> runs ordinary steps, which are a contraction, until the distance is below it. <code>:vfi_interp_howard</code> uses 0.01. Grid search maximises exactly, so <code>:vfi_fast</code> does not use it. In <code>solve_vfi</code>:</p>
+<pre><code><span class="c"># run Howard only if the distance is below howard_from and the lowest so far</span>
+if d &lt; d_best &amp;&amp; d &lt; howard_from
+    d_best = d
+    <span class="c"># evaluate the current policy n_H times, updating V1 in place</span>
+    n_H &gt; 0 &amp;&amp; howard_update!(V1, pol, hh, a, y, P; n_H, interp)
+end</code></pre>
+<p>Howard also runs only when the distance is the lowest so far.</p>
+
+<!-- ================= 6 ================= -->
+<h2 id="egm"><span class="num">PART 6</span>egm.jl: the endogenous grid method</h2>
+<p>Read each grid point as tomorrow's assets $a'_i$ (slides 12 to 14). Then nothing on the right-hand side of the Euler equation is unknown:</p>
+$$\text{RHS}(a'_i, y_j) = \beta R \sum_m P_{jm}\, u'\big(g^n_c(a'_i, y_m)\big), \qquad \tilde c = u'^{-1}\big(\text{RHS}(a'_i, y_j)\big), \qquad \hat a_i = \frac{\tilde c + a'_i - w y_j}{R} .$$
+<p>This is <code>egm_step!</code>:</p>
+<pre><code>function egm_step!(c1, apol, c0, hh::Household, a, y, P)
+    (; β, γ, R, w) = hh
+    <span class="c"># read a[i] as tomorrow's assets: row i of EMU is the choice a'_i</span>
+    EMU = marginal_utility.(c0, γ) * P'          <span class="c"># EMU[i, j] = Σ_m P[j, m] u'(c0[i, m])</span>
+    <span class="c"># empty vector for the generated assets at one income</span>
+    â = similar(a)
+    <span class="c"># one income today at a time</span>
+    for j in eachindex(y)
+        <span class="c"># each grid point is a choice of tomorrow's assets</span>
+        for i in eachindex(a)
+            <span class="c"># invert the Euler equation: consumption today, with no root finder</span>
+            c̃ = inverse_marginal_utility(β * R * EMU[i, j], γ)
+            <span class="c"># budget constraint: the assets today that lead to this a'</span>
+            â[i] = endogenous_assets(c̃, a[i], w * y[j], R)
+        end
+        ĝ = LinearInterp(â, a)                   <span class="c"># a' as a function of today's assets</span>
+        <span class="c"># back on the grid: a[i] now means today's assets</span>
+        for i in eachindex(a)
+            apol[i, j] = max(ĝ(a[i]), a[1])      <span class="c"># the borrowing constraint (slide 14)</span>
+            <span class="c"># consumption from the budget constraint</span>
+            c1[i, j] = R * a[i] + w * y[j] - apol[i, j]
+        end
+    end
+    return c1, apol
+end</code></pre>
+<p>Line by line:</p>
+<div class="tbl"><table>
+  <thead><tr><th>Code</th><th>Maths</th></tr></thead>
+  <tbody>
+    <tr><td><code>EMU = marginal_utility.(c0, γ) * P'</code></td><td>$\sum_m P_{jm}\, u'(g^n_c(a'_i, y_m))$ for every $i, j$</td></tr>
+    <tr><td><code>inverse_marginal_utility(β * R * EMU[i, j], γ)</code></td><td>$\tilde c = u'^{-1}(\text{RHS}(a'_i, y_j))$</td></tr>
+    <tr><td><code>endogenous_assets(c̃, a[i], w * y[j], R)</code></td><td>$\hat a_i = (\tilde c + a'_i - w y_j) / R$</td></tr>
+    <tr><td><code>ĝ = LinearInterp(â, a)</code></td><td>the policy through the pairs $(\hat a_i, a'_i)$</td></tr>
+    <tr><td><code>max(ĝ(a[i]), a[1])</code></td><td>the borrowing constraint (slide 14)</td></tr>
+    <tr><td><code>R * a[i] + w * y[j] - apol[i, j]</code></td><td>consumption from the budget constraint</td></tr>
+  </tbody>
+</table></div>
+<p>The worked number on slide 10 is a test: <code>endogenous_assets(1.5, 2.0, 1.0, 1.02)</code> returns $2.451$.</p>
+<p>EGM takes about as many iterations as plain VFI (319 against 295 on the lab grid). The gain is the cost per iteration: no search, one matrix product and one interpolation per income state. It has no value function, so <code>sol.V</code> is <code>nothing</code>.</p>
+<p>At very high assets the saving policy can come out just above the top of the grid (250.15 at the highest income on the dense grid). This does no harm inside EGM, where the grid only ever holds tomorrow's assets, and <code>policy_on_grid</code> caps it before the distribution uses it.</p>
+
+<!-- ================= 7 ================= -->
+<h2 id="euler"><span class="num">PART 7</span>euler_errors.jl: how accurate?</h2>
+<p>The consumption that the Euler equation implies, and the error relative to the policy's consumption $c$:</p>
+$$c^{EE} = u'^{-1}\Big(\beta R \sum_m P_{jm}\, u'\big(c'_m\big)\Big), \qquad \varepsilon = 1 - \frac{c^{EE}}{c} .$$
+<pre><code>function euler_error(c, c′, probs, β, R, γ)
+    <span class="c"># the consumption the Euler equation implies, given tomorrow's consumption c′</span>
+    c_EE = inverse_marginal_utility(β * R * sum(p * marginal_utility(x, γ) for (p, x) in zip(probs, c′)), γ)
+    <span class="c"># ε = 0 means the Euler equation holds exactly</span>
+    return (c_EE = c_EE, ε = 1 - c_EE / c)
+end</code></pre>
+<p><code>euler_error</code> is slide 18's formula at one state, and reproduces slide 19's numbers: $c^{EE} = 2.0425$, $\varepsilon = -0.0213$. <code>euler_errors</code> repeats it at 2000 equally spaced asset levels up to 50 at every income, reading the policies by linear interpolation, and leaves out states where the constraint binds:</p>
+<pre><code><span class="c"># every income, at equally spaced test assets x off the solution grid</span>
+for j in eachindex(y), x in range(a[1], a_hi; length = n_test)
+    <span class="c"># the policy's consumption at x, by interpolation</span>
+    c = gc[j](x)
+    <span class="c"># budget constraint: tomorrow's assets</span>
+    a′ = R * x + w * y[j] - c
+    a′ &lt;= a[1] + 1e-10 &amp;&amp; continue           <span class="c"># the constraint binds</span>
+    <span class="c"># tomorrow's consumption at a′ in each income, with row j of P as the probabilities</span>
+    e = euler_error(c, [gc[m](a′) for m in eachindex(y)], view(P, j, :), β, R, γ)
+    push!(errs, abs(e.ε))
+end</code></pre>
+<p>Report $\log_{10}|\varepsilon|$: $-3$ is an error of one part in a thousand of consumption.</p>
+
+<!-- ================= 8 ================= -->
+<h2 id="dist"><span class="num">PART 8</span>distribution.jl and simulate.jl: the joint distribution</h2>
+<p><code>young_weights</code> is the lottery of slide 23. With $a_k \leq a' \leq a_{k+1}$, it returns $k$ and the probability of going to the point below:</p>
+$$p = \frac{a_{k+1} - a'}{a_{k+1} - a_k}, \qquad p\, a_k + (1-p)\, a_{k+1} = a' .$$
+<pre><code>function young_weights(a′, a)
+    <span class="c"># below the grid: all the mass goes to the first point</span>
+    a′ &lt;= a[1] &amp;&amp; return 1, 1.0
+    <span class="c"># above the grid: all the mass goes to the last point</span>
+    a′ &gt;= a[end] &amp;&amp; return length(a) - 1, 0.0
+    <span class="c"># the index of the grid point just below a′</span>
+    k = searchsortedlast(a, a′)
+    <span class="c"># the point below, and the probability of going to it</span>
+    return k, (a[k+1] - a′) / (a[k+1] - a[k])
+end</code></pre>
+<p><code>build_Q</code> writes $Q$ out for small grids, and reproduces slide 25: 0.14 and 0.06. <code>stationary_distribution</code> applies $Q'$ in two parts without storing it: move the mass in assets within each income, then apply the income chain with one matrix product:</p>
+$$\mu_{kj} = \sum_i \lambda^{\ell}_{ij}\, \Pr\big(g_{ij} \to a_k\big), \qquad \lambda^{\ell+1}_{km} = \sum_j \mu_{kj} P_{jm} .$$
+<p>$\Pr(g_{ij} \to a_k)$ is the lottery's probability of sending the choice $g_{ij}$ to the node $a_k$. This is the loop:</p>
+<pre><code><span class="c"># each pass moves the distribution forward one period</span>
+for n in 1:maxiter
+    <span class="c"># μ: the mass after saving, before the income shock</span>
+    fill!(μ, 0.0)
+    for j in 1:n_y, i in 1:n_a               <span class="c"># the savings decision</span>
+        <span class="c"># this state's lottery: the point below and its probability</span>
+        k, p = ks[i, j], ps[i, j]
+        <span class="c"># share p of the mass goes to the point below</span>
+        μ[k, j] += p * λ0[i, j]
+        <span class="c"># the rest goes to the point above</span>
+        μ[k+1, j] += (1 - p) * λ0[i, j]
+    end
+    mul!(λ1, μ, P)                           <span class="c"># the income shocks: λ1[k, m] = Σ_j μ[k, j] P[j, m]</span>
+    <span class="c"># the largest change between two passes</span>
+    d = maximum(abs.(λ1 .- λ0))
+    d &lt; tol &amp;&amp; return (λ = λ1, iterations = n, converged = true)
+    <span class="c"># the new distribution becomes the current one</span>
+    λ0, λ1 = λ1, λ0
+end</code></pre>
+<ul>
+  <li><code>ks</code> and <code>ps</code> hold each state's lottery, computed once before the loop because the policy does not change.</li>
+  <li><code>mul!(λ1, μ, P)</code> writes the matrix product into <code>λ1</code> without allocating a new matrix.</li>
+</ul>
+<p><code>eq.λ</code> is the joint distribution of wealth and income: <code>eq.λ[i, j]</code> is the share of households at $(a_i, y_j)$. <code>joint_table</code> groups it into wealth bins, and <code>conditional_density</code> gives the density of assets at one income.</p>
+<figure><img src="week04_code_guide_joint.png" alt="Two panels, as on the lecture slide. Left: the density of assets at the lowest and highest income; low-income households pile up at the borrowing limit. Right: the joint distribution in three dimensions, one density curve per income state; most households have middle incomes, and wealth rises with income."></figure>
+<p><code>simulate_panel</code> finds the same distribution by Monte Carlo: 50,000 households for 1000 periods under the same policy. On the lab grid it takes about 30 times as long as the histogram, and the largest gap between the two joint tables is 0.18 percentage points.</p>
+
+<!-- ================= 9 ================= -->
+<h2 id="eq"><span class="num">PART 9</span>equilibrium.jl and statistics.jl</h2>
+<div class="tbl"><table>
+  <thead><tr><th>Lecture</th><th>Function</th></tr></thead>
+  <tbody>
+    <tr><td>Set-up (slide 28)</td><td><code>Economy</code>, <code>setup</code></td></tr>
+    <tr><td>Step 1: guess $r$</td><td><code>solve_equilibrium</code></td></tr>
+    <tr><td>Step 2: firm</td><td><code>capital_demand</code>, <code>w_from_r</code></td></tr>
+    <tr><td>Step 3: household</td><td><code>solve_household</code></td></tr>
+    <tr><td>Step 4: distribution</td><td><code>policy_on_grid</code>, <code>stationary_distribution</code></td></tr>
+    <tr><td>Step 5: excess demand</td><td><code>excess_demand</code></td></tr>
+    <tr><td>Step 6: update $r$</td><td><code>solve_equilibrium</code></td></tr>
+  </tbody>
+</table></div>
+<p>Steps 2 to 5 at one interest rate. Capital demand comes from the firm, asset supply from the distribution:</p>
+$$K(r) = \left(\frac{\alpha}{r + \delta}\right)^{\frac{1}{1-\alpha}} N, \qquad \Phi(r) = \sum_{i,j} a_i\, \lambda(a_i, y_j;\, r) - K(r) .$$
+<pre><code>function excess_demand(r, econ::Economy, s; method = :egm, start = nothing, λ_start = nothing, n_H = 50)
+    (; β, γ, ϕ, α, δ) = econ
+    K = capital_demand(r, s.N; α, δ)                                <span class="c"># Step 2</span>
+    w = w_from_r(r; α, δ)
+    <span class="c"># the household at these prices</span>
+    hh = Household(; β, γ, ϕ, r, w)
+    sol = solve_household(hh, s; method, start, n_H)                <span class="c"># Step 3</span>
+    g = policy_on_grid(sol, s.a_dist)                               <span class="c"># Step 4</span>
+    <span class="c"># the stationary distribution under this policy</span>
+    dist = stationary_distribution(g, s.a_dist, s.P; λ_start)
+    λ = dist.λ
+    <span class="c"># asset supply: each asset level times the mass at that level</span>
+    Ea = sum(s.a_dist .* sum(λ; dims = 2))                          <span class="c"># Step 5</span>
+    return (; Φ = Ea - K, Ea, K, w, r, hh, sol, g, λ, converged = dist.converged)
+end</code></pre>
+<p>The bracket is the theory's, pulled in slightly: $(-\delta + 0.001,\ 1/\beta - 1 - 0.001)$. The bisection stops when $|\Phi| &lt; 10^{-3}$ or the bracket is narrower than $10^{-6}$. <a href="#gridsearch">Part 12</a> explains the second test. Each $r$ starts from the previous $r$'s policy. This is Step 6. If $\Phi(r) > 0$, assets exceed capital demand, so $r$ becomes the new upper end of the bracket; otherwise it becomes the lower end:</p>
+<pre><code><span class="c"># the two ends of the bracket for r</span>
+lo, hi = bracket
+<span class="c"># solve the whole model at both ends</span>
+elo, ehi = evaluate(lo), evaluate(hi)
+<span class="c"># stop if the equilibrium is not inside the bracket</span>
+elo.Φ &lt; 0 &lt; ehi.Φ || error("Φ does not change sign on the bracket: Φ($lo) = $(elo.Φ), Φ($hi) = $(ehi.Φ)")
+<span class="c"># keep the r with the smallest |Φ| so far</span>
+best = abs(elo.Φ) &lt; abs(ehi.Φ) ? elo : ehi
+<span class="c"># halve the bracket until either stopping rule is met</span>
+while hi - lo &gt; tol_r &amp;&amp; abs(best.Φ) &gt; tol_Φ
+    <span class="c"># solve the whole model at the midpoint</span>
+    e = evaluate((lo + hi) / 2)
+    abs(e.Φ) &lt; abs(best.Φ) &amp;&amp; (best = e)
+    <span class="c"># Φ &gt; 0: too many assets, so r must fall. Otherwise it must rise</span>
+    e.Φ &gt; 0 ? (hi = e.r) : (lo = e.r)
+end</code></pre>
+<p><code>model_stats(eq)</code> gives slide 32's table. <code>at_limit</code> is the mass at the first grid point, which depends on the grid because the lottery sends mass there from just above; <code>constrained</code> is the mass of households who actually choose $a' = a_1$. <code>mpc</code> is $\Delta c / (R \Delta a)$, since extra assets of $\Delta a$ are $R \Delta a$ of extra resources.</p>
+
+<!-- ================= 10 ================= -->
+<h2 id="run"><span class="num">PART 10</span>Run it: scripts, the REPL, tests, notebook</h2>
+<p>From inside <code>ec991-work/week04/EC991Week4</code>:</p>
+<pre><code>julia --project=. -e "using Pkg; Pkg.instantiate()"   <span class="c"># once</span>
+julia --project=. run/compare_household.jl            <span class="c"># five methods at one r: time and accuracy</span>
+julia --project=. run/solve_distribution.jl           <span class="c"># the joint distribution: histogram vs Monte Carlo</span>
+julia --project=. run/solve_equilibrium.jl            <span class="c"># the equilibrium by EGM, then the statistics</span>
+julia --project=. run/solve_equilibrium.jl vfi_fast   <span class="c"># the same by another method</span>
+julia --project=. run/compare_equilibrium.jl          <span class="c"># the race: every method, same bracket</span>
+julia --project=. run/make_figures.jl                 <span class="c"># the figures on the slides</span>
+julia --project=. -e "using Pkg; Pkg.test()"          <span class="c"># the checks</span></code></pre>
+<h3>In the REPL</h3>
+<p>Start Julia inside the package folder with <code>julia --project=.</code>, and work interactively. This is the quickest way to try things, because compiled code stays in memory:</p>
+<pre><code>using EC991Week4
+eq = solve_equilibrium(Economy(); method = :egm)
+model_stats(eq)
+eq.λ                                                  <span class="c"># the joint distribution</span>
+joint_table(eq.λ, eq.s.a_dist, [0, 1, 5, 10, 20, Inf])
+@time solve_equilibrium(Economy(); method = :vfi_fast);
+@time solve_equilibrium(Economy(); method = :vfi_fast);   <span class="c"># time this one: the first compiles</span>
+include("run/compare_household.jl")                   <span class="c"># any script runs here too</span></code></pre>
+<p>Change a parameter by name, as in <code>Economy(σ = 0.2)</code> or <code>Economy(ϕ = 1.0)</code>. The grid behind the lecture's figures is <code>dense_economy()</code>.</p>
+<h3>What the numbers should be</h3>
+<p>The equilibrium by EGM on the lab grid:</p>
+<div class="tbl"><table>
+  <thead><tr><th>Statistic</th><th>Value</th></tr></thead>
+  <tbody>
+    <tr><td>$r^*$</td><td>0.0377</td></tr>
+    <tr><td>$w$</td><td>1.287</td></tr>
+    <tr><td>$K$</td><td>7.425</td></tr>
+    <tr><td>$N$</td><td>1.027</td></tr>
+    <tr><td>$A/Y$</td><td>3.76</td></tr>
+    <tr><td>constrained</td><td>0.034</td></tr>
+    <tr><td>median assets</td><td>5.58</td></tr>
+    <tr><td>99th percentile</td><td>29.10</td></tr>
+    <tr><td>Gini</td><td>0.485</td></tr>
+  </tbody>
+</table></div>
+<h3>Time and accuracy</h3>
+<p>One household solve at $r = 0.0377$, one thread on a 2.2 GHz server. Your times will differ; the pattern should not.</p>
+<div class="tbl"><table>
+  <thead><tr><th>Method</th><th>Time (s), $n_a = 300$</th><th>Time (s), $n_a = 1000$</th><th>Mean $\log_{10}|\varepsilon|$, 300</th><th>1000</th></tr></thead>
+  <tbody>
+    <tr><td>grid search</td><td>1.97</td><td>22.04</td><td>&minus;1.86</td><td>&minus;2.22</td></tr>
+    <tr><td>grid search + speed-ups</td><td>0.006</td><td>0.030</td><td>&minus;1.86</td><td>&minus;2.22</td></tr>
+    <tr><td>interpolation</td><td>3.92</td><td>13.95</td><td>&minus;3.30</td><td>&minus;3.63</td></tr>
+    <tr><td>interpolation + Howard</td><td>0.61</td><td>2.15</td><td>&minus;3.30</td><td>&minus;3.63</td></tr>
+    <tr><td>EGM</td><td>0.10</td><td>0.28</td><td>&minus;6.45</td><td>&minus;7.39</td></tr>
+  </tbody>
+</table></div>
+<p>The full equilibrium, from the same bracket:</p>
+<div class="tbl"><table>
+  <thead><tr><th>Method</th><th>Time (s), $n_a = 300$</th><th>Time (s), $n_a = 1000$</th><th>$r^*$, 300</th><th>1000</th></tr></thead>
+  <tbody>
+    <tr><td>grid search</td><td>27.1</td><td>321.2</td><td>0.0378</td><td>0.0380</td></tr>
+    <tr><td>grid search + speed-ups</td><td>1.4</td><td>19.2</td><td>0.0378</td><td>0.0380</td></tr>
+    <tr><td>interpolation</td><td>54.7</td><td>157.1</td><td>0.0377</td><td>0.0377</td></tr>
+    <tr><td>interpolation + Howard</td><td>7.0</td><td>28.3</td><td>0.0377</td><td>0.0377</td></tr>
+    <tr><td>EGM</td><td>1.3</td><td>12.3</td><td>0.0377</td><td>0.0377</td></tr>
+  </tbody>
+</table></div>
+<p>What to take from these. Speed-ups change the time, not the answer. For one household solve, fast grid search is the quickest but far less accurate than EGM. For the equilibrium, the distribution counts too, and EGM is the quickest route to the right answer. Grid search settles on a different $r^*$: see <a href="#gridsearch">Part 12</a>. In a different model VFI may be the only option: see the lecture's slide on why EGM is less robust.</p>
+<figure><img src="week04_code_guide_policy.png" alt="The saving policy at the lowest income for assets up to 2. Grid search moves in steps; interpolation and EGM lie on top of each other."></figure>
+<h3>The tests</h3>
+<pre><code>julia --project=. -e "using Pkg; Pkg.test()"</code></pre>
+<p>They check the lecture's worked numbers, that the speed-ups change nothing, that methods agree, that the distribution conserves mass and mean assets, that Monte Carlo agrees with the histogram, and the statistics in the table above. The last line should say <code>tests passed</code>.</p>
+<h3>The notebook</h3>
+<p>Start Pluto from your <code>ec991-work</code> folder:</p>
+<pre><code>julia -e 'using Pluto; Pluto.run()'</code></pre>
+<p>Then paste <code>week04/week04_lab.jl</code> into the <i>Open a notebook</i> box. The first run is slow, because the package compiles. The notebook climbs the same ladder with the source of each function next to its maths, and ends with six exercises. It uses the lab grid and shows no timings, because Pluto's compile times would mislead.</p>
+
+<!-- ================= 11 ================= -->
+<h2 id="checklist"><span class="num">PART 11</span>Checklist and common problems</h2>
+<ul class="check" id="checklist-items">
+  <li><input type="checkbox" id="w4-pull"><label for="w4-pull">Pulled the course repository; <code>week04/lab/EC991Week4</code> exists</label></li>
+  <li><input type="checkbox" id="w4-copy"><label for="w4-copy">Copied the lab folder into <code>ec991-work</code> and committed it</label></li>
+  <li><input type="checkbox" id="w4-inst"><label for="w4-inst"><code>Pkg.instantiate()</code> finished without errors</label></li>
+  <li><input type="checkbox" id="w4-hh"><label for="w4-hh"><code>run/compare_household.jl</code> shows EGM with a mean $\log_{10}|\varepsilon|$ of about $-6.45$</label></li>
+  <li><input type="checkbox" id="w4-eq"><label for="w4-eq"><code>run/solve_equilibrium.jl</code> ends with $r = 0.0377$</label></li>
+  <li><input type="checkbox" id="w4-repl"><label for="w4-repl">Ran <code>solve_equilibrium</code> with two methods in the REPL</label></li>
+  <li><input type="checkbox" id="w4-test"><label for="w4-test"><code>Pkg.test()</code> ends with "tests passed"</label></li>
+  <li><input type="checkbox" id="w4-nb"><label for="w4-nb">The notebook opens in Pluto with no red cells</label></li>
+</ul>
+<p class="progress" id="progress"></p>
+
+<h3>Common problems</h3>
+<div class="tbl"><table>
+  <thead><tr><th>You see</th><th>Cause and fix</th></tr></thead>
+  <tbody>
+    <tr><td>The first run is much slower than the second</td><td>Julia compiles on first use. Time the second call, in the same REPL session.</td></tr>
+    <tr><td><code>Φ does not change sign on the bracket</code></td><td>The bracket does not contain the equilibrium, or the upper bound of the grid is too low. Check <code>bracket</code> and <code>a_max</code>.</td></tr>
+    <tr><td><code>value function iteration did not converge</code> with your own Howard settings</td><td>Far from the solution, Howard can evaluate a poor policy too often. Lower <code>n_H</code>, or pass <code>howard_from = 0.01</code>.</td></tr>
+    <tr><td>The policy sits on $a_{n_a}$</td><td>Normal at the top of the grid close to $r = 1/\beta - 1$. It matters only if households live there: check <code>sum(eq.λ[end, :])</code> at the equilibrium.</td></tr>
+    <tr><td>Garbled EGM policy</td><td><code>LinearInterp</code> needs $\hat a$ increasing. Check that $\tilde c$ is positive and that the guess for $c$ is increasing in $a$.</td></tr>
+    <tr><td><code>Package EC991Week4 not found</code></td><td>Julia is in your default environment. Run from inside <code>EC991Week4/</code> with <code>--project=.</code>.</td></tr>
+  </tbody>
+</table></div>
+
+<!-- ================= 12 ================= -->
+<h2 id="gridsearch"><span class="num">PART 12</span>The problems grid search brings</h2>
+<p>Rounding $a'$ to the grid creates two problems that the other methods do not have.</p>
+<h3>Absorbing states</h3>
+<p>Far up the grid the gaps are wider than the differences in saving across incomes. Under grid search every income then rounds to the same point, and where that point is $a$ itself a household that arrives never leaves. On the lab grid at $r = 0.0377$ there are 67 such points, the first at $a \approx 49$; <code>absorbing_states(sol)</code> finds them. So the long-run distribution depends on where it starts: a uniform start leaves mass there for ever. That is why the code starts everyone at the borrowing limit, and why grid search does not reuse the distribution from the previous $r$. Well above the equilibrium, mass leaks into these points slowly and $\lambda$ may not converge; $\Phi(r)$ still has the right sign, so the search goes on, but the final $r$ must converge or the code stops with an error.</p>
+<h3>Jumps in asset supply</h3>
+<p>The policy does not move until a choice flips to the next grid point, so $\Phi(r)$ moves in jumps and may never get within $10^{-3}$ of zero. That is why the bisection also stops when the bracket is narrower than $10^{-6}$.</p>
+<h3>What you may see</h3>
+<div class="tbl"><table>
+  <thead><tr><th>You see</th><th>Cause and fix</th></tr></thead>
+  <tbody>
+    <tr><td>Grid search and EGM give different $r^*$</td><td>Expected: asset supply jumps under grid search, and the policy cannot be closer than the local grid gap allows. Trust the method whose Euler errors are smaller.</td></tr>
+    <tr><td><code>the distribution did not converge at the equilibrium</code></td><td>The policy is on the grid and mass is leaking into absorbing states near your $r$. Use a method off the grid, or change the grid.</td></tr>
+  </tbody>
+</table></div>
+
+</div>
+
+<script>
+(function () {
+  // OS tabs.
+  function setOS(os) {
+    document.querySelectorAll('.os').forEach(function (box) {
+      box.querySelectorAll('.os-tabs button').forEach(function (b) { b.setAttribute('aria-selected', b.dataset.os === os ? 'true' : 'false'); });
+      box.querySelectorAll('.os-pane').forEach(function (p) { p.classList.toggle('active', p.dataset.pane === os); });
+    });
+    try { localStorage.setItem('ec991-os', os); } catch (e) {}
+  }
+  document.querySelectorAll('.os-tabs button').forEach(function (b) { b.addEventListener('click', function () { setOS(b.dataset.os); }); });
+  var saved = null;
+  try { saved = localStorage.getItem('ec991-os'); } catch (e) {}
+  if (saved !== 'mac' && saved !== 'win') saved = /Windows/.test(navigator.userAgent || '') ? 'win' : 'mac';
+  setOS(saved);
+
+  // Copy buttons on code blocks.
+  document.querySelectorAll('pre').forEach(function (pre) {
+    var btn = document.createElement('button');
+    btn.className = 'copy'; btn.type = 'button'; btn.textContent = 'Copy';
+    btn.addEventListener('click', function () {
+      var text = pre.querySelector('code').innerText.replace(/[ \t]+#.*$/gm, '').replace(/\n{2,}/g, '\n').trim();
+      var done = function () { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = 'Copy'; }, 1200); };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, function () { selectText(pre); });
+      } else { selectText(pre); }
+    });
+    pre.appendChild(btn);
+  });
+  function selectText(el) {
+    var r = document.createRange(); r.selectNodeContents(el.querySelector('code'));
+    var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+  }
+
+  // Checklist, remembered in this browser only.
+  var boxes = document.querySelectorAll('#checklist-items input');
+  var prog = document.getElementById('progress');
+  function update() {
+    var n = 0; boxes.forEach(function (b) { if (b.checked) n++; });
+    prog.textContent = n === boxes.length ? 'All ' + n + ' done.' : n + ' of ' + boxes.length + ' done.';
+  }
+  boxes.forEach(function (b) {
+    try { b.checked = localStorage.getItem('ec991-' + b.id) === '1'; } catch (e) {}
+    b.addEventListener('change', function () {
+      try { localStorage.setItem('ec991-' + b.id, b.checked ? '1' : '0'); } catch (e) {}
+      update();
+    });
+  });
+  update();
+})();
+</script>
