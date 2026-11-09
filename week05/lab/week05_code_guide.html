@@ -1,0 +1,626 @@
+<title>EC991 Week 5 Code Guide</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Public+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column, 68ch, numbered parts; same house style as the week 1 setup guide. */
+:root {
+  --bg: #fbf9f7;
+  --surface: #f3efeb;
+  --surface-2: #e9e3dd;
+  --fg: #1f1a18;
+  --fg-muted: #6b625d;
+  --rule: #d9d0c9;
+  --accent: #cc092f;        /* vermell, the course colour */
+  --accent-ink: #ffffff;
+  --link: #0000b2;
+  --code-bg: #f0ebe6;
+  --ok: #1f7a3a;
+  --ok-bg: #e3f2e7;
+  --warn: #8a5a00;
+  --warn-bg: #fbefd4;
+  --display: "Newsreader", Georgia, "Times New Roman", serif;
+  --body: "Public Sans", -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  --mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #171412; --surface: #211d1a; --surface-2: #2b2522; --fg: #ece6e0; --fg-muted: #a69c94;
+    --rule: #3a322d; --accent: #ff4d6d; --accent-ink: #1a0b0f; --link: #8f9bff; --code-bg: #1f1b18;
+    --ok: #7fd49a; --ok-bg: #1b3022; --warn: #f2c56b; --warn-bg: #352a12; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #171412; --surface: #211d1a; --surface-2: #2b2522; --fg: #ece6e0; --fg-muted: #a69c94;
+  --rule: #3a322d; --accent: #ff4d6d; --accent-ink: #1a0b0f; --link: #8f9bff; --code-bg: #1f1b18;
+  --ok: #7fd49a; --ok-bg: #1b3022; --warn: #f2c56b; --warn-bg: #352a12; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 16.5px; line-height: 1.6; margin: 0; }
+.wrap { max-width: 72ch; margin: 0 auto; padding-block: 2.5rem 5rem; padding-inline: 20px; }
+header.masthead { border-bottom: 2px solid var(--accent); padding-bottom: 1.25rem; margin-bottom: 2rem; }
+.eyebrow { font-family: var(--body); text-transform: uppercase; letter-spacing: .12em; font-size: .75rem; color: var(--accent); font-weight: 600; margin: 0 0 .5rem; }
+h1 { font-family: var(--display); font-weight: 500; font-size: clamp(2rem, 5vw, 3rem); line-height: 1.1; margin: 0 0 .75rem; text-wrap: balance; letter-spacing: -.01em; }
+.lede { font-size: 1.1rem; color: var(--fg-muted); margin: 0; max-width: 60ch; }
+.meta { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; margin-top: 1rem; font-size: .9rem; color: var(--fg-muted); }
+.meta b { color: var(--fg); font-weight: 600; }
+h2 { font-family: var(--display); font-weight: 500; font-size: 1.85rem; line-height: 1.15; margin: 3rem 0 .75rem; text-wrap: balance; display: flex; gap: .75rem; align-items: baseline; }
+h2 .num { font-family: var(--body); font-size: .8rem; font-weight: 600; color: var(--accent); letter-spacing: .08em; flex: none; }
+h3 { font-family: var(--body); font-weight: 600; font-size: 1.05rem; margin: 2rem 0 .5rem; }
+p { margin: 0 0 1rem; }
+a { color: var(--link); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+ul, ol { padding-left: 1.4rem; margin: 0 0 1rem; }
+li { margin-bottom: .35rem; }
+li > ul { margin-top: .35rem; }
+code { font-family: var(--mono); font-size: .86em; background: var(--code-bg); padding: .1em .35em; border-radius: 3px; }
+pre { position: relative; background: var(--code-bg); border: 1px solid var(--rule); border-radius: 6px; padding: .85rem 1rem; overflow-x: auto; margin: 0 0 1rem; font-size: .85rem; line-height: 1.5; }
+pre code { background: none; padding: 0; font-size: inherit; }
+pre .c { color: var(--fg-muted); }
+pre .copy { position: absolute; top: .4rem; right: .4rem; font: 600 .7rem var(--body); letter-spacing: .05em; text-transform: uppercase; color: var(--fg-muted); background: var(--surface); border: 1px solid var(--rule); border-radius: 4px; padding: .2rem .5rem; cursor: pointer; }
+pre .copy:hover { color: var(--fg); }
+kbd { font-family: var(--mono); font-size: .8em; border: 1px solid var(--rule); border-bottom-width: 2px; border-radius: 4px; padding: .05em .4em; background: var(--surface); }
+.toc { background: var(--surface); border-radius: 6px; padding: 1.1rem 1.25rem; margin: 1.5rem 0 0; }
+.toc h3 { margin: 0 0 .5rem; font-size: .8rem; text-transform: uppercase; letter-spacing: .1em; color: var(--fg-muted); }
+.toc ol { margin: 0; columns: 2; column-gap: 2rem; font-size: .95rem; }
+.toc li { break-inside: avoid; }
+@media (max-width: 560px) { .toc ol { columns: 1; } }
+.callout { border-left: 3px solid var(--accent); background: var(--surface); padding: .9rem 1.1rem; margin: 0 0 1.25rem; border-radius: 0 6px 6px 0; }
+.callout.ok { border-color: var(--ok); background: var(--ok-bg); }
+.callout.warn { border-color: var(--warn); background: var(--warn-bg); }
+.callout p:last-child { margin: 0; }
+.callout .tag { display: block; font-size: .72rem; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; margin-bottom: .3rem; color: var(--fg-muted); }
+.callout.ok .tag { color: var(--ok); }
+.callout.warn .tag { color: var(--warn); }
+/* OS tabs */
+.os { border: 1px solid var(--rule); border-radius: 6px; margin: 0 0 1.25rem; overflow: hidden; }
+.os-tabs { display: flex; background: var(--surface); border-bottom: 1px solid var(--rule); }
+.os-tabs button { flex: 1; font: 600 .85rem var(--body); padding: .55rem .5rem; background: none; border: 0; color: var(--fg-muted); cursor: pointer; border-bottom: 2px solid transparent; }
+.os-tabs button[aria-selected="true"] { color: var(--fg); border-bottom-color: var(--accent); }
+.os-pane { display: none; padding: 1rem 1rem .25rem; }
+.os-pane.active { display: block; }
+.os-pane pre { margin-bottom: .85rem; }
+/* tables */
+.tbl { overflow-x: auto; margin: 0 0 1.25rem; }
+table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+th, td { text-align: left; padding: .5rem .6rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font-size: .75rem; text-transform: uppercase; letter-spacing: .08em; color: var(--fg-muted); font-weight: 600; }
+td code { white-space: nowrap; }
+/* checklist */
+.check { list-style: none; padding: 0; }
+.check li { display: flex; gap: .7rem; align-items: flex-start; padding: .45rem 0; border-bottom: 1px solid var(--rule); margin: 0; }
+.check input { margin-top: .35rem; accent-color: var(--accent); width: 1rem; height: 1rem; flex: none; }
+.check label { cursor: pointer; }
+.progress { font-size: .85rem; color: var(--fg-muted); margin-top: .5rem; }
+.plan td:first-child { font-family: var(--mono); font-size: .85rem; white-space: nowrap; }
+.compare td:first-child { font-weight: 500; white-space: nowrap; }
+.compare code { white-space: pre; }
+figure { margin: 1.25rem 0; }
+figure img { width: 100%; height: auto; display: block; border: 1px solid var(--rule); border-radius: 6px; }
+figcaption { font-size: .85rem; color: var(--fg-muted); margin-top: .45rem; }
+.diagram { background: var(--surface); border-radius: 6px; padding: .75rem .75rem .25rem; margin: 1.25rem 0; }
+.diagram svg { width: 100%; height: auto; display: block; }
+.diagram text { fill: var(--fg); font-family: var(--body); font-size: 13px; }
+.diagram .mono { font-family: var(--mono); font-size: 12.5px; }
+.diagram .muted { fill: var(--fg-muted); font-size: 12px; }
+.diagram .small { font-size: 11.5px; }
+.diagram .box { fill: var(--bg); stroke: var(--rule); stroke-width: 1.2; }
+.diagram .accbox { fill: var(--bg); stroke: var(--accent); stroke-width: 1.6; }
+.diagram .arrow { stroke: var(--fg-muted); stroke-width: 1.4; fill: none; marker-end: url(#arr); }
+.diagram .accarrow { stroke: var(--accent); stroke-width: 1.6; fill: none; marker-end: url(#arracc); }
+.diagram .arrhead { fill: var(--fg-muted); }
+.diagram .arrheadacc { fill: var(--accent); }
+.diagram .acctext { fill: var(--accent); font-weight: 600; }
+.term { background: #1b1816; color: #e8e2dc; border-radius: 6px; padding: .85rem 1rem; font-family: var(--mono); font-size: .82rem; line-height: 1.5; overflow-x: auto; margin: 0 0 1rem; white-space: pre; }
+.term .ok { color: #7fd49a; } .term .dim { color: #9c928a; }
+footer { margin-top: 4rem; padding-top: 1.25rem; border-top: 1px solid var(--rule); font-size: .88rem; color: var(--fg-muted); }
+.small { font-size: .9rem; color: var(--fg-muted); }
+@media (prefers-reduced-motion: no-preference) { .os-pane.active { animation: fade .15s ease; } }
+@keyframes fade { from { opacity: .4 } to { opacity: 1 } }
+mjx-container { color: var(--fg); }
+.tbl mjx-container { font-size: 95%; }
+</style>
+<script>
+window.MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] }, svg: { fontCache: 'global' } };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.js"></script>
+<div class="wrap">
+<header class="masthead">
+  <p class="eyebrow">EC991 Topics in Macroeconomics · Week 5 Lab</p>
+  <h1>The week 5 code: firm dynamics in the Hopenhayn model</h1>
+  <p class="lede">Weeks 3 and 4 solved for households. This week the heterogeneous agents are firms: productivity follows a Markov chain, firms decide whether to stay or exit, and entry pins down the price. The equilibrium comes in two blocks: the price from free entry, then the number of firms from the goods market.</p>
+  <div class="meta">
+    <span><b>Lecturer</b> Aseem Patel</span>
+    <span><b>Term</b> Autumn 2026</span>
+    <span><b>Assumes</b> the week 4 code guide</span>
+    <span><b>Code</b> <code>week05/lab/EC991Week5</code></span>
+  </div>
+  <nav class="toc" aria-label="Contents">
+    <h3>Contents</h3>
+    <ol>
+      <li><a href="#pull">Pull the week 5 code</a></li>
+      <li><a href="#idea">Two blocks: the price, then the firms</a></li>
+      <li><a href="#folders">The folders again</a></li>
+      <li><a href="#static">static.jl: the static economy</a></li>
+      <li><a href="#bellman">bellman.jl: stay or exit</a></li>
+      <li><a href="#entry">entry.jl: the free entry price</a></li>
+      <li><a href="#measure">distribution.jl and equilibrium.jl: how many firms</a></li>
+      <li><a href="#lottery">Exit decisions on a grid: the lottery</a></li>
+      <li><a href="#stats">statistics.jl: size, turnover, age</a></li>
+      <li><a href="#run">Run it: scripts, the REPL, tests</a></li>
+      <li><a href="#checklist">Checklist and common problems</a></li>
+      <li><a href="#panel">simulate.jl: a 10-year panel of firms</a></li>
+    </ol>
+  </nav>
+</header>
+
+<!-- ================= 1 ================= -->
+<h2 id="pull"><span class="num">PART 1</span>Pull the week 5 code</h2>
+<p>In VS Code, open your <code>EC991</code> folder and choose <b>Pull</b> in the Source Control pane, or from a terminal:</p>
+<pre><code>cd EC991          <span class="c"># wherever you cloned it in week 1</span>
+git pull</code></pre>
+<p>A new folder appears next to <code>week04</code>:</p>
+<pre><code>EC991/
+└── week05/
+    └── lab/
+        ├── week05_code_guide.html              <span class="c"># this page</span>
+        └── EC991Week5/                         <span class="c"># the package: all the code</span>
+            ├── Project.toml, Manifest.toml, README.md
+            ├── src/
+            ├── run/
+            └── test/</code></pre>
+<p>Then copy the whole <code>lab</code> folder into your own repository and commit it, as in earlier weeks.</p>
+<div class="os" data-os>
+  <div class="os-tabs" role="tablist">
+    <button role="tab" data-os="mac" aria-selected="true">macOS / Linux</button>
+    <button role="tab" data-os="win" aria-selected="false">Windows (PowerShell)</button>
+  </div>
+  <div class="os-pane active" data-pane="mac">
+<pre><code>cp -R EC991/week05/lab ec991-work/week05</code></pre>
+  </div>
+  <div class="os-pane" data-pane="win">
+<pre><code>Copy-Item -Recurse EC991\week05\lab ec991-work\week05</code></pre>
+  </div>
+</div>
+<div class="callout ok"><span class="tag">You know it worked when</span><p>the folder <code>ec991-work/week05/EC991Week5</code> exists and <code>git log --oneline -1</code> in <code>ec991-work</code> shows your commit.</p></div>
+
+<!-- ================= 2 ================= -->
+<h2 id="idea"><span class="num">PART 2</span>Two blocks: the price, then the firms</h2>
+<p>In Aiyagari, every guess of $r$ needed the household problem, the distribution and the market in turn. Here the law of motion of the measure of firms is linear in the mass of entrants $M$, so the price can be found without knowing $M$ (slide 32):</p>
+<div class="tbl"><table>
+<thead><tr><th>Block</th><th>Lecture</th><th>Function</th></tr></thead>
+<tbody>
+<tr><td>Set-up</td><td>grid, $F$, $g$ (slide 34)</td><td><code>Industry</code>, <code>setup</code></td></tr>
+<tr><td rowspan="4">1. The price</td><td>Step 1: profits at $p$</td><td><code>static_decisions</code></td></tr>
+<tr><td>Step 2: the incumbent's Bellman equation</td><td><code>solve_firm</code></td></tr>
+<tr><td>Step 3: the value of entry</td><td><code>entry_value</code></td></tr>
+<tr><td>Step 4: update $p$</td><td><code>solve_price</code></td></tr>
+<tr><td rowspan="2">2. The firms</td><td>Step 5: the measure for one unit of entrants</td><td><code>stationary_measure</code></td></tr>
+<tr><td>Step 6: the mass of entrants</td><td><code>mass_of_entrants</code></td></tr>
+</tbody>
+</table></div>
+<p>All of it in one call:</p>
+<pre><code>eq = solve_equilibrium(Industry())                          <span class="c"># VFI, default parameters</span>
+eq = solve_equilibrium(Industry(); method = :policy_iteration)
+eq = solve_equilibrium(Industry(); exit = :lottery)         <span class="c"># Part 8</span></code></pre>
+<p>As before, the only package beyond the standard library is <code>Plots</code>, used by the run scripts.</p>
+
+<!-- ================= 3 ================= -->
+<h2 id="folders"><span class="num">PART 3</span>The folders again</h2>
+<p>Same rules: <code>src/</code> never plots or prints, <code>run/</code> holds no model logic, <code>test/</code> checks against known answers. Slide numbers are pages of the week 5 lecture, unless marked as tutorial slides.</p>
+<div class="tbl"><table>
+<thead><tr><th>File</th><th>What it holds</th><th>Slides</th></tr></thead>
+<tbody>
+<tr><td><code>markov.jl</code></td><td>week 3's Tauchen, now around a mean; <code>stationary</code>; <code>discretise_normal</code></td><td>34</td></tr>
+<tr><td><code>static.jl</code></td><td><code>efficient_allocation</code>, <code>aggregate_tfp</code>, <code>allocation_with_wedges</code>, <code>misallocation</code>, <code>planner_entry</code></td><td>7 to 22</td></tr>
+<tr><td><code>industry.jl</code></td><td><code>Industry</code>, <code>setup</code>, <code>static_decisions</code></td><td>26, 34, 41</td></tr>
+<tr><td><code>bellman.jl</code></td><td><code>bellman_step!</code>, <code>solve_firm</code>, <code>evaluate_policy</code>, <code>solve_policy_iteration</code>, <code>exit_threshold</code>, <code>exit_lottery</code></td><td>27, 28, 35; tutorial 5, 6, 13 to 15</td></tr>
+<tr><td><code>entry.jl</code></td><td><code>entry_value</code>, <code>solve_price</code></td><td>29, 36</td></tr>
+<tr><td><code>distribution.jl</code></td><td><code>exit_transition</code>, <code>stationary_measure</code>, <code>cohorts</code></td><td>30, 37</td></tr>
+<tr><td><code>equilibrium.jl</code></td><td><code>mass_of_entrants</code>, <code>Equilibrium</code>, <code>solve_equilibrium</code></td><td>32, 38, 39</td></tr>
+<tr><td><code>statistics.jl</code></td><td><code>industry_stats</code>, <code>size_distribution</code>, <code>age_profile</code></td><td>45; tutorial 11, 12</td></tr>
+<tr><td><code>simulate.jl</code></td><td><code>simulate_panel</code></td><td>Part 12</td></tr>
+</tbody>
+</table></div>
+
+<!-- ================= 4 ================= -->
+<h2 id="static"><span class="num">PART 4</span>static.jl: the static economy</h2>
+<p>A fixed set of firms, $y_i = z_i n_i^{\eta}$. Every function takes the productivities <code>z</code> and, optionally, weights <code>m</code>: the mass of firms at each $z$. With equal marginal products, $n_i \propto z_i^{1/(1-\eta)}$ (slide 9):</p>
+<pre><code>function efficient_allocation(z, N; η, m = ones(length(z)))
+    <span class="c"># each firm's weight: employment is proportional to z^(1/(1-η))</span>
+    s = z .^ (1 / (1 - η))
+    <span class="c"># share out the N workers in proportion to the weights</span>
+    n = N .* s ./ sum(m .* s)
+    <span class="c"># output of each firm, then total output over all firms</span>
+    y = z .* n .^ η
+    return (; n, y, Y = sum(m .* y))
+end</code></pre>
+<p>The two-firm example on slide 12 is a test: <code>efficient_allocation([1.0, 2.0], 9.0; η = 2/3)</code> gives $n = (1, 8)$ and $Y = 9$, and <code>aggregate_tfp</code> gives $Z = 9^{1/3}$, so $Z N^{\eta} = 9$.</p>
+<p>With wedges, a firm hires as if its productivity were $(1+\tau_i) z_i$, but produces with $z_i$ (slides 14 and 15). The misallocation term, with $x_i = z_i^{1/(1-\eta)}$:</p>
+$$\Omega = \frac{\sum_i m_i x_i (1+\tau_i)^{\eta/(1-\eta)}}{\big(\sum_i m_i x_i (1+\tau_i)^{1/(1-\eta)}\big)^{\eta}\big(\sum_i m_i x_i\big)^{1-\eta}} .$$
+<pre><code>function misallocation(z, τ; η, m = ones(length(z)))
+    <span class="c"># x_i = z_i^(1/(1-η)): how much firm i would hire without wedges</span>
+    x = z .^ (1 / (1 - η))
+    <span class="c"># t_i = 1 + τ_i: how much the wedge scales firm i's productivity when hiring</span>
+    t = 1 .+ τ
+    <span class="c"># numerator: output with wedges; denominator: the same labour, allocated efficiently</span>
+    return sum(m .* x .* t .^ (η / (1 - η))) / (sum(m .* x .* t .^ (1 / (1 - η)))^η * sum(m .* x)^(1 - η))
+end</code></pre>
+<p>The tests check that $\Omega = 1$ for a common wedge, and that <code>allocation_with_wedges</code>'s output equals $Z \Omega N^{\eta}$ computed this way.</p>
+
+<!-- ================= 5 ================= -->
+<h2 id="bellman"><span class="num">PART 5</span>bellman.jl: stay or exit</h2>
+<p>At price $p$, <code>static_decisions</code> gives $n(z_i)$, $y(z_i)$ and $\pi(z_i)$ in closed form (slide 26). The incumbent's Bellman equation then has only a discrete choice (slide 35):</p>
+$$V^{n+1}(z_i) = \pi(z_i) + \beta \max\Big\{\sum_j F_{ij} V^n(z_j),\ 0\Big\} .$$
+<pre><code>function bellman_step!(V1, V0, π, F, β)
+    <span class="c"># the continuation value at every z_i: one matrix product, written into V1</span>
+    mul!(V1, F, V0)
+    <span class="c"># stay if the continuation value is positive, exit (value 0) if not</span>
+    @. V1 = π + β * max(V1, 0.0)
+    return V1
+end</code></pre>
+<div class="tbl"><table>
+<thead><tr><th>Code</th><th>Maths</th></tr></thead>
+<tbody>
+<tr><td><code>mul!(V1, F, V0)</code></td><td>$\sum_j F_{ij} V^n(z_j)$ for every $i$: the continuation value</td></tr>
+<tr><td><code>max(V1, 0.0)</code></td><td>stay or exit; exit is worth zero</td></tr>
+<tr><td><code>π + β * …</code></td><td>profit today, plus the discounted best option</td></tr>
+</tbody>
+</table></div>
+<h3><code>solve_firm</code>: three methods (tutorial slides 5 and 6)</h3>
+<pre><code>sol = solve_firm(π, F, β; method = :vfi)                <span class="c"># iterate bellman_step!</span>
+sol = solve_firm(π, F, β; method = :howard)             <span class="c"># n_H evaluations between steps</span>
+sol = solve_firm(π, F, β; method = :policy_iteration)   <span class="c"># evaluate each exit rule exactly</span></code></pre>
+<p>Howard holds the exit rule fixed for $n_H$ updates between Bellman steps:</p>
+$$V^{k+1}(z_i) = \pi(z_i) + \beta\, \big[1 - \chi(z_i)\big] \sum_j F_{ij} V^k(z_j) .$$
+<pre><code><span class="c"># inside solve_firm, after each Bellman step, when method = :howard</span>
+<span class="c"># read the exit rule off the current value: stay where EV ≥ 0</span>
+mul!(EV, F, V1)
+stay = EV .&gt;= 0
+<span class="c"># hold that rule fixed and update the value n_H times, with no max</span>
+for _ in 1:n_H
+    mul!(EV, F, V1)
+    <span class="c"># stayers: profit + discounted continuation value; exiters: profit only</span>
+    @. V1 = π + β * stay * EV
+end</code></pre>
+<p>With the exit rule $\chi$ fixed, the Bellman equation has no maximum left and is linear in $V$, so a fixed rule can be evaluated exactly:</p>
+$$V = \big(I - \beta\, \mathrm{diag}(1-\chi)\, F\big)^{-1} \pi .$$
+<pre><code>function evaluate_policy(χ, π, F, β)
+    <span class="c"># I - β diag(1 - χ) F: row i of F is scaled by 1 - χ_i, so exiters lose their future</span>
+    A = I - β .* (1 .- χ) .* F
+    <span class="c"># solve the linear system A V = π in one step</span>
+    return A \ π
+end</code></pre>
+<p>Policy iteration starts from "never exit", evaluates, sets $\chi_i = 1$ wherever $\sum_j F_{ij} V_j &lt; 0$, and repeats until $\chi$ stops changing:</p>
+<pre><code>χ = falses(length(π))                                  <span class="c"># start: no one exits</span>
+for n in 1:maxiter
+    <span class="c"># evaluate: the exact value of following χ forever</span>
+    V = evaluate_policy(χ, π, F, β)
+    <span class="c"># the continuation value at every grid point under that value</span>
+    EV = F * V
+    <span class="c"># improve: exit wherever the continuation value is negative</span>
+    χ_new = EV .&lt; 0
+    <span class="c"># stop when the improved rule is the rule just evaluated</span>
+    χ_new == χ &amp;&amp; return FirmSolution(V, EV, χ, n, distances)
+    χ = χ_new
+end</code></pre>
+<p><code>exit_threshold</code> finds $\tilde z$ between the last grid point that exits and the first that stays, where the continuation value, interpolated linearly in $\log z$, is zero (slide 28):</p>
+<pre><code>function exit_threshold(sol::FirmSolution, z)
+    <span class="c"># the first grid point that stays; the one before it is the last that exits</span>
+    k = findfirst(.!sol.χ)
+    (k === nothing || k == 1) &amp;&amp; return (z̃ = NaN, k = k)
+    <span class="c"># log z and the continuation value at those two neighbours</span>
+    lo, hi = log(z[k-1]), log(z[k])
+    EVlo, EVhi = sol.EV[k-1], sol.EV[k]
+    <span class="c"># the straight line between them crosses zero at log z̃</span>
+    return (z̃ = exp(lo + (hi - lo) * (0 - EVlo) / (EVhi - EVlo)), k = k)
+end</code></pre>
+<figure><img src="week05_code_guide_value.png" alt="Near the exit threshold: profit today (dashed), the continuation value, and the value function, against productivity on a log scale. Below the threshold z-tilde of about 2.62 the continuation value is negative and the value equals profit. Just above it, profit is still negative but the continuation value is positive, so the firm stays."></figure>
+<p>Below $\tilde z$ the firm produces this period and exits, so $V = \pi$. On 8 grid points just above $\tilde z$ profit is negative, but the firm stays, because $z$ is expected to recover.</p>
+
+<!-- ================= 6 ================= -->
+<h2 id="entry"><span class="num">PART 6</span>entry.jl: the free entry price</h2>
+<p>The value of entry at price $p$ (slide 36), with $g_i$ the probability that an entrant draws $z_i$:</p>
+$$V^e(p) = -c_e + \beta \sum_i g_i V(z_i;\, p) .$$
+<pre><code>function entry_value(p, ind::Industry, s; method = :vfi, V_start = nothing)
+    (; η, β, c_e, c_f) = ind
+    <span class="c"># Step 1: labour, output and profit at every grid point, at this price</span>
+    dec = static_decisions(p, s.z; η, c_f)
+    <span class="c"># Step 2: the incumbent's value function and exit rule, given those profits</span>
+    sol = solve_firm(dec.π, s.F, β; method, V_start)
+    <span class="c"># Step 3: pay c_e, draw z from g, and receive the discounted value of that z</span>
+    Ve = -c_e + β * sum(s.g .* sol.V)
+    return (; Ve, sol, dec, p)
+end</code></pre>
+<p>$V$ rises with $p$, so $V^e$ does too, and bisection finds the root, as it found $r$ in week 4:</p>
+<pre><code><span class="c"># widen the bracket until entry is unprofitable at lo and profitable at hi</span>
+while evaluate(lo).Ve &gt; 0; lo /= 2; end
+while evaluate(hi).Ve &lt; 0; hi *= 2; end
+<span class="c"># halve the bracket until it is narrow enough</span>
+e = last[]
+while hi - lo &gt; tol_p * hi
+    e = evaluate((lo + hi) / 2)
+    <span class="c"># V^e &gt; 0: entering pays, so the price must fall. Otherwise it must rise</span>
+    e.Ve &gt; 0 ? (hi = e.p) : (lo = e.p)
+end</code></pre>
+<p>Demand $\bar D$ never enters: free entry alone pins down the price.</p>
+
+<!-- ================= 7 ================= -->
+<h2 id="measure"><span class="num">PART 7</span>distribution.jl and equilibrium.jl: how many firms</h2>
+<p>$\hat F$ is $F$ with the rows of exiting firms set to zero, and the stationary measure solves a linear system (slide 37):</p>
+$$\mu = \hat F' \mu + M g \qquad \Longrightarrow \qquad \mu = M (I - \hat F')^{-1} g .$$
+<pre><code><span class="c"># F̂: the rows of exiting firms set to zero</span>
+exit_transition(F, χ) = (1 .- χ) .* F
+
+function stationary_measure(F̂, g; M = 1.0, method = :linear, tol = 1e-12, maxiter = 100_000)
+    <span class="c"># :linear: μ = F̂' μ + M g rearranges to (I - F̂') μ = M g, solved in one step</span>
+    method === :linear &amp;&amp; return (I - F̂') \ (M .* g)
+    <span class="c"># method = :iterate: apply the law of motion from μ = 0, as in week 4</span>
+    …
+end</code></pre>
+<p>Two differences from week 4's $\lambda$. First, the transpose: <code>F[i, j]</code> is the probability of moving from $z_i$ to $z_j$, so mass moves with $\hat F'$. Second, $\mu$ is a <b>measure</b>: it does not sum to one, and doubling $M$ doubles it.</p>
+<p>So $\mu$ is computed once, for $M = 1$, and the goods market gives $M$ in one line (slide 38):</p>
+$$M = \frac{\bar D / p}{\sum_i y(z_i;\, p)\, \mu_i(p, 1)} .$$
+<pre><code><span class="c"># goods market: D̄ / p = M Σ_i y_i μ1_i, solved for M</span>
+mass_of_entrants(p, y, μ1; D̄) = (D̄ / p) / sum(y .* μ1)</code></pre>
+<p>And the whole equilibrium:</p>
+<pre><code>function solve_equilibrium(ind::Industry = Industry(); method = :vfi, exit = :grid, kwargs...)
+    <span class="c"># the grid z, the transition matrix F and the entrants' probabilities g</span>
+    s = setup(ind)
+    <span class="c"># Steps 1 to 4: the price at which free entry holds</span>
+    e, history = solve_price(ind, s; method, kwargs...)
+    <span class="c"># the exit rule the measure uses: 0 or 1 on the grid, or with the lottery cell</span>
+    χ = exit === :grid ? Float64.(e.sol.χ) : exit === :lottery ? exit_lottery(e.sol, s.z) :
+        throw(ArgumentError("exit must be :grid or :lottery"))
+    <span class="c"># Step 5: remove the exiters' rows from F, then the measure for one unit of entrants</span>
+    F̂ = exit_transition(s.F, χ)
+    μ1 = stationary_measure(F̂, s.g)
+    <span class="c"># Step 6: the mass of entrants that clears the goods market</span>
+    M = mass_of_entrants(e.p, e.dec.y, μ1; ind.D̄)
+    M &gt; 0 || error("no entry at p = $(e.p): see slide 39")
+    <span class="c"># store everything, with the measure scaled up: μ = M μ1</span>
+    return Equilibrium(…)
+end</code></pre>
+
+<!-- ================= 8 ================= -->
+<h2 id="lottery"><span class="num">PART 8</span>Exit decisions on a grid: the lottery</h2>
+<p>On the grid, the exit rule can only switch at a grid point. When $c_e$ rises, $\tilde z$ moves smoothly, but the exit rate stays put until $\tilde z$ crosses a grid point, then jumps (tutorial slides 13 to 15).</p>
+<p>Grid point $z_i$ stands for the cell of $\log z$ within half a step of $\log z_i$: the Tauchen bins. Cells wholly below $\tilde z$ exit, cells wholly above stay, and in the one cell that contains $\tilde z$ the share below it exits:</p>
+<pre><code>function exit_lottery(sol::FirmSolution, z)
+    <span class="c"># start from the grid rule: 1 = exit, 0 = stay</span>
+    χ = Float64.(sol.χ)
+    <span class="c"># the interpolated threshold z̃, and k, the first grid point that stays</span>
+    (; z̃, k) = exit_threshold(sol, z)
+    isnan(z̃) &amp;&amp; return χ
+    <span class="c"># the grid step d in log z, and the threshold t in log z</span>
+    logz = log.(z)
+    d = logz[2] - logz[1]
+    t = log(z̃)
+    <span class="c"># the cell that contains t: point k-1's cell if t is below their midpoint, else point k's</span>
+    i = t &lt; logz[k-1] + d / 2 ? k - 1 : k
+    <span class="c"># that cell exits in proportion to the part of it below t</span>
+    χ[i] = clamp((t - (logz[i] - d / 2)) / d, 0.0, 1.0)
+    return χ
+end</code></pre>
+<p>$\chi$ is now a share between 0 and 1, and <code>exit_transition</code> works unchanged. The price does not move, because it depends only on $V$.</p>
+<figure><img src="week05_code_guide_exit.png" alt="The entry rate against the entry cost from 30 to 50. With the exit rule on a 101-point grid, the rate is a staircase with four steps. With the lottery on the same grid, it is a smooth falling line that lies on top of the 1001-point grid's line."></figure>
+<div class="tbl"><table>
+<thead><tr><th>$n_z$</th><th>Price $p$</th><th>Exit rate, grid</th><th>Exit rate, lottery</th><th>$\tilde z$</th></tr></thead>
+<tbody>
+<tr><td>51</td><td>1.48150</td><td>0.1417</td><td>0.1410</td><td>2.6148</td></tr>
+<tr><td>101</td><td>1.48617</td><td>0.1341</td><td>0.1424</td><td>2.6188</td></tr>
+<tr><td>201</td><td>1.48723</td><td>0.1382</td><td>0.1419</td><td>2.6172</td></tr>
+<tr><td>501</td><td>1.48753</td><td>0.1407</td><td>0.1417</td><td>2.6168</td></tr>
+<tr><td>1001</td><td>1.48758</td><td>0.1415</td><td>0.1417</td><td>2.6168</td></tr>
+<tr><td>2001</td><td>1.48759</td><td>0.1419</td><td>0.1417</td><td>2.6168</td></tr>
+</tbody>
+</table></div>
+<p>The price and $\tilde z$ settle fast; the exit rate on the grid does not.</p>
+
+<!-- ================= 9 ================= -->
+<h2 id="stats"><span class="num">PART 9</span>statistics.jl: size, turnover, age</h2>
+<p><code>industry_stats(eq)</code> gives the table on tutorial slide 12. Two identities are worth checking yourself: the entry rate $M / \sum_i \mu_i$ equals the exit rate $\sum_i \chi_i \mu_i / \sum_i \mu_i$, because entrants replace exits one for one; and production labour is exactly $\eta \bar D$, because firms pay the share $\eta$ of revenue $pY = \bar D$ to production workers.</p>
+<p>Mean age needs no simulation. The firms of age $a$ are $(\hat F')^a M g$, so</p>
+$$\bar a = \frac{\sum_a a\, (\hat F')^a g}{\sum_a (\hat F')^a g} \quad \text{summed over } i, \qquad \sum_a (\hat F')^a = (I - \hat F')^{-1}, \quad \sum_a a (\hat F')^a = \hat F' (I - \hat F')^{-2} .$$
+<pre><code><span class="c"># A = I - F̂': the sums over all ages, in closed form</span>
+A = I - F̂'
+<span class="c"># x = Σ_a (F̂')^a g: firms of every age, per unit of entrants</span>
+x = A \ eq.s.g
+<span class="c"># Σ_a a (F̂')^a g = (I - F̂')⁻¹ F̂' x, divided by the number of firms</span>
+mean_age = sum(A \ (F̂' * x)) / sum(x)</code></pre>
+<p><code>cohorts(F̂, g, A)</code> moves one cohort forward year by year, and <code>age_profile(eq, A)</code> turns it into survival, average size and the exit rate by age (slide 45). <code>size_distribution(eq, edges)</code> gives the shares of firms and of employment by size class (tutorial slide 11).</p>
+
+<!-- ================= 10 ================= -->
+<h2 id="run"><span class="num">PART 10</span>Run it: scripts, the REPL, tests</h2>
+<p>From inside <code>ec991-work/week05/EC991Week5</code>:</p>
+<pre><code>julia --project=. -e "using Pkg; Pkg.instantiate()"   <span class="c"># once</span>
+julia --project=. run/static_examples.jl              <span class="c"># the static economy: two firms, wedges, entry</span>
+julia --project=. run/solve_equilibrium.jl            <span class="c"># the equilibrium by VFI, step by step</span>
+julia --project=. run/solve_equilibrium.jl howard     <span class="c"># the same with Howard (or policy_iteration)</span>
+julia --project=. run/compare_methods.jl              <span class="c"># VFI, Howard and policy iteration: iterations and time</span>
+julia --project=. run/comparative_statics.jl          <span class="c"># higher c_e, higher c_f; grid vs lottery</span>
+julia --project=. run/simulate_panel.jl               <span class="c"># a 10-year panel of firms (Part 12)</span>
+julia --project=. run/make_figures.jl                 <span class="c"># the figures on the slides</span>
+julia --project=. -e "using Pkg; Pkg.test()"          <span class="c"># the checks</span></code></pre>
+<h3>In the REPL</h3>
+<pre><code>using EC991Week5
+eq = solve_equilibrium(Industry())
+industry_stats(eq)
+eq.μ                                                  <span class="c"># the measure of firms on the grid</span>
+size_distribution(eq, [0, 10, 20, 50, 100, 500, Inf])
+age_profile(eq, 20)
+industry_stats(solve_equilibrium(Industry(c_e = 60)))  <span class="c"># any parameter by name</span></code></pre>
+<h3>What the numbers should be</h3>
+<p>Default parameters, 101-point grid:</p>
+<div class="tbl"><table>
+<thead><tr><th>Statistic</th><th>Baseline</th><th>$c_e = 60$</th><th>$c_f = 30$</th></tr></thead>
+<tbody>
+<tr><td>price $p$</td><td>1.4862</td><td>1.5973</td><td>1.5974</td></tr>
+<tr><td>entry rate = exit rate</td><td>0.134</td><td>0.106</td><td>0.190</td></tr>
+<tr><td>average size (workers)</td><td>104.0</td><td>120.6</td><td>142.4</td></tr>
+<tr><td>output $Y$</td><td>67.29</td><td>62.60</td><td>62.60</td></tr>
+<tr><td>exit threshold $\tilde z$</td><td>2.619</td><td>2.348</td><td>2.869</td></tr>
+<tr><td>mean age (years)</td><td>11.5</td><td>13.7</td><td>8.7</td></tr>
+<tr><td>number of firms</td><td>0.641</td><td>0.553</td><td>0.468</td></tr>
+</tbody>
+</table></div>
+<h3>Time</h3>
+<p>One solve of the incumbent's problem at $p = 1.4862$ from $V = \pi$, one thread on a 2.2 GHz server, after a warm-up. Your times will differ; the pattern should not.</p>
+<div class="tbl"><table>
+<thead><tr><th>Method</th><th>Iterations</th><th>Time (ms), $n_z = 101$</th><th>Time (ms), $n_z = 1001$</th></tr></thead>
+<tbody>
+<tr><td>VFI</td><td>57</td><td>0.15</td><td>16</td></tr>
+<tr><td>VFI + Howard ($n_H = 20$)</td><td>5</td><td>0.21</td><td>24</td></tr>
+<tr><td>policy iteration</td><td>4</td><td>1.03</td><td>131</td></tr>
+</tbody>
+</table></div>
+<p>Fewer iterations, but not less time. The "maximisation" is <code>max(·, 0)</code>, so an evaluation costs as much as a full Bellman step, and policy iteration's linear solve grows with $n_z^3$.</p>
+<h3>The tests</h3>
+<pre><code>julia --project=. -e "using Pkg; Pkg.test()"</code></pre>
+<p>They check the two-firm example and $\Omega$, the planner's entry choice against brute force, the firm's first-order condition and profit formula, that the three methods agree, that the exit rule is a threshold, that iterating the measure equals solving for it, market clearing, and that a simulated panel matches the stationary equilibrium. The last line should say <code>tests passed</code>.</p>
+
+<!-- ================= 11 ================= -->
+<h2 id="checklist"><span class="num">PART 11</span>Checklist and common problems</h2>
+<ul class="check" id="checklist-items">
+  <li><input type="checkbox" id="w5-pull"><label for="w5-pull">Pulled the course repository; <code>week05/lab/EC991Week5</code> exists</label></li>
+  <li><input type="checkbox" id="w5-copy"><label for="w5-copy">Copied the lab folder into <code>ec991-work</code> and committed it</label></li>
+  <li><input type="checkbox" id="w5-inst"><label for="w5-inst"><code>Pkg.instantiate()</code> finished without errors</label></li>
+  <li><input type="checkbox" id="w5-static"><label for="w5-static"><code>run/static_examples.jl</code> shows $Y = 9$ and $\Omega = 0.9086$</label></li>
+  <li><input type="checkbox" id="w5-eq"><label for="w5-eq"><code>run/solve_equilibrium.jl</code> ends with $p = 1.48617$ and average size 103.96</label></li>
+  <li><input type="checkbox" id="w5-cs"><label for="w5-cs"><code>run/comparative_statics.jl</code> shows the exit rate jumping on the grid and moving smoothly with the lottery</label></li>
+  <li><input type="checkbox" id="w5-panel"><label for="w5-panel"><code>run/simulate_panel.jl</code> shows an exit rate near 0.134 and writes <code>panel.csv</code></label></li>
+  <li><input type="checkbox" id="w5-test"><label for="w5-test"><code>Pkg.test()</code> ends with "tests passed"</label></li>
+</ul>
+<p class="progress" id="progress"></p>
+
+<h3>Common problems</h3>
+<div class="tbl"><table>
+<thead><tr><th>You see</th><th>Cause and fix</th></tr></thead>
+<tbody>
+<tr><td>The first run is much slower than the second</td><td>Julia compiles on first use. Time the second call, in the same REPL session.</td></tr>
+<tr><td>The exit rate does not move when you change a cost</td><td>The threshold has not crossed a grid point. Use <code>exit = :lottery</code> or more grid points.</td></tr>
+<tr><td><code>sum(eq.μ)</code> is not one</td><td>Correct: $\mu$ is a measure, and its total is the number of firms.</td></tr>
+<tr><td>Wrong distribution, or mass that does not move</td><td>Check the transpose: mass moves with <code>F̂'</code>, because <code>F[i, j]</code> is the move from $z_i$ to $z_j$.</td></tr>
+<tr><td>The run scripts are slow on a many-core machine</td><td>Small matrices and many BLAS threads. Add <code>using LinearAlgebra; BLAS.set_num_threads(1)</code>, as <code>make_figures.jl</code> does.</td></tr>
+<tr><td><code>Package EC991Week5 not found</code></td><td>Julia is in your default environment. Run from inside <code>EC991Week5/</code> with <code>--project=.</code>.</td></tr>
+</tbody>
+</table></div>
+
+<!-- ================= 12 ================= -->
+<h2 id="panel"><span class="num">PART 12</span>simulate.jl: a 10-year panel of firms</h2>
+<p>The equilibrium gives a measure of firms, $\mu$. To get data shaped like a firm panel, follow individual firms through the same law of motion, $\mu' = \hat F' \mu + M g$. Each simulated year:</p>
+<ol>
+  <li>entrants arrive and draw $z$ from $g$;</li>
+  <li>every firm produces $n(z)$ and $y(z)$ at the equilibrium price;</li>
+  <li>each firm exits with probability $\chi(z)$;</li>
+  <li>survivors draw next year's $z'$ from their row of $F$, and age by one year.</li>
+</ol>
+<p>With $N M / \sum_i \mu_i$ entrants a year, the industry settles at about $N$ firms. The simulation starts from an empty industry and runs a burn-in before recording, so every firm's age is known:</p>
+<pre><code>function simulate_panel(eq::Equilibrium; T = 10, N = 1000, burn_in = 100, rng = Random.default_rng())
+    (; F, g, z) = eq.s
+    <span class="c"># entrants per year, so that the industry holds about N firms</span>
+    n_entrants = round(Int, N * eq.M / sum(eq.μ))
+    <span class="c"># cumulative probabilities: a uniform draw u picks the first index where the sum exceeds u</span>
+    G = cumsum(g)
+    Fcum = cumsum(F; dims = 2)
+    draw(cdf) = min(searchsortedfirst(cdf, rand(rng)), length(cdf))
+    <span class="c"># the firms alive at the start of the year: id, grid index, age</span>
+    ids, iz, age = Int[], Int[], Int[]
+    next_id = 1
+    <span class="c"># the panel, one entry per firm and recorded year</span>
+    panel = (; firm = Int[], year = Int[], iz = Int[], z = Float64[], n = Float64[],
+             y = Float64[], age = Int[], exit = Bool[])
+    for t in 1:(burn_in + T)
+        <span class="c"># 1. entrants arrive, draw z from g, and start at age 0</span>
+        for _ in 1:n_entrants
+            push!(ids, next_id); push!(iz, draw(G)); push!(age, 0)
+            next_id += 1
+        end
+        <span class="c"># 3. each firm draws its exit decision: exit with probability χ at its grid point</span>
+        leaves = [rand(rng) &lt; eq.χ[i] for i in iz]
+        <span class="c"># 2. after the burn-in, record what every firm produces this year</span>
+        if t &gt; burn_in
+            append!(panel.firm, ids); append!(panel.year, fill(t - burn_in, length(ids)))
+            append!(panel.iz, iz); append!(panel.z, z[iz])
+            append!(panel.n, eq.n[iz]); append!(panel.y, eq.y[iz])
+            append!(panel.age, age); append!(panel.exit, leaves)
+        end
+        <span class="c"># 4. survivors move to next year's productivity, drawn from their row of F, and age</span>
+        stay = .!leaves
+        ids, age = ids[stay], age[stay] .+ 1
+        iz = [draw(view(Fcum, i, :)) for i in iz[stay]]
+    end
+    return panel
+end</code></pre>
+<p>A firm's productivity is drawn by comparing a uniform draw with the cumulative probabilities: <code>draw(G)</code> for an entrant, <code>draw(view(Fcum, i, :))</code> for a survivor at grid point $z_i$.</p>
+<p>In the REPL:</p>
+<pre><code>using EC991Week5, Random
+eq = solve_equilibrium(Industry())
+panel = simulate_panel(eq; T = 10, N = 1000, rng = MersenneTwister(1234))
+panel.n[panel.year .== 1]                             <span class="c"># employment of every firm in year 1</span>
+panel.firm[panel.exit]                                <span class="c"># the firms that exit, one entry per exit</span></code></pre>
+<p>Or run the script, which prints the panel's averages next to the model's and writes <code>panel.csv</code>, one row per firm and year:</p>
+<pre><code>julia --project=. run/simulate_panel.jl</code></pre>
+<div class="tbl"><table>
+<thead><tr><th>Statistic</th><th>Panel, $N = 1000$</th><th>Model</th></tr></thead>
+<tbody>
+<tr><td>exit rate</td><td>0.1386</td><td>0.1341</td></tr>
+<tr><td>entry rate</td><td>0.1330</td><td>0.1341</td></tr>
+<tr><td>average size (workers)</td><td>101.01</td><td>103.96</td></tr>
+<tr><td>mean age (years)</td><td>11.41</td><td>11.45</td></tr>
+</tbody>
+</table></div>
+<p>The gaps are sampling noise and shrink as $N$ grows.</p>
+
+</div>
+
+<script>
+(function () {
+  // OS tabs.
+  function setOS(os) {
+    document.querySelectorAll('.os').forEach(function (box) {
+      box.querySelectorAll('.os-tabs button').forEach(function (b) { b.setAttribute('aria-selected', b.dataset.os === os ? 'true' : 'false'); });
+      box.querySelectorAll('.os-pane').forEach(function (p) { p.classList.toggle('active', p.dataset.pane === os); });
+    });
+    try { localStorage.setItem('ec991-os', os); } catch (e) {}
+  }
+  document.querySelectorAll('.os-tabs button').forEach(function (b) { b.addEventListener('click', function () { setOS(b.dataset.os); }); });
+  var saved = null;
+  try { saved = localStorage.getItem('ec991-os'); } catch (e) {}
+  if (saved !== 'mac' && saved !== 'win') saved = /Windows/.test(navigator.userAgent || '') ? 'win' : 'mac';
+  setOS(saved);
+
+  // Copy buttons on code blocks.
+  document.querySelectorAll('pre').forEach(function (pre) {
+    var btn = document.createElement('button');
+    btn.className = 'copy'; btn.type = 'button'; btn.textContent = 'Copy';
+    btn.addEventListener('click', function () {
+      var text = pre.querySelector('code').innerText.replace(/[ \t]+#.*$/gm, '').replace(/\n{2,}/g, '\n').trim();
+      var done = function () { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = 'Copy'; }, 1200); };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, function () { selectText(pre); });
+      } else { selectText(pre); }
+    });
+    pre.appendChild(btn);
+  });
+  function selectText(el) {
+    var r = document.createRange(); r.selectNodeContents(el.querySelector('code'));
+    var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+  }
+
+  // Checklist, remembered in this browser only.
+  var boxes = document.querySelectorAll('#checklist-items input');
+  var prog = document.getElementById('progress');
+  function update() {
+    var n = 0; boxes.forEach(function (b) { if (b.checked) n++; });
+    prog.textContent = n === boxes.length ? 'All ' + n + ' done.' : n + ' of ' + boxes.length + ' done.';
+  }
+  boxes.forEach(function (b) {
+    try { b.checked = localStorage.getItem('ec991-' + b.id) === '1'; } catch (e) {}
+    b.addEventListener('change', function () {
+      try { localStorage.setItem('ec991-' + b.id, b.checked ? '1' : '0'); } catch (e) {}
+      update();
+    });
+  });
+  update();
+})();
+</script>
