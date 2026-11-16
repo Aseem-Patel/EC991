@@ -1,0 +1,559 @@
+<title>Hopenhayn and Rogerson (1993)</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Public+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column, 68ch, numbered parts; same house style as the week 1 setup guide. */
+:root {
+  --bg: #fbf9f7;
+  --surface: #f3efeb;
+  --surface-2: #e9e3dd;
+  --fg: #1f1a18;
+  --fg-muted: #6b625d;
+  --rule: #d9d0c9;
+  --accent: #cc092f;        /* vermell, the course colour */
+  --accent-ink: #ffffff;
+  --link: #0000b2;
+  --code-bg: #f0ebe6;
+  --ok: #1f7a3a;
+  --ok-bg: #e3f2e7;
+  --warn: #8a5a00;
+  --warn-bg: #fbefd4;
+  --display: "Newsreader", Georgia, "Times New Roman", serif;
+  --body: "Public Sans", -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  --mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #171412; --surface: #211d1a; --surface-2: #2b2522; --fg: #ece6e0; --fg-muted: #a69c94;
+    --rule: #3a322d; --accent: #ff4d6d; --accent-ink: #1a0b0f; --link: #8f9bff; --code-bg: #1f1b18;
+    --ok: #7fd49a; --ok-bg: #1b3022; --warn: #f2c56b; --warn-bg: #352a12; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #171412; --surface: #211d1a; --surface-2: #2b2522; --fg: #ece6e0; --fg-muted: #a69c94;
+  --rule: #3a322d; --accent: #ff4d6d; --accent-ink: #1a0b0f; --link: #8f9bff; --code-bg: #1f1b18;
+  --ok: #7fd49a; --ok-bg: #1b3022; --warn: #f2c56b; --warn-bg: #352a12; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 16.5px; line-height: 1.6; margin: 0; }
+.wrap { max-width: 72ch; margin: 0 auto; padding-block: 2.5rem 5rem; padding-inline: 20px; }
+header.masthead { border-bottom: 2px solid var(--accent); padding-bottom: 1.25rem; margin-bottom: 2rem; }
+.eyebrow { font-family: var(--body); text-transform: uppercase; letter-spacing: .12em; font-size: .75rem; color: var(--accent); font-weight: 600; margin: 0 0 .5rem; }
+h1 { font-family: var(--display); font-weight: 500; font-size: clamp(2rem, 5vw, 3rem); line-height: 1.1; margin: 0 0 .75rem; text-wrap: balance; letter-spacing: -.01em; }
+.lede { font-size: 1.1rem; color: var(--fg-muted); margin: 0; max-width: 60ch; }
+.meta { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; margin-top: 1rem; font-size: .9rem; color: var(--fg-muted); }
+.meta b { color: var(--fg); font-weight: 600; }
+h2 { font-family: var(--display); font-weight: 500; font-size: 1.85rem; line-height: 1.15; margin: 3rem 0 .75rem; text-wrap: balance; display: flex; gap: .75rem; align-items: baseline; }
+h2 .num { font-family: var(--body); font-size: .8rem; font-weight: 600; color: var(--accent); letter-spacing: .08em; flex: none; }
+h3 { font-family: var(--body); font-weight: 600; font-size: 1.05rem; margin: 2rem 0 .5rem; }
+p { margin: 0 0 1rem; }
+a { color: var(--link); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+ul, ol { padding-left: 1.4rem; margin: 0 0 1rem; }
+li { margin-bottom: .35rem; }
+li > ul { margin-top: .35rem; }
+code { font-family: var(--mono); font-size: .86em; background: var(--code-bg); padding: .1em .35em; border-radius: 3px; }
+pre { position: relative; background: var(--code-bg); border: 1px solid var(--rule); border-radius: 6px; padding: .85rem 1rem; overflow-x: auto; margin: 0 0 1rem; font-size: .85rem; line-height: 1.5; }
+pre code { background: none; padding: 0; font-size: inherit; }
+pre .c { color: var(--fg-muted); }
+pre .copy { position: absolute; top: .4rem; right: .4rem; font: 600 .7rem var(--body); letter-spacing: .05em; text-transform: uppercase; color: var(--fg-muted); background: var(--surface); border: 1px solid var(--rule); border-radius: 4px; padding: .2rem .5rem; cursor: pointer; }
+pre .copy:hover { color: var(--fg); }
+kbd { font-family: var(--mono); font-size: .8em; border: 1px solid var(--rule); border-bottom-width: 2px; border-radius: 4px; padding: .05em .4em; background: var(--surface); }
+.toc { background: var(--surface); border-radius: 6px; padding: 1.1rem 1.25rem; margin: 1.5rem 0 0; }
+.toc h3 { margin: 0 0 .5rem; font-size: .8rem; text-transform: uppercase; letter-spacing: .1em; color: var(--fg-muted); }
+.toc ol { margin: 0; columns: 2; column-gap: 2rem; font-size: .95rem; }
+.toc li { break-inside: avoid; }
+@media (max-width: 560px) { .toc ol { columns: 1; } }
+.callout { border-left: 3px solid var(--accent); background: var(--surface); padding: .9rem 1.1rem; margin: 0 0 1.25rem; border-radius: 0 6px 6px 0; }
+.callout.ok { border-color: var(--ok); background: var(--ok-bg); }
+.callout.warn { border-color: var(--warn); background: var(--warn-bg); }
+.callout p:last-child { margin: 0; }
+.callout .tag { display: block; font-size: .72rem; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; margin-bottom: .3rem; color: var(--fg-muted); }
+.callout.ok .tag { color: var(--ok); }
+.callout.warn .tag { color: var(--warn); }
+/* OS tabs */
+.os { border: 1px solid var(--rule); border-radius: 6px; margin: 0 0 1.25rem; overflow: hidden; }
+.os-tabs { display: flex; background: var(--surface); border-bottom: 1px solid var(--rule); }
+.os-tabs button { flex: 1; font: 600 .85rem var(--body); padding: .55rem .5rem; background: none; border: 0; color: var(--fg-muted); cursor: pointer; border-bottom: 2px solid transparent; }
+.os-tabs button[aria-selected="true"] { color: var(--fg); border-bottom-color: var(--accent); }
+.os-pane { display: none; padding: 1rem 1rem .25rem; }
+.os-pane.active { display: block; }
+.os-pane pre { margin-bottom: .85rem; }
+/* tables */
+.tbl { overflow-x: auto; margin: 0 0 1.25rem; }
+table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+th, td { text-align: left; padding: .5rem .6rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font-size: .75rem; text-transform: uppercase; letter-spacing: .08em; color: var(--fg-muted); font-weight: 600; }
+td code { white-space: nowrap; }
+/* checklist */
+.check { list-style: none; padding: 0; }
+.check li { display: flex; gap: .7rem; align-items: flex-start; padding: .45rem 0; border-bottom: 1px solid var(--rule); margin: 0; }
+.check input { margin-top: .35rem; accent-color: var(--accent); width: 1rem; height: 1rem; flex: none; }
+.check label { cursor: pointer; }
+.progress { font-size: .85rem; color: var(--fg-muted); margin-top: .5rem; }
+.plan td:first-child { font-family: var(--mono); font-size: .85rem; white-space: nowrap; }
+.compare td:first-child { font-weight: 500; white-space: nowrap; }
+.compare code { white-space: pre; }
+figure { margin: 1.25rem 0; }
+figure img { width: 100%; height: auto; display: block; border: 1px solid var(--rule); border-radius: 6px; }
+figcaption { font-size: .85rem; color: var(--fg-muted); margin-top: .45rem; }
+.diagram { background: var(--surface); border-radius: 6px; padding: .75rem .75rem .25rem; margin: 1.25rem 0; }
+.diagram svg { width: 100%; height: auto; display: block; }
+.diagram text { fill: var(--fg); font-family: var(--body); font-size: 13px; }
+.diagram .mono { font-family: var(--mono); font-size: 12.5px; }
+.diagram .muted { fill: var(--fg-muted); font-size: 12px; }
+.diagram .small { font-size: 11.5px; }
+.diagram .box { fill: var(--bg); stroke: var(--rule); stroke-width: 1.2; }
+.diagram .accbox { fill: var(--bg); stroke: var(--accent); stroke-width: 1.6; }
+.diagram .arrow { stroke: var(--fg-muted); stroke-width: 1.4; fill: none; marker-end: url(#arr); }
+.diagram .accarrow { stroke: var(--accent); stroke-width: 1.6; fill: none; marker-end: url(#arracc); }
+.diagram .arrhead { fill: var(--fg-muted); }
+.diagram .arrheadacc { fill: var(--accent); }
+.diagram .acctext { fill: var(--accent); font-weight: 600; }
+.term { background: #1b1816; color: #e8e2dc; border-radius: 6px; padding: .85rem 1rem; font-family: var(--mono); font-size: .82rem; line-height: 1.5; overflow-x: auto; margin: 0 0 1rem; white-space: pre; }
+.term .ok { color: #7fd49a; } .term .dim { color: #9c928a; }
+footer { margin-top: 4rem; padding-top: 1.25rem; border-top: 1px solid var(--rule); font-size: .88rem; color: var(--fg-muted); }
+.small { font-size: .9rem; color: var(--fg-muted); }
+@media (prefers-reduced-motion: no-preference) { .os-pane.active { animation: fade .15s ease; } }
+@keyframes fade { from { opacity: .4 } to { opacity: 1 } }
+mjx-container { color: var(--fg); }
+.tbl mjx-container { font-size: 95%; }
+</style>
+<script>
+window.MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] }, svg: { fontCache: 'global' } };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.js"></script>
+<div class="wrap">
+<header class="masthead">
+  <p class="eyebrow">EC991 Topics in Macroeconomics · Week 6 Lab</p>
+  <h1>Hopenhayn and Rogerson (1993)</h1>
+  <p class="lede">Week 5's firms chose labour afresh every period. This week firing a worker costs τ, so the employment a firm brings into the period becomes a state. Firms then keep their workers inside an inaction region, marginal products differ across firms, and labour is misallocated.</p>
+  <div class="meta">
+    <span><b>Lecturer</b> Aseem Patel</span>
+    <span><b>Term</b> Autumn 2026</span>
+    <span><b>Assumes</b> the week 5 code guide</span>
+    <span><b>Code</b> <code>week06/lab/EC991Week6</code></span>
+  </div>
+  <nav class="toc" aria-label="Contents">
+    <h3>Contents</h3>
+    <ol>
+      <li><a href="#pull">Pull the week 6 code</a></li>
+      <li><a href="#idea">What changes from week 5</a></li>
+      <li><a href="#folders">The folders again</a></li>
+      <li><a href="#choice">firm.jl: choosing employment</a></li>
+      <li><a href="#inaction">The inaction region</a></li>
+      <li><a href="#entry">entry.jl and equilibrium.jl: the price, then the firms</a></li>
+      <li><a href="#measure">distribution.jl: firms over (z, m)</a></li>
+      <li><a href="#misalloc">aggregates.jl: misallocation</a></li>
+      <li><a href="#run">Run it: scripts, the REPL, tests</a></li>
+      <li><a href="#checklist">Checklist and common problems</a></li>
+    </ol>
+  </nav>
+</header>
+
+<!-- ================= 1 ================= -->
+<h2 id="pull"><span class="num">PART 1</span>Pull the week 6 code</h2>
+<p>In VS Code, open your <code>EC991</code> folder and choose <b>Pull</b> in the Source Control pane, or from a terminal:</p>
+<pre><code>cd EC991          <span class="c"># wherever you cloned it in week 1</span>
+git pull</code></pre>
+<p>A new folder appears next to <code>week05</code>:</p>
+<pre><code>EC991/
+└── week06/
+    └── lab/
+        ├── week06_code_guide.html              <span class="c"># this page</span>
+        └── EC991Week6/                         <span class="c"># the package: all the code</span>
+            ├── Project.toml, Manifest.toml, README.md
+            ├── src/
+            ├── run/
+            └── test/</code></pre>
+<p>Then copy the whole <code>lab</code> folder into your own repository and commit it, as in earlier weeks.</p>
+<div class="os" data-os>
+  <div class="os-tabs" role="tablist">
+    <button role="tab" data-os="mac" aria-selected="true">macOS / Linux</button>
+    <button role="tab" data-os="win" aria-selected="false">Windows (PowerShell)</button>
+  </div>
+  <div class="os-pane active" data-pane="mac">
+<pre><code>cp -R EC991/week06/lab ec991-work/week06</code></pre>
+  </div>
+  <div class="os-pane" data-pane="win">
+<pre><code>Copy-Item -Recurse EC991\week06\lab ec991-work\week06</code></pre>
+  </div>
+</div>
+<div class="callout ok"><span class="tag">You know it worked when</span><p>the folder <code>ec991-work/week06/EC991Week6</code> exists and <code>git log --oneline -1</code> in <code>ec991-work</code> shows your commit.</p></div>
+
+<!-- ================= 2 ================= -->
+<h2 id="idea"><span class="num">PART 2</span>What changes from week 5</h2>
+<p>A firm starts the period with productivity $z$ and <strong>inherited employment</strong> $m$, and chooses employment $n$. Letting workers go costs $\tau \max\{0, m - n\}$, so its value depends on $(z, m)$ (tutorial slides 3 and 4):</p>
+$$V(z, m) = \max_{n \ge 0} \Big\{ p z n^{\eta} - n - p c_f - \tau \max\{0, m - n\} + \beta \max\Big\{ -\tau n,\ \mathbb{E}\big[V(z_{t+1}, n) \mid z_t = z\big] \Big\} \Big\} .$$
+<p>In calendar time $m = n_{t-1}$ and $n = n_t$. Exit is decided after producing, and costs $\tau n$ next period: the firm fires everyone.</p>
+<div class="tbl"><table>
+<thead><tr><th>Step (slide 6)</th><th>Week 5</th><th>Week 6</th></tr></thead>
+<tbody>
+<tr><td>Set-up: grids, $F$, $g$</td><td><code>Industry</code>, <code>setup</code></td><td><code>Economy</code>, <code>setup</code>: adds the grid for employment</td></tr>
+<tr><td>1. The firm's problem at a trial price $p$</td><td><code>static_decisions</code>, <code>solve_firm</code></td><td><code>solve_firm</code>: employment is now a dynamic choice</td></tr>
+<tr><td>2. The price, by bisection on free entry</td><td><code>entry_value</code>, <code>solve_price</code></td><td>the same, with $V(z, 0)$: entrants inherit no workers</td></tr>
+<tr><td>3. The distribution for $M = 1$, then $M$</td><td><code>stationary_measure</code> (a linear solve), <code>mass_of_entrants</code></td><td><code>stationary_distribution</code> (iterate the law of motion), then the same formula inside <code>solve_equilibrium</code></td></tr>
+<tr><td>Results</td><td><code>industry_stats</code></td><td><code>aggregates</code>, <code>misallocation</code>, <code>inaction_region</code></td></tr>
+</tbody>
+</table></div>
+<p>All of it in one call:</p>
+<pre><code>eq = solve_equilibrium(Economy())               <span class="c"># τ = 0.1</span>
+eq = solve_equilibrium(Economy(τ = 1.0))        <span class="c"># ten times the tax</span></code></pre>
+
+<!-- ================= 3 ================= -->
+<h2 id="folders"><span class="num">PART 3</span>The folders again</h2>
+<p>Same rules: <code>src/</code> never plots or prints, <code>run/</code> holds no model logic, <code>test/</code> checks against known answers. Slide numbers are pages of the week 6 tutorial.</p>
+<div class="tbl"><table>
+<thead><tr><th>File</th><th>What it holds</th><th>Slides</th></tr></thead>
+<tbody>
+<tr><td><code>markov.jl</code></td><td>Tauchen around a mean and <code>stationary</code>, from week 5</td><td>12</td></tr>
+<tr><td><code>economy.jl</code></td><td><code>Economy</code>, <code>setup</code>, <code>firing_cost</code></td><td>3, 12</td></tr>
+<tr><td><code>firm.jl</code></td><td><code>choice_value!</code>, <code>best_employment!</code>, <code>best_employment_fast!</code>, <code>bellman_step!</code>, <code>solve_firm</code>, <code>inaction_region</code></td><td>4, 7 to 9</td></tr>
+<tr><td><code>entry.jl</code></td><td><code>entry_value</code>, <code>solve_price</code></td><td>4, 6</td></tr>
+<tr><td><code>distribution.jl</code></td><td><code>law_of_motion!</code>, <code>stationary_distribution</code></td><td>5, 10</td></tr>
+<tr><td><code>equilibrium.jl</code></td><td><code>output_per_firm</code>, <code>Equilibrium</code>, <code>solve_equilibrium</code></td><td>6</td></tr>
+<tr><td><code>aggregates.jl</code></td><td><code>aggregates</code>, <code>misallocation</code>, <code>size_distribution</code></td><td>5, 16, 17</td></tr>
+</tbody>
+</table></div>
+<p>In <code>run/</code>, <code>plotting.jl</code> holds the plotting helpers that the other scripts include.</p>
+
+<!-- ================= 4 ================= -->
+<h2 id="choice"><span class="num">PART 4</span>firm.jl: choosing employment</h2>
+<p>Employment lives on a grid $n_1 = 0 &lt; n_2 &lt; \dots &lt; n_{n_n}$, used twice: inherited employment is $m = n_k$ and a candidate choice is $n = n_\ell$. So $V$ is a matrix, <code>V[i, k]</code> $= V(z_i, n_k)$, and value function iteration updates it from guess $V^{(r)}$ to $V^{(r+1)}$ (tutorial slide 7). First, the value of choosing $n_\ell$ before any firing tax:</p>
+$$h^{(r)}[i, \ell] = p z_i n_\ell^{\eta} - n_\ell - p c_f + \beta \max\Big\{ -\tau n_\ell,\ EV^{(r)}[i, \ell] \Big\}, \qquad EV^{(r)}[i, \ell] = \sum_j F_{ij} V^{(r)}[j, \ell] .$$
+<pre><code>function choice_value!(h, i, EV, p, s, eco::Economy)
+    (; η, β, c_f, τ) = eco
+    <span class="c"># this firm's productivity, and the employment grid</span>
+    z, n = s.z[i], s.n
+    for ell in eachindex(n)
+        <span class="c"># profit with n = n[ell] workers, plus the better of exit (fire them all) and stay</span>
+        h[ell] = p * z * n[ell]^η - n[ell] - p * c_f + β * max(-τ * n[ell], EV[i, ell])
+    end
+    return h
+end</code></pre>
+<p><code>EV</code> is the matrix product <code>F * V</code>, computed once per Bellman update. $h$ does not depend on inherited employment, so it is computed once for each $(z_i, n_\ell)$.</p>
+<p>Then the search. For every inherited $n_k$, try <strong>every</strong> candidate $n_\ell$ and keep the best:</p>
+$$V^{(r+1)}[i, k] = \max_{\ell = 1, \dots, n_n} \Big\{ h^{(r)}[i, \ell] - \tau \max(0,\ n_k - n_\ell) \Big\} .$$
+<pre><code>function best_employment!(Vrow, polrow, h, n, τ)
+    <span class="c"># every inherited employment m = n[k] on the grid</span>
+    for k in eachindex(n)
+        best_value = -Inf
+        best_index = 0
+
+        <span class="c"># try every candidate n = n[ell]: its value, net of the tax on the workers let go</span>
+        for ell in eachindex(n)
+            value = h[ell] - τ * max(0.0, n[k] - n[ell])
+
+            <span class="c"># on an exact tie, prefer the choice that fires nobody</span>
+            prefer_no_firing =
+                value == best_value &amp;&amp;
+                ell &gt;= k &amp;&amp;
+                best_index &lt; k
+
+            if value &gt; best_value || prefer_no_firing
+                best_value = value
+                best_index = ell
+            end
+        end
+
+        <span class="c"># the value at (z, n[k]) and the index of the chosen n</span>
+        Vrow[k] = best_value
+        polrow[k] = best_index
+    end
+
+    return Vrow
+end</code></pre>
+<div class="tbl"><table>
+<thead><tr><th>Code</th><th>Maths</th></tr></thead>
+<tbody>
+<tr><td><code>n[k]</code></td><td>inherited employment, $m = n_k$</td></tr>
+<tr><td><code>n[ell]</code></td><td>a candidate for chosen employment, $n = n_\ell$</td></tr>
+<tr><td><code>value</code></td><td>$h[i, \ell] - \tau \max(0, n_k - n_\ell)$</td></tr>
+<tr><td><code>Vrow[k]</code></td><td>$V^{(r+1)}[i, k]$, the best value</td></tr>
+<tr><td><code>polrow[k]</code></td><td>the index of $n^d(z_i, n_k)$ on the grid</td></tr>
+</tbody>
+</table></div>
+<p>This is an exhaustive search: $n_n^2$ comparisons at each $z_i$, so $n_z n_n^2$ (about 25 million with the default grids) for one Bellman update. Choices are restricted to the grid, and nothing is interpolated. If two choices are worth exactly the same, the firm takes the one that fires nobody. One Bellman update is <code>mul!(EV, F, V0)</code> plus this search at every $z_i$:</p>
+<pre><code>function bellman_step!(V1, pol, EV, V0, p, s, eco::Economy, work)
+    <span class="c"># the continuation value of every (z_i, n), before next period's z is known</span>
+    mul!(EV, s.F, V0)
+    for i in eachindex(s.z)
+        <span class="c"># h at every candidate n, then the best n for every inherited m, at z_i</span>
+        choice_value!(work.h, i, EV, p, s, eco)
+        best_employment!(view(V1, i, :), view(pol, i, :), work.h, s.n, eco.τ)
+    end
+    return V1
+end</code></pre>
+<p><code>solve_firm</code> iterates this until $\max |V^{(r+1)} - V^{(r)}| &lt; 10^{-9} \max |V^{(r+1)}|$, then records the exit rule $\chi(z_i, n_k)$: the firm exits after producing if staying is worth less than firing everyone,</p>
+<pre><code>χ[i, k] = EV[i, pol[i, k]] &lt; -eco.τ * s.n[pol[i, k]]</code></pre>
+<p>The exit rule depends on both productivity and inherited employment, because the chosen $n$ does.</p>
+
+<h3>Can the search be faster? A comparison</h3>
+<p>The exhaustive search is the easiest one to read and to trust, and that is why the solver uses it. It is also wasteful: at each inherited $n_k$ it starts again from the first candidate, although most of the work is the same as for $n_{k-1}$. The package has a second function, <code>best_employment_fast!</code>, that gives the same answer in one pass. The solver does not call it; it is there so you can compare.</p>
+<p>The idea: the firing tax depends on inherited employment only through <em>whether</em> the firm fires. So split the candidates in two groups:</p>
+$$V[i, k] = \max\Big\{ \underbrace{\max_{\ell \ge k} h[i, \ell]}_{\text{fire nobody}},\ \ \underbrace{\max_{\ell &lt; k} \big( h[i, \ell] + \tau n_\ell \big) - \tau n_k}_{\text{fire } n_k - n_\ell \text{ workers}} \Big\} .$$
+<p>Neither inner max needs a fresh search. The best candidate at or above $k$ is the better of $h[i, k]$ and the best candidate at or above $k + 1$: a <strong>running maximum</strong>, filled in from the top of the grid. The second is a running maximum from the bottom. The split is exact and assumes nothing about $h$.</p>
+<pre><code>function best_employment_fast!(Vrow, polrow, h, n, τ)
+    N = length(n)
+    up, arg_up = similar(h), zeros(Int, N)
+    <span class="c"># from the top: the best candidate at or above each k, and where it is</span>
+    up[N], arg_up[N] = h[N], N
+    for k in N-1:-1:1
+        if h[k] &gt;= up[k+1]
+            up[k], arg_up[k] = h[k], k
+        else
+            up[k], arg_up[k] = up[k+1], arg_up[k+1]
+        end
+    end
+    <span class="c"># from the bottom: the best h[ell] + τ n[ell] strictly below each k, and where it is</span>
+    down, arg_down = -Inf, 0
+    for k in 1:N
+        fire_some = down - τ * n[k]
+        <span class="c"># on a tie, prefer the choice that fires nobody</span>
+        if up[k] &gt;= fire_some
+            Vrow[k], polrow[k] = up[k], arg_up[k]
+        else
+            Vrow[k], polrow[k] = fire_some, arg_down
+        end
+        <span class="c"># now let n[k] join the candidates for every state above k</span>
+        if h[k] + τ * n[k] &gt; down
+            down, arg_down = h[k] + τ * n[k], k
+        end
+    end
+    return Vrow
+end</code></pre>
+<p>Measured on the same machine, one core, default parameters:</p>
+<div class="tbl"><table>
+<thead><tr><th></th><th>Exhaustive search</th><th>Running maxima</th></tr></thead>
+<tbody>
+<tr><td>Comparisons at one $z_i$</td><td>$n_n^2 = 250{,}000$</td><td>about $2 n_n = 1{,}000$</td></tr>
+<tr><td>Comparisons per Bellman update</td><td>$n_z n_n^2 \approx 25$ million</td><td>$2 n_z n_n \approx 100{,}000$</td></tr>
+<tr><td>Time for one equilibrium, $101 \times 500$ grid</td><td>the reference</td><td>18 times less</td></tr>
+<tr><td>If the employment grid doubles</td><td>four times the work</td><td>twice the work</td></tr>
+<tr><td>Price, mass of entrants, policy, exit rule</td><td colspan="2">identical at every one of the 50,500 states, for $\tau = 0$, 0.1 and 1</td></tr>
+</tbody>
+</table></div>
+<ul>
+<li><strong>Same answer, 18 times faster.</strong> Nothing was approximated: the fast search looks at the same candidates, in a cleverer order. Speed came from the structure of the problem (the tax is linear in the workers fired), not from a faster computer or a coarser grid.</li>
+<li><strong>The search itself is 250 times cheaper, but the equilibrium only 18 times faster.</strong> Once the search is cheap, the matrix product <code>F * V</code> takes most of each Bellman update. Speeding up one step moves the bottleneck to another.</li>
+<li><strong>Write the slow version first.</strong> The exhaustive search is the definition of the max, so it is hard to get wrong. The fast version is checked against it, in the tests, on values of $h$ with several peaks. You can only trust a clever algorithm if you have a simple one to compare it with.</li>
+</ul>
+<p>Try it in the REPL, at one productivity:</p>
+<pre><code>using EC991Week6
+n = setup(Economy()).n                               <span class="c"># the 500-point employment grid</span>
+h = 10 .* n .^ (2/3) .- n                            <span class="c"># any h will do</span>
+V1, pol1 = zeros(500), zeros(Int, 500)
+V2, pol2 = zeros(500), zeros(Int, 500)
+best_employment!(V1, pol1, h, n, 0.1)                <span class="c"># run each once first: Julia compiles on first use</span>
+best_employment_fast!(V2, pol2, h, n, 0.1)
+@elapsed best_employment!(V1, pol1, h, n, 0.1)       <span class="c"># exhaustive</span>
+@elapsed best_employment_fast!(V2, pol2, h, n, 0.1)  <span class="c"># one pass</span>
+pol1 == pol2                                         <span class="c"># true</span></code></pre>
+
+<!-- ================= 5 ================= -->
+<h2 id="inaction"><span class="num">PART 5</span>The inaction region</h2>
+<p>With $\tau &gt; 0$ the employment policy can exhibit a hiring target and a firing target (tutorial slide 8). The hiring target $n_L(z)$ maximises $h(z, n)$; the firing target $n_H(z)$ maximises $h(z, n) + \tau n$. If $h$ is differentiable and strictly concave in $n$, then $n_H \ge n_L$: a firm that inherits $m &lt; n_L$ hires up to $n_L$, a firm with $m &gt; n_H$ fires down to $n_H$, and a firm in between keeps its workers, $n = m$. The code does not use this: it reads both targets off the policy that the search found.</p>
+<pre><code>function inaction_region(sol::FirmSolution, s)
+    nL = s.n[sol.pol[:, 1]]          <span class="c"># n^d(z, 0): a firm that inherits no workers hires up to n_L(z)</span>
+    nH = s.n[sol.pol[:, end]]        <span class="c"># n^d(z, n_max): a firm that inherits n_max fires down to n_H(z)</span>
+    return (; z = s.z, nL, nH)
+end</code></pre>
+<p>The tests check the rule "hire up to $n_L$, keep, fire down to $n_H$" at every one of the 50,500 states. <code>run/inaction_region.jl</code> draws the two graphs on tutorial slides 13 and 14:</p>
+<figure><img src="week06_code_guide_inaction.png" alt="Two panels of employment against productivity from 0 to 12. Each shows the hiring target n_L(z) as a solid line, the firing target n_H(z) as a dashed line, and the inaction region between them shaded. With tau = 0.1 the band is narrow: n_H is about 28 percent above n_L. With tau = 1 the band is about four times as wide, and both curves jump near z = 3, where firms start to exit."></figure>
+<p>With $\tau = 1$ the band widens, and both curves jump near $z = 3$. Below that, firms plan to exit, and every worker they keep will cost $\tau$ when they do: they hire less now and put off firing until they exit. For $z$ from 2.72 to 3.03 firms that inherit few workers exit but large ones stay, because firing everyone costs too much: there is no single productivity cutoff for exit.</p>
+
+<!-- ================= 6 ================= -->
+<h2 id="entry"><span class="num">PART 6</span>entry.jl and equilibrium.jl: the price, then the firms</h2>
+<p>Entrants inherit no workers, $m = 0$, so the value of entry reads the first column of $V$, with $g_i = G(z_i)$ the entrants' probabilities:</p>
+$$V^e(p) = -c_e + \beta \sum_i g_i V(z_i, 0;\, p) .$$
+<pre><code>function entry_value(p, eco::Economy, s; V_start = nothing)
+    <span class="c"># Step 1: the incumbent's problem at p</span>
+    sol = solve_firm(p, eco, s; V_start)
+    <span class="c"># the value of entry: entrants start with no workers, the first column of V</span>
+    Ve = -eco.c_e + eco.β * sum(s.g .* sol.V[:, 1])
+    return (; Ve, sol, p)
+end</code></pre>
+<p><code>solve_price</code> is week 5's bisection, unchanged, with each value function starting from the last price's. Then the measure for one unit of entrants and the goods market (tutorial slide 6):</p>
+$$M = \frac{\bar D / p}{\sum_{i,k} \mu(z_i, n_k;\, p, 1)\, \big( z_i\, n^d(z_i, n_k)^{\eta} - c_f \big)} .$$
+<pre><code>function solve_equilibrium(eco::Economy = Economy(); kwargs...)
+    <span class="c"># the grids z and n, the transition matrix F and the entrants' probabilities g</span>
+    s = setup(eco)
+    <span class="c"># 1 and 2: the firm's problem at each trial price, and the price at which free entry holds</span>
+    e, history = solve_price(eco, s; kwargs...)
+    <span class="c"># 3: the measure for one unit of entrants ...</span>
+    μ1 = stationary_distribution(e.sol, s)
+    <span class="c"># ... then the mass of entrants that clears the goods market, C = D̄ / p</span>
+    Y1 = sum(output_per_firm(e.sol, s, eco) .* μ1)
+    Y1 &gt; 0 || error("output per unit of entrants is not positive at p = $(e.p)")
+    M = (eco.D̄ / e.p) / Y1
+    <span class="c"># store everything, with the measure scaled up: μ = M μ1</span>
+    return Equilibrium(eco, e.p, M, M .* μ1, e.sol, s, e.Ve, history)
+end</code></pre>
+<p>The household's demand is $C = \bar D / p$ with $\bar D = 1/A$, as in week 5. Its labour supply, $N = \bar D - \Pi - T$, needs no extra step. Profits are $\Pi = pY - N^d - T$, and goods-market clearing gives $pY = \bar D$, so $N^d = \bar D - \Pi - T$: the labour market clears by accounting. <code>aggregates</code> checks it.</p>
+
+<!-- ================= 7 ================= -->
+<h2 id="measure"><span class="num">PART 7</span>distribution.jl: firms over (z, m)</h2>
+<p>Week 5 solved $\mu = (I - \hat F^{\top})^{-1} g$. With 50,500 states that matrix would have 2.6 billion entries, so we iterate the law of motion from $\mu_0 = 0$ instead (tutorial slides 5 and 10). $\mu_t(z, m)$ is the mass of firms that start period $t$ with productivity $z$ and inherited employment $m$:</p>
+$$\mu_{t+1}(z_j, m) = \sum_{i,k} \mu_t(z_i, n_k)\, \big[1 - \chi(z_i, n_k)\big]\, F_{ij}\, \mathbf{1}\big[m = n^d(z_i, n_k)\big] + M g_j \mathbf{1}[m = 0] .$$
+<pre><code>function law_of_motion!(μ1, μ0, sol::FirmSolution, s, M, tmp)
+    fill!(tmp, 0.0)
+    n_z, n_n = size(μ0)
+    <span class="c"># 1. survivors keep their z_i for now and move to the column of the n they chose</span>
+    for k in 1:n_n, i in 1:n_z
+        sol.χ[i, k] || (tmp[i, sol.pol[i, k]] += μ0[i, k])
+    end
+    <span class="c"># 2. productivity moves: mass at z_i spreads over z_j with F_ij</span>
+    mul!(μ1, s.F', tmp)
+    <span class="c"># 3. entrants draw z from g and start with no workers</span>
+    μ1[:, 1] .+= M .* s.g
+    return μ1
+end</code></pre>
+<p>Employment choices lie on the grid, so firm mass is assigned directly to the chosen employment point. Exit is still a 0 or 1 at each state, so the exit rate moves in steps, as in week 5: it is 0.265 at both $\tau = 0$ and $\tau = 0.1$.</p>
+
+<!-- ================= 8 ================= -->
+<h2 id="misalloc"><span class="num">PART 8</span>aggregates.jl: misallocation</h2>
+<p><code>aggregates(eq)</code> sums over the measure: output $Y$, labour demand $N^d$, firing taxes $T$, profits $\Pi$, entry and exit rates, job creation and destruction (tutorial slide 5). <code>misallocation(eq)</code> gives two measures (tutorial slide 16). The first is the average gap between each firm's marginal product and the real wage $1/p$, with $n = n^d(z, m)$ and weights $\mu(z, m)$:</p>
+$$\text{gap}(z, m) = \big| p\, \eta\, z\, n^{\eta - 1} - 1 \big| \times 100 .$$
+<p>The second is week 5's $\Omega$: keep the same firms and the same production workers, reallocate the workers efficiently, and compare output.</p>
+<pre><code>function misallocation(eq::Equilibrium)
+    (; μ, p, s, sol, eco) = eq
+    η = eco.η
+    n_new = s.n[sol.pol]                               <span class="c"># chosen n at every state</span>
+    z = repeat(s.z, 1, length(s.n))
+    <span class="c"># the MPL gap, over firms with n &gt; 0 (at n = 0 the marginal product is infinite)</span>
+    pos = n_new .&gt; 0
+    gap = abs.(p .* η .* z[pos] .* n_new[pos] .^ (η - 1) .- 1) .* 100
+    mpl_gap = sum(μ[pos] .* gap) / sum(μ[pos])
+    mpl_gap_emp = sum(μ[pos] .* n_new[pos] .* gap) / sum(μ[pos] .* n_new[pos])
+    <span class="c"># Ω: actual output over Z N^η, the output of the same firms and workers allocated efficiently</span>
+    N = sum(μ .* n_new)
+    Z = sum(μ .* z .^ (1 / (1 - η)))^(1 - η)
+    Ω = sum(μ .* z .* n_new .^ η) / (Z * N^η)
+    …
+end</code></pre>
+<p><code>run/firing_taxes.jl</code> solves the model at $\tau = 0$, 0.1 and 1, then for $\tau$ from 0 to 1 (tutorial slide 17):</p>
+<figure><img src="week06_code_guide_taxes.png" alt="Left panel: misallocation against the firing tax from 0 to 1. The average MPL gap rises steeply, to about 24 percent; output lost rises slowly, to about 3.8 percent. Right panel: percentage change from tau = 0. Output and output per worker fall by about 9 to 10 percent; job reallocation falls by about 68 percent."></figure>
+<p>Output lost grows much faster than the gap (5 times the gap, 21 times the loss, from $\tau = 0.1$ to 1): losses from wedges are second order. And output per worker falls by 10% at $\tau = 1$ while $1 - \Omega$ is only 3.8%. The rest is selection: unproductive firms stay, and average productivity falls from 4.32 to 4.18.</p>
+<div class="callout warn"><span class="tag">Grid error</span><p>At $\tau = 0$ the MPL gap should be zero, but it is 0.19%: firms want the $n$ that solves their first-order condition and must pick a grid point. It halves each time the $n$ grid doubles (0.38%, 0.19%, 0.09% for 250, 500, 1000 points), while the gap at $\tau = 0.1$ stays at 4.54%.</p></div>
+
+<!-- ================= 9 ================= -->
+<h2 id="run"><span class="num">PART 9</span>Run it: scripts, the REPL, tests</h2>
+<p>From inside <code>ec991-work/week06/EC991Week6</code>:</p>
+<pre><code>julia --project=. -e "using Pkg; Pkg.instantiate()"   <span class="c"># once</span>
+julia --project=. run/solve_equilibrium.jl            <span class="c"># the equilibrium at τ = 0.1, step by step</span>
+julia --project=. run/solve_equilibrium.jl 0          <span class="c"># the same at any other τ</span>
+julia --project=. run/inaction_region.jl              <span class="c"># slides 13 and 14, as PNG files</span>
+julia --project=. run/inaction_region.jl 0.5          <span class="c"># the second graph at another τ</span>
+julia --project=. run/firing_taxes.jl                 <span class="c"># τ = 0, 0.1, 1 side by side, then slide 17 (14 equilibria)</span>
+julia --project=. -e "using Pkg; Pkg.test()"          <span class="c"># the checks</span></code></pre>
+<div class="callout warn"><span class="tag">Be patient</span><p>These runs are slow, because the solver tries every employment choice at every state (Part 4). <code>run/inaction_region.jl</code> solves two equilibria, <code>run/firing_taxes.jl</code> fourteen, and the tests three. Nothing is printed while an equilibrium is being solved, so a quiet terminal does not mean the run is stuck: leave it alone until the prompt comes back.</p></div>
+<h3>In the REPL</h3>
+<pre><code>using EC991Week6
+eq = solve_equilibrium(Economy())
+aggregates(eq)
+misallocation(eq)
+r = inaction_region(eq.sol, eq.s)                     <span class="c"># r.z, r.nL, r.nH</span>
+eq.μ                                                  <span class="c"># the measure over (z, m): 101 × 500</span>
+size_distribution(eq, [10, 20, 50, 100, 1000])
+misallocation(solve_equilibrium(Economy(τ = 1.0)))    <span class="c"># any parameter by name</span></code></pre>
+<h3>What the numbers should be</h3>
+<p>Default parameters, $101 \times 500$ grid:</p>
+<div class="tbl"><table>
+<thead><tr><th>Statistic</th><th>$\tau = 0$</th><th>$\tau = 0.1$</th><th>$\tau = 1$</th></tr></thead>
+<tbody>
+<tr><td>price $p$</td><td>1.4571</td><td>1.4847</td><td>1.6045</td></tr>
+<tr><td>output $Y$</td><td>68.63</td><td>67.35</td><td>62.32</td></tr>
+<tr><td>labour $N$</td><td>83.41</td><td>82.32</td><td>83.91</td></tr>
+<tr><td>mass of firms $B$</td><td>0.679</td><td>0.656</td><td>0.599</td></tr>
+<tr><td>entry rate = exit rate</td><td>0.265</td><td>0.265</td><td>0.175</td></tr>
+<tr><td>average size (workers)</td><td>117.6</td><td>120.2</td><td>136.5</td></tr>
+<tr><td>job reallocation</td><td>0.294</td><td>0.236</td><td>0.094</td></tr>
+<tr><td>average MPL gap (%)</td><td>0.19</td><td>4.54</td><td>23.56</td></tr>
+<tr><td>output lost, $1 - \Omega$ (%)</td><td>0.00</td><td>0.18</td><td>3.77</td></tr>
+</tbody>
+</table></div>
+<p>One equilibrium is 30 bisection steps, each a value function iteration that starts from the last price's $V$.</p>
+<h3>The tests</h3>
+<pre><code>julia --project=. -e "using Pkg; Pkg.test()"</code></pre>
+<p>The tests solve three equilibria with bounds checking switched on, so they are slower than the run scripts. Start them and wait: the summary lines appear one by one, and the last one takes longest.</p>
+<p>They check the exhaustive search on a case worked by hand ($n = [0, 1, 2, 3]$, $h = [1, 6, 5, 2]$, $\tau = 2$ gives values $[6, 6, 5, 3]$ and choices $[1, 1, 2, 2]$), on exact ties and against the definition on an uneven grid; that the one-pass search gives the same answer; that with $\tau = 0$ chosen employment does not depend on inherited employment and sits next to the first-order condition, the equilibrium conditions (free entry, both markets, entry = exit, job creation = destruction, a stationary $\mu$), the inaction rule at every state, that no firm hits the top of the $n$ grid, and that a higher $\tau$ widens the band, raises the price and misallocation, and lowers output and reallocation. The last line should say <code>tests passed</code>.</p>
+
+<!-- ================= 10 ================= -->
+<h2 id="checklist"><span class="num">PART 10</span>Checklist and common problems</h2>
+<ul class="check" id="checklist-items">
+  <li><input type="checkbox" id="w6-pull"><label for="w6-pull">Pulled the course repository; <code>week06/lab/EC991Week6</code> exists</label></li>
+  <li><input type="checkbox" id="w6-copy"><label for="w6-copy">Copied the lab folder into <code>ec991-work</code> and committed it</label></li>
+  <li><input type="checkbox" id="w6-inst"><label for="w6-inst"><code>Pkg.instantiate()</code> finished without errors</label></li>
+  <li><input type="checkbox" id="w6-eq"><label for="w6-eq"><code>run/solve_equilibrium.jl</code> ends with $p = 1.4847$ and an average MPL gap of 4.541%</label></li>
+  <li><input type="checkbox" id="w6-fig"><label for="w6-fig"><code>run/inaction_region.jl</code> wrote <code>inaction_region.png</code> and <code>inaction_region_high_tax.png</code>, and they match tutorial slides 13 and 14</label></li>
+  <li><input type="checkbox" id="w6-tax"><label for="w6-tax"><code>run/firing_taxes.jl</code> shows output lost rising to 3.77% at $\tau = 1$</label></li>
+  <li><input type="checkbox" id="w6-test"><label for="w6-test"><code>Pkg.test()</code> ends with "tests passed"</label></li>
+</ul>
+<p class="progress" id="progress"></p>
+<h3>Common problems</h3>
+<div class="tbl"><table>
+<thead><tr><th>You see</th><th>Cause and fix</th></tr></thead>
+<tbody>
+<tr><td>Every equilibrium is slow to solve</td><td>Expected: the search tries all 500 candidates at each of the 50,500 states, at every Bellman update. To experiment faster, use a coarser grid, as in <code>Economy(n_n = 250)</code>: a quarter of the time.</td></tr>
+<tr><td>The first run is much slower than the second</td><td>Julia compiles on first use. Time the second call, in the same REPL session.</td></tr>
+<tr><td>The MPL gap is not zero at $\tau = 0$</td><td>Grid error: firms must pick a grid point for $n$. Raise <code>n_n</code> and watch it halve.</td></tr>
+<tr><td>The exit rate does not move when $\tau$ changes</td><td>The exit threshold has not crossed a $z$ grid point: the week 5 staircase. Raise <code>n_z</code>.</td></tr>
+<tr><td>$n_H(z)$ is flat at the top of the graph</td><td>It has reached <code>n_max</code>. Harmless where no firm is (the tests check this), but raise <code>n_max</code> for high $\tau$ or high $z$.</td></tr>
+<tr><td><code>sum(eq.μ)</code> is not one</td><td>Correct: $\mu$ is a measure, and its total is the number of firms $B$.</td></tr>
+<tr><td>The run scripts are slow on a many-core machine</td><td>Small matrices and many BLAS threads. The scripts call <code>BLAS.set_num_threads(1)</code>; do the same in the REPL.</td></tr>
+<tr><td><code>Package EC991Week6 not found</code></td><td>Julia is in your default environment. Run from inside <code>EC991Week6/</code> with <code>--project=.</code>.</td></tr>
+</tbody>
+</table></div>
+</div>
+
+<script>
+(function () {
+  // OS tabs.
+  function setOS(os) {
+    document.querySelectorAll('.os').forEach(function (box) {
+      box.querySelectorAll('.os-tabs button').forEach(function (b) { b.setAttribute('aria-selected', b.dataset.os === os ? 'true' : 'false'); });
+      box.querySelectorAll('.os-pane').forEach(function (p) { p.classList.toggle('active', p.dataset.pane === os); });
+    });
+    try { localStorage.setItem('ec991-os', os); } catch (e) {}
+  }
+  document.querySelectorAll('.os-tabs button').forEach(function (b) { b.addEventListener('click', function () { setOS(b.dataset.os); }); });
+  var saved = null;
+  try { saved = localStorage.getItem('ec991-os'); } catch (e) {}
+  if (saved !== 'mac' && saved !== 'win') saved = /Windows/.test(navigator.userAgent || '') ? 'win' : 'mac';
+  setOS(saved);
+
+  // Copy buttons on code blocks.
+  document.querySelectorAll('pre').forEach(function (pre) {
+    var btn = document.createElement('button');
+    btn.className = 'copy'; btn.type = 'button'; btn.textContent = 'Copy';
+    btn.addEventListener('click', function () {
+      var text = pre.querySelector('code').innerText.replace(/[ \t]+#.*$/gm, '').replace(/\n{2,}/g, '\n').trim();
+      var done = function () { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = 'Copy'; }, 1200); };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, function () { selectText(pre); });
+      } else { selectText(pre); }
+    });
+    pre.appendChild(btn);
+  });
+  function selectText(el) {
+    var r = document.createRange(); r.selectNodeContents(el.querySelector('code'));
+    var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+  }
+
+  // Checklist, remembered in this browser only.
+  var boxes = document.querySelectorAll('#checklist-items input');
+  var prog = document.getElementById('progress');
+  function update() {
+    var n = 0; boxes.forEach(function (b) { if (b.checked) n++; });
+    prog.textContent = n === boxes.length ? 'All ' + n + ' done.' : n + ' of ' + boxes.length + ' done.';
+  }
+  boxes.forEach(function (b) {
+    try { b.checked = localStorage.getItem('ec991-' + b.id) === '1'; } catch (e) {}
+    b.addEventListener('change', function () {
+      try { localStorage.setItem('ec991-' + b.id, b.checked ? '1' : '0'); } catch (e) {}
+      update();
+    });
+  });
+  update();
+})();
+</script>
