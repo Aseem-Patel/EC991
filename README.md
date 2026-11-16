@@ -2,7 +2,7 @@
 
 University of Essex, Department of Economics, Autumn Term 2026.
 
-This repository holds the course materials: lecture slides, lab slides, Julia notebooks and code. New material is added each week. Announcements, deadlines and submissions are on Moodle.
+This repository holds the course materials: lecture slides, lab slides, Julia notebooks and code. New material is added each week. Announcements are on Moodle; problem sets are handed in through GitHub (see [Problem sets](#problem-sets)).
 
 | | |
 | --- | --- |
@@ -23,6 +23,14 @@ This repository holds the course materials: lecture slides, lab slides, Julia no
 | 6 | Lecture: Market Power and Misallocation<br>Lab: Firing Costs: Hopenhayn and Rogerson | [Slides](week06/lecture/week06_market_power.pdf) | [Slides](week06/lab/week06_hopenhayn_rogerson.pdf) · [Code guide](https://aseem-patel.github.io/EC991/week06/lab/week06_code_guide.html) · [Pluto notebook](week06/lab/week06_lab.jl) · [Code package](week06/lab/EC991Week6) · Standalone notebook: [the Atkeson and Burstein model](week06/lab/week06_atkeson_burstein.jl) |
 
 Later weeks appear here as they are released.
+
+## Problem sets
+
+| Problem set | Deadline | |
+| --- | --- | --- |
+| 1 | Friday 18 December 2026, 12:00 (UK time) | [Problem set](problem-sets/ps1.pdf) |
+
+You hand in your report and code through a private GitHub repository, not Moodle. You will receive an email invitation to it: accept it, then follow the repository's `README.md`. At the deadline the repository becomes read-only, and what is on GitHub then is your submission.
 
 ## Getting started
 
