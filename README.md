@@ -21,6 +21,7 @@ This repository holds the course materials: lecture slides, lab slides, Julia no
 | 4 | Lecture: Computing the Aiyagari Equilibrium<br>Lab: Solving Aiyagari, Part 2 | [Slides](week04/lecture/week04_aiyagari_equilibrium.pdf) | [Code guide](https://aseem-patel.github.io/EC991/week04/lab/week04_code_guide.html) · [Pluto notebook](week04/lab/week04_lab.jl) · [Code package](week04/lab/EC991Week4) |
 | 5 | Lecture: Firm Dynamics: the Hopenhayn Model<br>Lab: Solving Hopenhayn | [Slides](week05/lecture/week05_hopenhayn.pdf) | [Slides](week05/lab/week05_solving_hopenhayn.pdf) · [Code guide](https://aseem-patel.github.io/EC991/week05/lab/week05_code_guide.html) · [Pluto notebook](week05/lab/week05_lab.jl) · [Code package](week05/lab/EC991Week5) |
 | 6 | Lecture: Market Power and Misallocation<br>Lab: Firing Costs: Hopenhayn and Rogerson | [Slides](week06/lecture/week06_market_power.pdf) | [Slides](week06/lab/week06_hopenhayn_rogerson.pdf) · [Code guide](https://aseem-patel.github.io/EC991/week06/lab/week06_code_guide.html) · [Pluto notebook](week06/lab/week06_lab.jl) · [Code package](week06/lab/EC991Week6) · Standalone notebook: [the Atkeson and Burstein model](week06/lab/week06_atkeson_burstein.jl) |
+| 7 | Lecture: Aggregate Shocks and Transition Dynamics | [Slides](week07/lecture/week07_aggregate_shocks_transitions.pdf) | |
 
 Later weeks appear here as they are released.
 
