@@ -1,0 +1,726 @@
+<title>Krusell–Smith and MIT Shocks</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Public+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column, 68ch, numbered parts; same house style as the week 1 setup guide. */
+:root {
+  --bg: #fbf9f7;
+  --surface: #f3efeb;
+  --surface-2: #e9e3dd;
+  --fg: #1f1a18;
+  --fg-muted: #6b625d;
+  --rule: #d9d0c9;
+  --accent: #cc092f;        /* vermell, the course colour */
+  --accent-ink: #ffffff;
+  --link: #0000b2;
+  --code-bg: #f0ebe6;
+  --ok: #1f7a3a;
+  --ok-bg: #e3f2e7;
+  --warn: #8a5a00;
+  --warn-bg: #fbefd4;
+  --display: "Newsreader", Georgia, "Times New Roman", serif;
+  --body: "Public Sans", -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  --mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #171412; --surface: #211d1a; --surface-2: #2b2522; --fg: #ece6e0; --fg-muted: #a69c94;
+    --rule: #3a322d; --accent: #ff4d6d; --accent-ink: #1a0b0f; --link: #8f9bff; --code-bg: #1f1b18;
+    --ok: #7fd49a; --ok-bg: #1b3022; --warn: #f2c56b; --warn-bg: #352a12; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #171412; --surface: #211d1a; --surface-2: #2b2522; --fg: #ece6e0; --fg-muted: #a69c94;
+  --rule: #3a322d; --accent: #ff4d6d; --accent-ink: #1a0b0f; --link: #8f9bff; --code-bg: #1f1b18;
+  --ok: #7fd49a; --ok-bg: #1b3022; --warn: #f2c56b; --warn-bg: #352a12; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 16.5px; line-height: 1.6; margin: 0; }
+.wrap { max-width: 72ch; margin: 0 auto; padding-block: 2.5rem 5rem; padding-inline: 20px; }
+header.masthead { border-bottom: 2px solid var(--accent); padding-bottom: 1.25rem; margin-bottom: 2rem; }
+.eyebrow { font-family: var(--body); text-transform: uppercase; letter-spacing: .12em; font-size: .75rem; color: var(--accent); font-weight: 600; margin: 0 0 .5rem; }
+h1 { font-family: var(--display); font-weight: 500; font-size: clamp(2rem, 5vw, 3rem); line-height: 1.1; margin: 0 0 .75rem; text-wrap: balance; letter-spacing: -.01em; }
+.lede { font-size: 1.1rem; color: var(--fg-muted); margin: 0; max-width: 60ch; }
+.meta { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; margin-top: 1rem; font-size: .9rem; color: var(--fg-muted); }
+.meta b { color: var(--fg); font-weight: 600; }
+h2 { font-family: var(--display); font-weight: 500; font-size: 1.85rem; line-height: 1.15; margin: 3rem 0 .75rem; text-wrap: balance; display: flex; gap: .75rem; align-items: baseline; }
+h2 .num { font-family: var(--body); font-size: .8rem; font-weight: 600; color: var(--accent); letter-spacing: .08em; flex: none; }
+h3 { font-family: var(--body); font-weight: 600; font-size: 1.05rem; margin: 2rem 0 .5rem; }
+p { margin: 0 0 1rem; }
+a { color: var(--link); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+ul, ol { padding-left: 1.4rem; margin: 0 0 1rem; }
+li { margin-bottom: .35rem; }
+li > ul { margin-top: .35rem; }
+code { font-family: var(--mono); font-size: .86em; background: var(--code-bg); padding: .1em .35em; border-radius: 3px; }
+pre { position: relative; background: var(--code-bg); border: 1px solid var(--rule); border-radius: 6px; padding: .85rem 1rem; overflow-x: auto; margin: 0 0 1rem; font-size: .85rem; line-height: 1.5; }
+pre code { background: none; padding: 0; font-size: inherit; }
+pre .c { color: var(--fg-muted); }
+pre .copy { position: absolute; top: .4rem; right: .4rem; font: 600 .7rem var(--body); letter-spacing: .05em; text-transform: uppercase; color: var(--fg-muted); background: var(--surface); border: 1px solid var(--rule); border-radius: 4px; padding: .2rem .5rem; cursor: pointer; }
+pre .copy:hover { color: var(--fg); }
+kbd { font-family: var(--mono); font-size: .8em; border: 1px solid var(--rule); border-bottom-width: 2px; border-radius: 4px; padding: .05em .4em; background: var(--surface); }
+.toc { background: var(--surface); border-radius: 6px; padding: 1.1rem 1.25rem; margin: 1.5rem 0 0; }
+.toc h3 { margin: 0 0 .5rem; font-size: .8rem; text-transform: uppercase; letter-spacing: .1em; color: var(--fg-muted); }
+.toc ol { margin: 0; columns: 2; column-gap: 2rem; font-size: .95rem; }
+.toc li { break-inside: avoid; }
+@media (max-width: 560px) { .toc ol { columns: 1; } }
+.callout { border-left: 3px solid var(--accent); background: var(--surface); padding: .9rem 1.1rem; margin: 0 0 1.25rem; border-radius: 0 6px 6px 0; }
+.callout.ok { border-color: var(--ok); background: var(--ok-bg); }
+.callout.warn { border-color: var(--warn); background: var(--warn-bg); }
+.callout p:last-child { margin: 0; }
+.callout .tag { display: block; font-size: .72rem; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; margin-bottom: .3rem; color: var(--fg-muted); }
+.callout.ok .tag { color: var(--ok); }
+.callout.warn .tag { color: var(--warn); }
+/* OS tabs */
+.os { border: 1px solid var(--rule); border-radius: 6px; margin: 0 0 1.25rem; overflow: hidden; }
+.os-tabs { display: flex; background: var(--surface); border-bottom: 1px solid var(--rule); }
+.os-tabs button { flex: 1; font: 600 .85rem var(--body); padding: .55rem .5rem; background: none; border: 0; color: var(--fg-muted); cursor: pointer; border-bottom: 2px solid transparent; }
+.os-tabs button[aria-selected="true"] { color: var(--fg); border-bottom-color: var(--accent); }
+.os-pane { display: none; padding: 1rem 1rem .25rem; }
+.os-pane.active { display: block; }
+.os-pane pre { margin-bottom: .85rem; }
+/* tables */
+.tbl { overflow-x: auto; margin: 0 0 1.25rem; }
+table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+th, td { text-align: left; padding: .5rem .6rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font-size: .75rem; text-transform: uppercase; letter-spacing: .08em; color: var(--fg-muted); font-weight: 600; }
+td code { white-space: nowrap; }
+/* checklist */
+.check { list-style: none; padding: 0; }
+.check li { display: flex; gap: .7rem; align-items: flex-start; padding: .45rem 0; border-bottom: 1px solid var(--rule); margin: 0; }
+.check input { margin-top: .35rem; accent-color: var(--accent); width: 1rem; height: 1rem; flex: none; }
+.check label { cursor: pointer; }
+.progress { font-size: .85rem; color: var(--fg-muted); margin-top: .5rem; }
+.plan td:first-child { font-family: var(--mono); font-size: .85rem; white-space: nowrap; }
+.compare td:first-child { font-weight: 500; white-space: nowrap; }
+.compare code { white-space: pre; }
+figure { margin: 1.25rem 0; }
+figure img { width: 100%; height: auto; display: block; border: 1px solid var(--rule); border-radius: 6px; }
+figcaption { font-size: .85rem; color: var(--fg-muted); margin-top: .45rem; }
+.diagram { background: var(--surface); border-radius: 6px; padding: .75rem .75rem .25rem; margin: 1.25rem 0; }
+.diagram svg { width: 100%; height: auto; display: block; }
+.diagram text { fill: var(--fg); font-family: var(--body); font-size: 13px; }
+.diagram .mono { font-family: var(--mono); font-size: 12.5px; }
+.diagram .muted { fill: var(--fg-muted); font-size: 12px; }
+.diagram .small { font-size: 11.5px; }
+.diagram .box { fill: var(--bg); stroke: var(--rule); stroke-width: 1.2; }
+.diagram .accbox { fill: var(--bg); stroke: var(--accent); stroke-width: 1.6; }
+.diagram .arrow { stroke: var(--fg-muted); stroke-width: 1.4; fill: none; marker-end: url(#arr); }
+.diagram .accarrow { stroke: var(--accent); stroke-width: 1.6; fill: none; marker-end: url(#arracc); }
+.diagram .arrhead { fill: var(--fg-muted); }
+.diagram .arrheadacc { fill: var(--accent); }
+.diagram .acctext { fill: var(--accent); font-weight: 600; }
+.term { background: #1b1816; color: #e8e2dc; border-radius: 6px; padding: .85rem 1rem; font-family: var(--mono); font-size: .82rem; line-height: 1.5; overflow-x: auto; margin: 0 0 1rem; white-space: pre; }
+.term .ok { color: #7fd49a; } .term .dim { color: #9c928a; }
+footer { margin-top: 4rem; padding-top: 1.25rem; border-top: 1px solid var(--rule); font-size: .88rem; color: var(--fg-muted); }
+.small { font-size: .9rem; color: var(--fg-muted); }
+@media (prefers-reduced-motion: no-preference) { .os-pane.active { animation: fade .15s ease; } }
+@keyframes fade { from { opacity: .4 } to { opacity: 1 } }
+mjx-container { color: var(--fg); }
+.tbl mjx-container { font-size: 95%; }
+</style>
+<script>
+window.MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] }, svg: { fontCache: 'global' } };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.js"></script>
+<div class="wrap">
+<header class="masthead">
+  <p class="eyebrow">EC991 Topics in Macroeconomics · Week 7 Lab</p>
+  <h1>Krusell–Smith and MIT Shocks</h1>
+  <p class="lede">Part A solves the economy the way Krusell and Smith did: households forecast aggregate capital with a simple rule, and the rule is fitted to the economy it creates. Part B indexes everything by time instead: an unexpected shock, then the path back to the steady state.</p>
+  <div class="meta">
+    <span><b>Lecturer</b> Aseem Patel</span>
+    <span><b>Term</b> Autumn 2026</span>
+    <span><b>Assumes</b> the week 4 code guide</span>
+    <span><b>Code</b> <code>week07/lab/EC991Week7</code></span>
+  </div>
+  <nav class="toc" aria-label="Contents">
+    <h3>Contents</h3>
+    <ol>
+      <li><a href="#pull">Pull the week 7 code</a></li>
+      <li><a href="#idea">What changes from week 4</a></li>
+      <li><a href="#folders">The folders</a></li>
+      <li><a href="#economy">ks_economy.jl: the 4 × 4 matrix</a></li>
+      <li><a href="#household">ks_household.jl: EGM with K in the state</a></li>
+      <li><a href="#simulate">ks_simulate.jl: K<sub>t</sub> from a histogram</a></li>
+      <li><a href="#loop">ks_equilibrium.jl: a rule that reproduces itself</a></li>
+      <li><a href="#ksresults">Part A results: slides 23 to 30</a></li>
+      <li><a href="#shooting">transition.jl: the shooting algorithm</a></li>
+      <li><a href="#mit">The MIT shock</a></li>
+      <li><a href="#tax">The labour tax reform</a></li>
+      <li><a href="#bkm">bkm.jl: from one shock to many</a></li>
+      <li><a href="#run">Run it: scripts, the REPL, tests</a></li>
+      <li><a href="#checklist">Checklist and common problems</a></li>
+    </ol>
+  </nav>
+</header>
+
+<!-- ================= 1 ================= -->
+<h2 id="pull"><span class="num">PART 1</span>Pull the week 7 code</h2>
+<p>In VS Code, open your <code>EC991</code> folder and choose <b>Pull</b> in the Source Control pane, or from a terminal:</p>
+<pre><code>cd EC991          <span class="c"># wherever you cloned it in week 1</span>
+git pull</code></pre>
+<p>A new folder appears:</p>
+<pre><code>EC991/
+└── week07/
+    └── lab/
+        ├── week07_code_guide.html              <span class="c"># this page</span>
+        └── EC991Week7/                         <span class="c"># the package: all the code</span>
+            ├── Project.toml, Manifest.toml, README.md
+            ├── src/
+            ├── run/
+            └── test/</code></pre>
+<p>Then copy the whole <code>lab</code> folder into your own repository and commit it.</p>
+<div class="os" data-os>
+  <div class="os-tabs" role="tablist">
+    <button role="tab" data-os="mac" aria-selected="true">macOS / Linux</button>
+    <button role="tab" data-os="win" aria-selected="false">Windows (PowerShell)</button>
+  </div>
+  <div class="os-pane active" data-pane="mac">
+<pre><code>cp -R EC991/week07/lab ec991-work/week07</code></pre>
+  </div>
+  <div class="os-pane" data-pane="win">
+<pre><code>Copy-Item -Recurse EC991\week07\lab ec991-work\week07</code></pre>
+  </div>
+</div>
+<div class="callout ok"><span class="tag">You know it worked when</span><p>the folder <code>ec991-work/week07/EC991Week7</code> exists and <code>git log --oneline -1</code> in <code>ec991-work</code> shows your commit.</p></div>
+
+<!-- ================= 2 ================= -->
+<h2 id="idea"><span class="num">PART 2</span>What changes from week 4</h2>
+<p>Production is $Y_t = Z_t K_t^{\alpha} N_t^{1-\alpha}$, so prices depend on $Z_t$ and on capital (lecture slide 3):</p>
+$$r_t + \delta = \alpha Z_t \left(\frac{K_t}{N_t}\right)^{\alpha - 1}, \qquad w_t = (1-\alpha) Z_t \left(\frac{K_t}{N_t}\right)^{\alpha} .$$
+<p>In week 4, $r$ and $w$ were two numbers, fixed for ever. Now a household must know today's prices and forecast tomorrow's, and tomorrow's capital $K_{t+1}$ is the sum of everyone's saving today (slide 10).</p>
+<ul>
+<li><strong>Part A, the state space (Krusell and Smith).</strong> Put $Z$ and $K$ into the household's state, and let households forecast tomorrow's capital with a log-linear rule (slides 13 and 14). Guess the rule, solve the households, simulate the economy, fit the rule to the simulation, and repeat.</li>
+<li><strong>Part B, the sequence space.</strong> No aggregate uncertainty: the economy is in its steady state when a shock nobody expected arrives (an MIT shock, slide 33). Index prices, policies and the distribution by time, and solve for the whole path at once (slides 39 and 40).</li>
+</ul>
+<div class="tbl"><table>
+<thead><tr><th>Step</th><th>Week 4</th><th>Part A: Krusell–Smith</th><th>Part B: sequence space</th></tr></thead>
+<tbody>
+<tr><td>What households must know</td><td>$r$ and $w$</td><td>$Z$, $K$, and the rule $\log K' = \theta_{0Z} + \theta_{1Z} \log K$</td><td>the paths $\{r_t, w_t\}_{t=1}^{T}$</td></tr>
+<tr><td>The unknown</td><td>one number, $r$</td><td>four numbers, $\theta$</td><td>a path, $\{K_t\}_{t=2}^{T-1}$</td></tr>
+<tr><td>The household</td><td><code>solve_egm</code></td><td><code>solve_ks_household</code>: EGM over $(a, y, Z, K)$</td><td><code>backward_pass</code>: one EGM step per date, from $T$ back to 1</td></tr>
+<tr><td>The distribution</td><td><code>stationary_distribution</code></td><td><code>simulate_capital</code>: forward for 11,000 quarters</td><td><code>forward_pass</code>: forward from the initial steady state</td></tr>
+<tr><td>The update</td><td>bisection on $r$</td><td>regression, then $\theta \leftarrow \omega \theta^{\text{new}} + (1 - \omega) \theta$</td><td>$K^g \leftarrow \omega K^s + (1 - \omega) K^g$</td></tr>
+</tbody>
+</table></div>
+<p>One call each:</p>
+<pre><code>eq = solve_krusell_smith(KSEconomy())           <span class="c"># Part A</span>
+ss = solve_steady_state(Economy())              <span class="c"># Part B: week 4's steady state ...</span>
+tr = mit_shock(ss; ε = 0.01, ρ_Z = 0.9)         <span class="c"># ... and the path after a 1% shock</span></code></pre>
+
+<!-- ================= 3 ================= -->
+<h2 id="folders"><span class="num">PART 3</span>The folders</h2>
+<p>Slide numbers are pages of the week 7 lecture.</p>
+<div class="tbl"><table>
+<thead><tr><th>File</th><th>What it holds</th><th>Slides</th></tr></thead>
+<tbody>
+<tr><td><code>markov.jl</code></td><td>Rouwenhorst and <code>stationary</code> from week 4; <code>simulate_chain</code></td><td></td></tr>
+<tr><td><code>tools.jl</code></td><td>the asset grid, <code>LinearInterp</code>, <code>bracket</code>, marginal utility, Young's lottery and <code>move_assets!</code>, <code>gini</code>, <code>top_share</code></td><td></td></tr>
+<tr><td colspan="3"><b>Part A: Krusell–Smith</b></td></tr>
+<tr><td><code>ks_economy.jl</code></td><td><code>KSEconomy</code>, <code>employment_transitions</code>, <code>joint_transition</code>, <code>ks_prices</code>, <code>ks_setup</code></td><td>3, 6, 18–22</td></tr>
+<tr><td><code>ks_household.jl</code></td><td><code>forecast_K</code>, <code>ks_egm_step!</code>, <code>solve_ks_household</code>, <code>individual_rule</code></td><td>10, 13, 14, 25</td></tr>
+<tr><td><code>ks_simulate.jl</code></td><td><code>simulate_Z</code>, <code>initial_distribution</code>, <code>simulate_capital</code></td><td>15, 22</td></tr>
+<tr><td><code>ks_equilibrium.jl</code></td><td><code>regress_law_of_motion</code>, <code>solve_krusell_smith</code>, <code>forecast_errors</code></td><td>15–17, 23</td></tr>
+<tr><td><code>ks_statistics.jl</code></td><td><code>aggregate_series</code>, <code>business_cycle_stats</code>, <code>wealth_stats</code></td><td>29, 30</td></tr>
+<tr><td colspan="3"><b>Part B: sequence space</b></td></tr>
+<tr><td><code>aiyagari.jl</code></td><td><code>Economy</code>, <code>prices</code>, <code>income</code>, <code>egm_backward!</code>, <code>solve_steady_state</code></td><td>33, 34, 37</td></tr>
+<tr><td><code>transition.jl</code></td><td><code>backward_pass</code>, <code>forward_pass</code>, <code>solve_transition</code>, <code>mit_shock</code>, <code>tax_reform</code></td><td>33–41</td></tr>
+<tr><td><code>bkm.jl</code></td><td><code>impulse_response</code>, <code>bkm_simulate</code></td><td>42–45</td></tr>
+</tbody>
+</table></div>
+<p>In <code>run/</code>, <code>plotting.jl</code> holds the plotting helpers that the other scripts include.</p>
+
+<!-- ================= 4 ================= -->
+<h2 id="economy"><span class="num">PART 4</span>ks_economy.jl: the 4 × 4 matrix</h2>
+<p>The parameters are the lecture's (slides 18 to 22), one period a quarter: $\beta = 0.99$, log utility, $\alpha = 0.36$, $\delta = 0.025$, $Z \in \{0.99, 1.01\}$ with $P(Z' = Z \mid Z) = 0.875$, and $y \in \{0.25, 1\}$ for the unemployed and the employed. In the code, index 1 is always the low state: <code>z = 1</code> is a recession, <code>j = 1</code> is unemployment.</p>
+<p>The joint chain factors as $P(y', Z' \mid y, Z) = P(y' \mid y, Z, Z')\, P(Z' \mid Z)$. Slides 20 and 21 give the unemployed rows of $P(y' \mid y, Z, Z')$. The employed rows are not given: they follow from aggregate consistency (slide 22). With $u(Z)$ the unemployment rate, 10% in a recession and 4% in a boom, the unemployed tomorrow are the unemployed who stay unemployed plus the employed who lose their jobs:</p>
+$$u(Z') = P(y_l \mid y_l, Z, Z')\, u(Z) + P(y_l \mid y_h, Z, Z')\, \big(1 - u(Z)\big) .$$
+<p>That is one equation in one unknown, the job-loss probability:</p>
+<pre><code>function employment_transitions(eco::KSEconomy)
+    (; u, stay_unemployed) = eco
+    Py = zeros(2, 2, 2, 2)
+    for z in 1:2, z′ in 1:2
+        <span class="c"># the unemployed: given on slides 20 and 21</span>
+        p_ll = stay_unemployed[z, z′]
+        Py[1, :, z, z′] = [p_ll, 1 - p_ll]
+        <span class="c"># the employed: the job-loss probability that keeps the unemployment rate at u(Z')</span>
+        p_hl = (u[z′] - p_ll * u[z]) / (1 - u[z])
+        0 &lt;= p_hl &lt;= 1 || error("no job-loss probability is consistent with u for z = $z, z′ = $z′")
+        Py[2, :, z, z′] = [p_hl, 1 - p_hl]
+    end
+    return Py
+end</code></pre>
+<p>The job-loss probabilities this gives:</p>
+<div class="tbl"><table>
+<thead><tr><th></th><th>$Z' = Z_l$</th><th>$Z' = Z_h$</th></tr></thead>
+<tbody>
+<tr><td>$Z = Z_l$</td><td>$(0.10 - 0.6 \times 0.10) / 0.90 = 0.0444$</td><td>$(0.04 - 0.25 \times 0.10) / 0.90 = 0.0167$</td></tr>
+<tr><td>$Z = Z_h$</td><td>$(0.10 - 0.75 \times 0.04) / 0.96 = 0.0729$</td><td>$(0.04 - \tfrac13 \times 0.04) / 0.96 = 0.0278$</td></tr>
+</tbody>
+</table></div>
+<p><code>joint_transition(eco)</code> multiplies the two factors into the $4 \times 4$ matrix of slide 6. The code never uses it, but the tests check the adding-up condition on it: summing a row over $y'$ gives $P(Z' \mid Z)$, whatever $y$ is. Labour depends on $Z$ alone (slide 10): $N(Z_l) = 0.1 \times 0.25 + 0.9 = 0.925$ and $N(Z_h) = 0.97$. Prices come from the firm:</p>
+<pre><code>function ks_prices(Z, K, N, eco::KSEconomy)
+    (; α, δ) = eco
+    r = α * Z * (K / N)^(α - 1) - δ
+    w = (1 - α) * Z * (K / N)^α
+    return 1 + r, w
+end</code></pre>
+<div class="callout"><span class="tag">Why K is about 36, not 11.6</span><p>Krusell and Smith measure labour in hours: an employed household works about a third of its time, and an unemployed household earns nothing. Here labour is $y \in \{0.25, 1\}$, so $N$ is about three times theirs, and so is $K$, because prices depend on $K / N$ only. With log utility and $a' \ge 0$, scaling every income scales every saving choice by the same factor. So the slopes $\theta_{1Z}$, the $R^2$, the correlations and the wealth shares do not depend on units, and those are the numbers to compare with the lecture.</p></div>
+
+<!-- ================= 5 ================= -->
+<h2 id="household"><span class="num">PART 5</span>ks_household.jl: EGM with K in the state</h2>
+<p>The approximate problem of slide 14 replaces the distribution $\Lambda$ by aggregate capital $K$:</p>
+$$V(a, y;\, Z, K) = \max_{a' \ge 0} \Big[ u(c) + \beta \sum_{y'} \sum_{Z'} V(a', y';\, Z', K')\, P(y', Z' \mid y, Z) \Big], \qquad \log K' = \theta_{0Z} + \theta_{1Z} \log K .$$
+<pre><code>forecast_K(K, z, θ) = exp(θ[1, z] + θ[2, z] * log(K))</code></pre>
+<p><code>θ</code> is a $2 \times 2$ matrix: column <code>z</code> holds $(\theta_{0Z}, \theta_{1Z})$. The household is solved by week 4's endogenous grid method, with the Euler equation of slide 10:</p>
+$$u'(c) = \beta\, \mathbb{E}\Big[ u'(c')\, \big(1 + r(Z', K')\big) \,\Big|\, y, Z \Big] .$$
+<p>The policy now lives on a four-dimensional grid, <code>c[i, j, z, k]</code> at $(a_i, y_j, Z_z, K_k)$: $100 \times 2 \times 2 \times 7$ points. Two things are new. Tomorrow's capital $K'$ comes from the rule and is off the $K$ grid, so tomorrow's consumption is interpolated between the two nearest $K$ points. And tomorrow's return $R'$ depends on $Z'$, so it sits inside the expectation.</p>
+<pre><code>function ks_egm_step!(c1, apol, c0, θ, eco::KSEconomy, s)
+    (; β, γ, Z, y) = eco
+    (; a, Kgrid, N, PZ, Py) = s
+    EMU = zeros(length(a))
+    â = similar(a)
+    for k in eachindex(Kgrid), z in 1:2
+        <span class="c"># 1. prices today</span>
+        R, w = ks_prices(Z[z], Kgrid[k], N[z], eco)
+        <span class="c"># 2. tomorrow's capital, from the perceived law of motion, and where it sits on the K grid</span>
+        K′ = forecast_K(Kgrid[k], z, θ)
+        kk, ωK = bracket(K′, Kgrid)
+        for j in 1:2
+            <span class="c"># 3. expected marginal utility times the return, for every choice a'_i</span>
+            fill!(EMU, 0.0)
+            for z′ in 1:2
+                R′, _ = ks_prices(Z[z′], K′, N[z′], eco)
+                for j′ in 1:2
+                    prob = PZ[z, z′] * Py[j, j′, z, z′]
+                    for i in eachindex(a)
+                        <span class="c"># tomorrow's consumption at K', between two points of the K grid</span>
+                        c′ = ωK * c0[i, j′, z′, kk] + (1 - ωK) * c0[i, j′, z′, kk+1]
+                        EMU[i] += prob * R′ * marginal_utility(c′, γ)
+                    end
+                end
+            end
+            <span class="c"># invert the Euler equation, then the budget constraint: c + a' = R a + w y</span>
+            for i in eachindex(a)
+                c̃ = inverse_marginal_utility(β * EMU[i], γ)
+                â[i] = (c̃ + a[i] - w * y[j]) / R
+            end
+            <span class="c"># 4. back on the grid: a[i] now means today's assets</span>
+            ĝ = LinearInterp(â, a)
+            for i in eachindex(a)
+                apol[i, j, z, k] = max(ĝ(a[i]), a[1])
+                c1[i, j, z, k] = R * a[i] + w * y[j] - apol[i, j, z, k]
+            end
+        end
+    end
+    return c1, apol
+end</code></pre>
+<div class="tbl"><table>
+<thead><tr><th>Code</th><th>Maths</th></tr></thead>
+<tbody>
+<tr><td><code>Kgrid[k]</code></td><td>today's aggregate capital, $K_k$</td></tr>
+<tr><td><code>K′</code></td><td>$\exp(\theta_{0Z} + \theta_{1Z} \log K_k)$, tomorrow's capital from the rule</td></tr>
+<tr><td><code>kk, ωK</code></td><td>$K' \approx \omega_K K_{kk} + (1 - \omega_K) K_{kk+1}$</td></tr>
+<tr><td><code>prob</code></td><td>$P(Z' \mid Z)\, P(y' \mid y, Z, Z') = P(y', Z' \mid y, Z)$</td></tr>
+<tr><td><code>EMU[i]</code></td><td>$\sum_{y', Z'} P(y', Z' \mid y, Z)\, R'\, u'(c(a'_i, y', Z', K'))$</td></tr>
+<tr><td><code>â[i]</code></td><td>the assets today that lead to $a'_i$</td></tr>
+</tbody>
+</table></div>
+<p><code>solve_ks_household</code> iterates this until consumption moves by less than $10^{-8}$. That takes about 1,000 iterations each time, because $\beta = 0.99$ is close to one, even when a solve starts from the previous rule's policy.</p>
+
+<!-- ================= 6 ================= -->
+<h2 id="simulate"><span class="num">PART 6</span>ks_simulate.jl: K<sub>t</sub> from a histogram</h2>
+<p>Slide 15 simulates a panel of households and averages their assets. The code uses week 4's histogram instead: the distribution $\lambda_t$ on a 1,000-point asset grid, moved forward by Young's lottery. It is the panel with infinitely many households. The simulated $K_t$ then has no sampling noise, so the regression sees only the economy's own dynamics, and the unemployment rate is exactly $u(Z_t)$ at every date.</p>
+<pre><code>function simulate_capital(sol::KSSolution, zpath, eco::KSEconomy, s; λ_start)
+    (; a_dist, Kgrid, Py) = s
+    gd = policy_on_dist(sol, s)
+    T = length(zpath)
+    K = zeros(T)
+    λ, μ = copy(λ_start), similar(λ_start)
+    g = zeros(length(a_dist), 2)
+    for t in 1:T
+        z = zpath[t]
+        <span class="c"># 1. aggregate capital: the first moment of the wealth distribution</span>
+        K[t] = sum(a_dist .* λ)
+        t == T &amp;&amp; break
+        <span class="c"># 2. the saving rule at (Z_t, K_t)</span>
+        k, ωK = bracket(K[t], Kgrid)
+        @views g .= ωK .* gd[:, :, z, k] .+ (1 - ωK) .* gd[:, :, z, k+1]
+        <span class="c"># 3. assets move, then endowments, with the probabilities for Z_t → Z_{t+1}</span>
+        move_assets!(μ, λ, g, a_dist)
+        mul!(λ, μ, view(Py, :, :, z, zpath[t+1]))
+    end
+    return (; K, λ)
+end</code></pre>
+<p>Three details:</p>
+<ul>
+<li><strong>The shocks are drawn once.</strong> <code>simulate_Z</code> draws 11,000 quarters of $Z_t$ from a fixed seed, and every iteration of the algorithm uses that same path. With new shocks each time, $\theta$ would move with the draws and might never settle.</li>
+<li><strong>The start.</strong> Every simulation starts with all households holding the representative agent's capital, 35.995. The first 1,000 quarters are thrown away, while the wealth distribution spreads out.</li>
+<li><strong>Consistency again.</strong> <code>mul!(λ, μ, view(Py, :, :, z, zpath[t+1]))</code> moves endowments with the probabilities for the pair $(Z_t, Z_{t+1})$. Because the employed rows came from slide 22, the unemployed share lands exactly on $u(Z_{t+1})$. The tests check it at every date.</li>
+</ul>
+
+<!-- ================= 7 ================= -->
+<h2 id="loop"><span class="num">PART 7</span>ks_equilibrium.jl: a rule that reproduces itself</h2>
+<p>For each $Z$, regress $\log K_{t+1}$ on $\log K_t$ over the dates with $Z_t = Z$ (slides 15 and 16):</p>
+<pre><code>function regress_law_of_motion(K, zpath, T_burn)
+    θ, R2, σ = zeros(2, 2), zeros(2), zeros(2)
+    for z in 1:2
+        <span class="c"># the dates in state z, and the pairs (log K_t, log K_{t+1})</span>
+        ts = [t for t in T_burn+1:length(K)-1 if zpath[t] == z]
+        x, yv = log.(K[ts]), log.(K[ts .+ 1])
+        x̄, ȳ = sum(x) / length(x), sum(yv) / length(yv)
+        slope = sum((x .- x̄) .* (yv .- ȳ)) / sum((x .- x̄) .^ 2)
+        θ[:, z] = [ȳ - slope * x̄, slope]
+        resid = yv .- θ[1, z] .- slope .* x
+        R2[z] = 1 - sum(resid .^ 2) / sum((yv .- ȳ) .^ 2)
+        σ[z] = sqrt(sum(resid .^ 2) / (length(resid) - 2))
+    end
+    return θ, R2, σ
+end</code></pre>
+<p>The loop of slide 15, with slide 17's first guess, $\theta_{0Z} = \log K_{ss}$ and $\theta_{1Z} = 0$: households first believe capital never moves.</p>
+<pre><code>function solve_krusell_smith(eco::KSEconomy = KSEconomy(); θ_start = nothing, ω = 0.3, tol = 1e-6,
+                             maxiter = 200, callback = (n, θ, d) -&gt; nothing)
+    s = ks_setup(eco)
+    zpath = simulate_Z(eco, s)
+    <span class="c"># 1. the first guess: K stays at the representative agent's steady state</span>
+    θ = θ_start === nothing ? [log(s.K_ra) log(s.K_ra); 0.0 0.0] : copy(θ_start)
+    <span class="c"># every simulation starts with all households at that steady state</span>
+    λ_start = initial_distribution(s.K_ra, zpath[1], eco, s)
+    sol, history = nothing, Float64[]
+    for n in 1:maxiter
+        <span class="c"># 2. the household problem, given the rule</span>
+        sol = solve_ks_household(θ, eco, s; c_start = sol === nothing ? nothing : sol.c)
+        <span class="c"># 3. simulate, 4. regress</span>
+        sim = simulate_capital(sol, zpath, eco, s; λ_start)
+        θ_new, R2, σ = regress_law_of_motion(sim.K, zpath, eco.T_burn)
+        <span class="c"># 5. compare, then update</span>
+        d = maximum(abs.(θ_new .- θ))
+        push!(history, d)
+        callback(n, θ_new, d)
+        if d &lt; tol
+            return KSEquilibrium(eco, s, θ_new, R2, σ, sol, zpath, sim.K, sim.λ, history)
+        end
+        θ = ω .* θ_new .+ (1 - ω) .* θ
+    end
+    error("the forecasting rule did not converge in $maxiter iterations")
+end</code></pre>
+<p><code>run/solve_krusell_smith.jl</code> prints the rule at every iteration:</p>
+<div class="term">  iter   θ_0(Z_l)  θ_1(Z_l)   θ_0(Z_h)  θ_1(Z_h)   distance
+     1  <span class="dim">...</span>
+    12    0.10938   0.96888    0.12061   0.96700   3.12e-02
+    18    0.12171   0.96545    0.13266   0.96363   4.97e-04
+    24    0.12187   0.96540    0.13284   0.96358   1.25e-05
+    30    0.12187   0.96540    0.13284   0.96358   6.44e-07
+<span class="ok">converged in 30 iterations</span></div>
+<div class="callout warn"><span class="tag">Dampening</span><p>With $\omega = 0.3$ the rule converges in 30 iterations. With $\omega = 0.5$ it zigzags between two values and needs 60. With $\omega = 0.7$ it does not converge in 200. If the distance stops falling, lower $\omega$.</p></div>
+
+<!-- ================= 8 ================= -->
+<h2 id="ksresults"><span class="num">PART 8</span>Part A results: slides 23 to 30</h2>
+<h3>The law of motion (slide 23)</h3>
+<div class="tbl"><table>
+<thead><tr><th></th><th>$\theta_{0Z}$</th><th>$\theta_{1Z}$</th><th>$R^2$</th><th>s.d. of residuals</th></tr></thead>
+<tbody>
+<tr><td>Boom, this code</td><td>0.1328</td><td>0.9636</td><td>0.9999992</td><td>0.0018%</td></tr>
+<tr><td>Boom, Krusell and Smith</td><td>0.095</td><td>0.962</td><td>0.999998</td><td>0.0028%</td></tr>
+<tr><td>Recession, this code</td><td>0.1219</td><td>0.9654</td><td>0.9999989</td><td>0.0020%</td></tr>
+<tr><td>Recession, Krusell and Smith</td><td>0.085</td><td>0.965</td><td>0.999998</td><td>0.0036%</td></tr>
+</tbody>
+</table></div>
+<p>The slopes match theirs to the third decimal; the intercepts differ because $K$ is in different units (Part 4). Quasi-aggregation holds: the rule explains all but a millionth of the variation in $K'$. The rule must also forecast far ahead. <code>forecast_errors(eq)</code> starts from the actual $K$ and iterates the rule forward, looking only at the shocks. One hundred quarters (25 years) ahead, the forecast is off by 0.033% on average and by 0.13% at worst, close to slide 23's 0.1%.</p>
+<figure><img src="week07_code_guide_aggregate.png" alt="Tomorrow's aggregate capital against today's, for K between 34.3 and 38.2. The simulated pairs for booms lie on a line just above the 45-degree line, and those for recessions on a line just below it. Both law-of-motion lines pass exactly through their dots."></figure>
+<p>Slide 24, from <code>plot_aggregate_rule</code>. In a boom, capital grows at every $K$ in the simulation; in a recession it shrinks. The boom line crosses the 45° line at $K = 38.4$, the level capital would reach if the boom lasted for ever, and the recession line at 33.9: capital moves back and forth between the two, and the simulation stays between 34.3 and 38.2. The dots are the 10,000 simulated pairs $(K_t, K_{t+1})$, and they lie on the lines.</p>
+<h3>Individual decision rules (slide 25)</h3>
+<p><code>individual_rule(eq.sol, eq.s, j, z, K)</code> reads off $a' = g_a(a, y_j;\, Z_z, K)$ at any $K$:</p>
+<figure><img src="week07_code_guide_individual.png" alt="Two panels of tomorrow's assets against today's. Left, assets up to 80: four almost straight, parallel lines; the employed save more than the unemployed, and recession lines are hard to tell from boom lines. Right, a zoom on assets below 5.4: the employed lines are straight; the unemployed lines are zero below about 0.3 to 0.5 and bend upwards before becoming straight."></figure>
+<p>Away from zero the rules are straight lines with the same slope: every household saves the same share of an extra unit of wealth. Then aggregate saving depends on the distribution only through its mean, which is why $K$ alone forecasts $K'$ so well (slide 26). The bend sits near the borrowing limit, where poor unemployed households run their assets down to zero; they hold too little capital to move the aggregate.</p>
+<h3>Wealth and the business cycle (slides 29 and 30)</h3>
+<div class="tbl"><table>
+<thead><tr><th></th><th>Top 1%</th><th>Top 5%</th><th>Top 10%</th><th>Top 20%</th><th>Top 30%</th><th>Gini</th></tr></thead>
+<tbody>
+<tr><td>This code</td><td>3.2</td><td>12.5</td><td>22.0</td><td>37.5</td><td>50.3</td><td>0.30</td></tr>
+<tr><td>Krusell and Smith, benchmark</td><td>3</td><td>11</td><td>19</td><td>35</td><td>46</td><td>0.25</td></tr>
+<tr><td>Data</td><td>30</td><td>51</td><td>64</td><td>79</td><td>88</td><td>0.79</td></tr>
+</tbody>
+</table></div>
+<div class="tbl"><table>
+<thead><tr><th></th><th>Mean($K_t$)</th><th>corr($C_t, Y_t$)</th><th>s.d.($I_t$)</th><th>corr($Y_t, Y_{t-4}$)</th></tr></thead>
+<tbody>
+<tr><td>This code</td><td>36.14</td><td>0.690</td><td>0.078</td><td>0.450</td></tr>
+<tr><td>Krusell and Smith, incomplete markets</td><td>11.61</td><td>0.701</td><td>0.030</td><td>0.481</td></tr>
+</tbody>
+</table></div>
+<p>Mean capital and the standard deviation of investment are in units of $K$, so they are larger than Krusell and Smith's. The correlations are unit-free and close to theirs. Wealth is far less concentrated than in the data: with one discount factor, income risk alone cannot make anyone very rich. That is the point of the stochastic-$\beta$ model on slide 28.</p>
+
+<!-- ================= 9 ================= -->
+<h2 id="shooting"><span class="num">PART 9</span>transition.jl: the shooting algorithm</h2>
+<p>Part B uses the week 4 economy as it was ($\beta = 0.96$, $\gamma = 2$, $\alpha = 0.33$, $\delta = 0.05$, seven income states, one period a year), with productivity $Z$ in front of the production function and a labour tax $\tau$ whose revenue goes back as a lump sum (slide 37). In the steady state $Z = 1$ and $\tau = 0$, and <code>solve_steady_state</code> is week 4's bisection on $r$. It gives week 4's answer, $r = 0.037659$, with $K = 7.42486$.</p>
+<p>Along a transition, today's return $R_t$ and tomorrow's $R_{t+1}$ differ. That is the one change to week 4's EGM step:</p>
+$$u'(\tilde c) = \beta R_{t+1} \sum_m P[j, m]\, u'\big(c_{t+1}(a'_i, y_m)\big), \qquad \hat a = \frac{\tilde c + a'_i - \big((1 - \tau_t) w_t y_j + \tau_t w_t N\big)}{R_t} .$$
+<pre><code>function egm_backward!(c, apol, c′, R′, R, inc, a, P, β, γ)
+    <span class="c"># read a[i] as tomorrow's assets: EMU[i, j] = Σ_m P[j, m] u'(c′[i, m])</span>
+    EMU = marginal_utility.(c′, γ) * P'
+    â = similar(a)
+    for j in axes(c, 2)
+        <span class="c"># invert the Euler equation, then the budget constraint</span>
+        for i in eachindex(a)
+            c̃ = inverse_marginal_utility(β * R′ * EMU[i, j], γ)
+            â[i] = (c̃ + a[i] - inc[j]) / R
+        end
+        <span class="c"># back on the grid: a[i] now means today's assets</span>
+        ĝ = LinearInterp(â, a)
+        for i in eachindex(a)
+            apol[i, j] = max(ĝ(a[i]), a[1])
+            c[i, j] = R * a[i] + inc[j] - apol[i, j]
+        end
+    end
+    return c, apol
+end</code></pre>
+<p>The algorithm of slides 39 and 40. Step (ii): guess the capital path. $K_1$ is fixed by the initial distribution, because capital is chosen the period before, and $K_T$ is the final steady state's. Prices follow from the guess. Step (iii): households backwards, from the final steady state's policy at $T$:</p>
+<pre><code>function backward_pass(K, Z, τ, ss1::SteadyState)
+    (; β, γ, α, δ) = ss1.eco
+    (; y, P, N, a) = ss1.s
+    T = length(K)
+    pr = [prices(Z[t], K[t], N, α, δ) for t in 1:T]
+    R, w = first.(pr), last.(pr)
+    c = zeros(length(a), length(y), T)
+    apol = similar(c)
+    <span class="c"># date T: the final steady state</span>
+    c[:, :, T] .= ss1.c
+    apol[:, :, T] .= ss1.apol
+    <span class="c"># dates T-1, ..., 1: V_T → V_{T-1} → ... → V_1, one EGM step at a time</span>
+    for t in T-1:-1:1
+        @views egm_backward!(c[:, :, t], apol[:, :, t], c[:, :, t+1], R[t+1], R[t],
+                             income(w[t], τ[t], y, N), a, P, β, γ)
+    end
+    return (; c, apol, R, w)
+end</code></pre>
+<p>Steps (iv) and (v): the distribution forwards, from the initial steady state's $\lambda$, and the capital it implies, $K^s_t = \sum_j a_j \lambda_{t,j}$:</p>
+<pre><code>function forward_pass(apol, ss0::SteadyState)
+    (; P, a) = ss0.s
+    T = size(apol, 3)
+    λ = zeros(size(apol))
+    λ[:, :, 1] .= ss0.λ
+    μ = similar(ss0.λ)
+    for t in 1:T-1
+        <span class="c"># assets move by the lottery, then income by P</span>
+        @views move_assets!(μ, λ[:, :, t], apol[:, :, t], a)
+        @views mul!(λ[:, :, t+1], μ, P)
+    end
+    Ks = [sum(a .* view(λ, :, :, t)) for t in 1:T]
+    return Ks, λ
+end</code></pre>
+<p>Step (vi): compare, and update with dampening:</p>
+<pre><code>function solve_transition(ss0::SteadyState, ss1::SteadyState, Z, τ; ω = 0.2, tol = 1e-8,
+                          maxiter = 2_000, K_start = nothing, callback = (n, d) -&gt; nothing)
+    (; α, δ) = ss1.eco
+    (; y, N, a) = ss1.s
+    T = length(Z)
+    <span class="c"># (ii) the first guess; the two ends never change</span>
+    K = K_start === nothing ? fill(ss1.K, T) : copy(K_start)
+    K[1], K[T] = ss0.Ea, ss1.K
+    history = Float64[]
+    for n in 1:maxiter
+        <span class="c"># (iii) households backwards, (iv) and (v) the distribution forwards</span>
+        bw = backward_pass(K, Z, τ, ss1)
+        Ks, λ = forward_pass(bw.apol, ss0)
+        <span class="c"># (vi) compare implied with guessed capital</span>
+        d = maximum(abs.(Ks[2:T-1] .- K[2:T-1]))
+        push!(history, d)
+        callback(n, d)
+        if d &lt; tol
+            return transition_paths(ss0, ss1, Z, τ, K, Ks, bw, λ, n, history)
+        end
+        K[2:T-1] .= ω .* Ks[2:T-1] .+ (1 - ω) .* K[2:T-1]
+    end
+    error("the transition did not converge in $maxiter iterations")
+end</code></pre>
+<div class="tbl"><table>
+<thead><tr><th>Code</th><th>Maths</th></tr></thead>
+<tbody>
+<tr><td><code>K</code></td><td>the guess $\{K^g_t\}_{t=1}^{T}$, with $K^g_1$ and $K^g_T$ fixed</td></tr>
+<tr><td><code>bw.apol[:, :, t]</code></td><td>$g_{a,t}(a, y)$, the saving policy at date $t$</td></tr>
+<tr><td><code>λ[:, :, t]</code></td><td>$\lambda_t$, shares on the asset–income grid</td></tr>
+<tr><td><code>Ks</code></td><td>$\{K^s_t\}$, the capital households supply</td></tr>
+<tr><td><code>d</code></td><td>$\max_{2 \le t \le T-1} |K^s_t - K^g_t|$</td></tr>
+</tbody>
+</table></div>
+
+<!-- ================= 10 ================= -->
+<h2 id="mit"><span class="num">PART 10</span>The MIT shock</h2>
+<p>At $t = 1$, $\log Z_1 = 0.01$, and the shock dies out at rate $\rho_Z = 0.9$ (slide 33). The transition starts and ends in the same steady state:</p>
+<pre><code>function mit_shock(ss::SteadyState; ε = 0.01, ρ_Z = 0.9, T = 300, kwargs...)
+    Z = ss.eco.Z .* exp.(ε .* ρ_Z .^ (0:T-1))
+    τ = fill(ss.eco.τ, T)
+    return solve_transition(ss, ss, Z, τ; kwargs...)
+end</code></pre>
+<figure><img src="week07_code_guide_irf.png" alt="Six panels over 150 years. Productivity jumps 1% at t = 1 and decays. Capital starts at zero, rises to a peak of 0.8% at t = 13, then falls back. The interest rate jumps 0.09 percentage points, turns negative near t = 8, reaches -0.03 near t = 20, and returns. The wage and output jump 1% and decay more slowly than productivity. Consumption jumps 0.46% and peaks at 0.55% a few years later."></figure>
+<p>Slide 35, from <code>run/mit_shock.jl</code>. Capital cannot move at $t = 1$: it was chosen at $t = 0$, when nobody expected the shock. Households save part of the extra income, so capital builds up for 13 years, to 0.8% above the steady state. Consumption jumps by less than income (0.46% against 1.0%) and keeps rising while capital does. Once productivity has faded, the extra capital pushes the interest rate below its steady-state value. <code>run/mit_shock.jl</code> also draws slide 36: the Gini of wealth falls by about 0.0014 and the share of households at the borrowing limit by about 0.1 percentage points, because the shock raises everyone's wage.</p>
+<div class="callout warn"><span class="tag">Dampening and the last date (slide 41)</span><p>With $\omega = 0.2$ the transition converges in 61 iterations. With $\omega = 0.5$ the distance cycles between 13.6 and 51 for ever: run <code>run/mit_shock.jl 0.5</code> to see it. Then check the last transition: $K^s_T - K_T = -3 \times 10^{-5}$ at $T = 300$. Capital dips slightly below its steady state after the hump and returns slowly, so the gap halves only about every 55 years. It is 0.0004% of $K$, small enough here. If it is not small, raise $T$.</p></div>
+
+<!-- ================= 11 ================= -->
+<h2 id="tax"><span class="num">PART 11</span>The labour tax reform</h2>
+<p>Slide 37: the economy is in its steady state with $\tau = 0$, and at $t = 1$ the labour tax rises to 0.2 for ever. The revenue goes back to everyone as the same lump sum, $T = \tau w N$. Now two steady states are needed, and the transition goes from one to the other:</p>
+<pre><code>function tax_reform(ss0::SteadyState, ss1::SteadyState; T = 300, kwargs...)
+    Z = fill(ss1.eco.Z, T)
+    τ = fill(ss1.eco.τ, T)
+    return solve_transition(ss0, ss1, Z, τ; kwargs...)
+end</code></pre>
+<div class="tbl"><table>
+<thead><tr><th></th><th>$\tau = 0$</th><th>$\tau = 0.2$</th></tr></thead>
+<tbody>
+<tr><td>interest rate $r$</td><td>0.03766</td><td>0.03907</td></tr>
+<tr><td>wage $w$</td><td>1.28717</td><td>1.27712</td></tr>
+<tr><td>capital $K$</td><td>7.42486</td><td>7.25061 (−2.35%)</td></tr>
+</tbody>
+</table></div>
+<figure><img src="week07_code_guide_tax.png" alt="Four panels over 150 years. The labour tax steps from 0 to 0.2 at t = 1. Capital falls smoothly towards -2.35%, the interest rate rises towards +0.14 percentage points, and the wage falls towards -0.78%; each line approaches its new steady state, shown dashed."></figure>
+<p>Slide 38. The tax with a lump-sum transfer is insurance: it takes from high incomes and gives to low ones. Households face less risk, so they save less for precautionary reasons, and capital falls. The economy covers half of the way to the new steady state by year 13 and 90% by year 41.</p>
+
+<!-- ================= 12 ================= -->
+<h2 id="bkm"><span class="num">PART 12</span>bkm.jl: from one shock to many</h2>
+<p>Slide 43: record the response at each horizon per unit of shock, then add up the effects of a sequence of shocks.</p>
+<pre><code>impulse_response(x, x̄, ε) = (x .- x̄) ./ ε
+
+function bkm_simulate(h, ε)
+    x = zeros(length(ε))
+    for t in eachindex(ε), s in 0:min(t - 1, length(h) - 1)
+        x[t] += h[s+1] * ε[t-s]
+    end
+    return x
+end</code></pre>
+<p>This works only if responses scale with the shock and do not depend on its sign (slide 42). <code>run/bkm_simulation.jl</code> solves the MIT shock three times and compares capital's response per unit of shock:</p>
+<div class="tbl"><table>
+<thead><tr><th>Horizon $s$</th><th>$\varepsilon = +0.01$</th><th>$\varepsilon = -0.01$</th><th>$\varepsilon = +0.05$</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>0.168</td><td>0.166</td><td>0.172</td></tr>
+<tr><td>10</td><td>0.792</td><td>0.783</td><td>0.810</td></tr>
+<tr><td>50</td><td>0.157</td><td>0.156</td><td>0.159</td></tr>
+<tr><td>largest gap from $+0.01$, share of the peak</td><td></td><td>1.1%</td><td>2.3%</td></tr>
+</tbody>
+</table></div>
+<p>Close to linear, but not exactly: a five-times-larger shock moves capital 2.3% more per unit. Then 200 years of shocks with $\sigma_\varepsilon = 0.01$:</p>
+<figure><img src="week07_code_guide_bkm.png" alt="Capital and output over 200 years, in % deviations from the steady state. Output is jagged and capital smooth and lagging behind it; both swing between about +4% and -12%."></figure>
+<p>Slide 44. Each path is a weighted sum of past shocks: once the impulse response is known, no further equilibrium has to be solved. That is the strength of the method (slide 45). Its weakness is that the responses come from a world where households expect no more shocks: aggregate risk has no effect on their saving.</p>
+
+<!-- ================= 13 ================= -->
+<h2 id="run"><span class="num">PART 13</span>Run it: scripts, the REPL, tests</h2>
+<p>From inside <code>ec991-work/week07/EC991Week7</code>:</p>
+<pre><code>julia --project=. -e "using Pkg; Pkg.instantiate()"   <span class="c"># once</span>
+julia --project=. run/solve_krusell_smith.jl          <span class="c"># Part A: slides 23 to 30, graphs for slides 24 and 25</span>
+julia --project=. run/mit_shock.jl                    <span class="c"># Part B: the MIT shock, slides 35 and 36</span>
+julia --project=. run/mit_shock.jl 0.5                <span class="c"># the same with ω = 0.5: watch it fail</span>
+julia --project=. run/labour_tax.jl                   <span class="c"># the tax reform, slide 38</span>
+julia --project=. run/bkm_simulation.jl               <span class="c"># linearity, then slide 44</span>
+julia --project=. -e "using Pkg; Pkg.test()"          <span class="c"># the checks</span></code></pre>
+<div class="callout warn"><span class="tag">Be patient</span><p><code>run/solve_krusell_smith.jl</code> takes about a minute: 30 household solves and 30 simulations of 11,000 quarters. Each transition in Part B takes several seconds. The scripts print as they go.</p></div>
+<h3>In the REPL</h3>
+<pre><code>using EC991Week7
+eq = solve_krusell_smith(KSEconomy())
+eq.θ, eq.R2                                           <span class="c"># the rule and its fit</span>
+forecast_errors(eq)                                   <span class="c"># how far ahead it can see</span>
+individual_rule(eq.sol, eq.s, 1, 1, 36.0)             <span class="c"># the unemployed, in a recession, at K = 36</span>
+joint_transition(KSEconomy())                         <span class="c"># the 4 × 4 matrix</span>
+eq2 = solve_krusell_smith(KSEconomy(T_sim = 4_000))   <span class="c"># any parameter by name</span>
+
+ss = solve_steady_state(Economy())
+tr = mit_shock(ss; ε = -0.01)                         <span class="c"># a 1% fall</span>
+tr.K, tr.r, tr.C                                      <span class="c"># the paths</span>
+tr = tax_reform(ss, solve_steady_state(Economy(τ = 0.4)))</code></pre>
+<h3>What the numbers should be</h3>
+<div class="tbl"><table>
+<thead><tr><th>Statistic</th><th>Value</th></tr></thead>
+<tbody>
+<tr><td>rule in a boom, $\log K' = \theta_0 + \theta_1 \log K$</td><td>$0.1328 + 0.9636 \log K$</td></tr>
+<tr><td>rule in a recession</td><td>$0.1219 + 0.9654 \log K$</td></tr>
+<tr><td>mean of $K$ in the simulation</td><td>36.14</td></tr>
+<tr><td>steady state of Part B, $r$ and $K$</td><td>0.037659, 7.42486</td></tr>
+<tr><td>MIT shock: peak of $K$</td><td>0.805% at $t = 13$</td></tr>
+<tr><td>tax reform: new steady-state $K$</td><td>7.25061, −2.35%</td></tr>
+</tbody>
+</table></div>
+<h3>The tests</h3>
+<pre><code>julia --project=. -e "using Pkg; Pkg.test()"</code></pre>
+<p>They check the $4 \times 4$ matrix against slides 20 to 22 (the unemployed rows, an employed row worked by hand, adding up, consistency), that factor payments exhaust output, and that the histogram keeps unemployment at $u(Z_t)$ at every date. For Krusell–Smith, on a shorter simulation: that the rule has converged with $R^2$ near one and slopes below one, that simulated $K$ stays inside its grid, that saving rises with assets and with employment, and that the borrowing limit binds only for poor households. For Part B: that the steady state is week 4's and is a fixed point of the EGM step, that a zero shock gives no transition, that the MIT transition clears the asset and goods markets at every date and returns to the steady state, that capital falls monotonically after the tax reform, and that adding up impulse responses is exact for single shocks and close to the nonlinear answer for a shock of the opposite sign. The last line should say <code>tests passed</code>.</p>
+
+<!-- ================= 14 ================= -->
+<h2 id="checklist"><span class="num">PART 14</span>Checklist and common problems</h2>
+<ul class="check" id="checklist-items">
+  <li><input type="checkbox" id="w7-pull"><label for="w7-pull">Pulled the course repository; <code>week07/lab/EC991Week7</code> exists</label></li>
+  <li><input type="checkbox" id="w7-copy"><label for="w7-copy">Copied the lab folder into <code>ec991-work</code> and committed it</label></li>
+  <li><input type="checkbox" id="w7-inst"><label for="w7-inst"><code>Pkg.instantiate()</code> finished without errors</label></li>
+  <li><input type="checkbox" id="w7-ks"><label for="w7-ks"><code>run/solve_krusell_smith.jl</code> ends with slopes 0.9636 and 0.9654 and $R^2$ above 0.99999</label></li>
+  <li><input type="checkbox" id="w7-fig"><label for="w7-fig"><code>ks_aggregate_rule.png</code> and <code>ks_individual_rules.png</code> look like slides 24 and 25</label></li>
+  <li><input type="checkbox" id="w7-mit"><label for="w7-mit"><code>run/mit_shock.jl</code> starts from $r = 0.037659$ and capital peaks 0.805% above it</label></li>
+  <li><input type="checkbox" id="w7-tax"><label for="w7-tax"><code>run/labour_tax.jl</code> shows capital falling 2.35% to the new steady state</label></li>
+  <li><input type="checkbox" id="w7-bkm"><label for="w7-bkm"><code>run/bkm_simulation.jl</code> wrote <code>bkm_simulation.png</code></label></li>
+  <li><input type="checkbox" id="w7-test"><label for="w7-test"><code>Pkg.test()</code> ends with "tests passed"</label></li>
+</ul>
+<p class="progress" id="progress"></p>
+<h3>Common problems</h3>
+<div class="tbl"><table>
+<thead><tr><th>You see</th><th>Cause and fix</th></tr></thead>
+<tbody>
+<tr><td>The Krusell–Smith distance stops falling and zigzags</td><td>Dampening too weak: lower <code>ω</code>, as in <code>solve_krusell_smith(eco; ω = 0.2)</code>.</td></tr>
+<tr><td>The transition's distance cycles or grows</td><td>The same in Part B: lower <code>ω</code> in <code>mit_shock(ss; ω = 0.1)</code>. It converges more slowly, but it converges.</td></tr>
+<tr><td>A low $R^2$ after you change a parameter</td><td>Check that simulated $K$ stays inside the $K$ grid: outside it the rule is clamped. Widen <code>K_band</code>.</td></tr>
+<tr><td>Your $\theta_{0Z}$ is not 0.095 as on slide 23</td><td>Expected: $K$ is in different units (Part 4). Compare the slopes.</td></tr>
+<tr><td><code>end_gap</code> is not small</td><td>$T$ is too short for the economy to settle. Raise it: <code>mit_shock(ss; T = 500)</code>.</td></tr>
+<tr><td>The first run is much slower than the second</td><td>Julia compiles on first use. Time the second call, in the same REPL session.</td></tr>
+<tr><td>The run scripts are slow on a many-core machine</td><td>Small matrices and many BLAS threads. The scripts call <code>BLAS.set_num_threads(1)</code>; do the same in the REPL.</td></tr>
+<tr><td><code>Package EC991Week7 not found</code></td><td>Julia is in your default environment. Run from inside <code>EC991Week7/</code> with <code>--project=.</code>.</td></tr>
+</tbody>
+</table></div>
+</div>
+
+<script>
+(function () {
+  // OS tabs.
+  function setOS(os) {
+    document.querySelectorAll('.os').forEach(function (box) {
+      box.querySelectorAll('.os-tabs button').forEach(function (b) { b.setAttribute('aria-selected', b.dataset.os === os ? 'true' : 'false'); });
+      box.querySelectorAll('.os-pane').forEach(function (p) { p.classList.toggle('active', p.dataset.pane === os); });
+    });
+    try { localStorage.setItem('ec991-os', os); } catch (e) {}
+  }
+  document.querySelectorAll('.os-tabs button').forEach(function (b) { b.addEventListener('click', function () { setOS(b.dataset.os); }); });
+  var saved = null;
+  try { saved = localStorage.getItem('ec991-os'); } catch (e) {}
+  if (saved !== 'mac' && saved !== 'win') saved = /Windows/.test(navigator.userAgent || '') ? 'win' : 'mac';
+  setOS(saved);
+
+  // Copy buttons on code blocks.
+  document.querySelectorAll('pre').forEach(function (pre) {
+    var btn = document.createElement('button');
+    btn.className = 'copy'; btn.type = 'button'; btn.textContent = 'Copy';
+    btn.addEventListener('click', function () {
+      var text = pre.querySelector('code').innerText.replace(/[ \t]+#.*$/gm, '').replace(/\n{2,}/g, '\n').trim();
+      var done = function () { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = 'Copy'; }, 1200); };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, function () { selectText(pre); });
+      } else { selectText(pre); }
+    });
+    pre.appendChild(btn);
+  });
+  function selectText(el) {
+    var r = document.createRange(); r.selectNodeContents(el.querySelector('code'));
+    var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+  }
+
+  // Checklist, remembered in this browser only.
+  var boxes = document.querySelectorAll('#checklist-items input');
+  var prog = document.getElementById('progress');
+  function update() {
+    var n = 0; boxes.forEach(function (b) { if (b.checked) n++; });
+    prog.textContent = n === boxes.length ? 'All ' + n + ' done.' : n + ' of ' + boxes.length + ' done.';
+  }
+  boxes.forEach(function (b) {
+    try { b.checked = localStorage.getItem('ec991-' + b.id) === '1'; } catch (e) {}
+    b.addEventListener('change', function () {
+      try { localStorage.setItem('ec991-' + b.id, b.checked ? '1' : '0'); } catch (e) {}
+      update();
+    });
+  });
+  update();
+})();
+</script>
