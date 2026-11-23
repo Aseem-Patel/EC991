@@ -71,7 +71,7 @@ For problems with setup or with the code in this repository, open an [issue](htt
 
 ## Acknowledgements
 
-The content of this course builds on the lecture notes of [Tomás R. Martinez](https://tomasrm.github.io/). All errors are mine.
+The content of this course builds on the lecture notes of [Tomás R. Martinez](https://tomasrm.github.io/), [Chris Edmond](https://www.chrisedmond.net/) and [Benjamin Moll](https://benjaminmoll.com/). All errors are mine.
 
 ## Licence
 
